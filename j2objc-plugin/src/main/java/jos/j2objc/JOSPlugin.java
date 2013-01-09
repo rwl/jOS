@@ -15,6 +15,5 @@ public class JOSPlugin extends Plugin {
 
 	@Override
 	public void endProcessing(final File outputDirectory) {
-
 	}
 }

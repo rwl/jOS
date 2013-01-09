@@ -6,10 +6,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import jos.j2objc.JOSPlugin;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -18,14 +19,15 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.google.devtools.j2objc.J2ObjC;
+import com.google.devtools.j2objc.Options;
 
 @Mojo(name = "translate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class JOSMojo extends AbstractMojo {
 
-    @Parameter(defaultValue = "${project.build.sourceDirectory}"/*, property = "sourceDirectory"*/, required = true)
+    @Parameter(defaultValue = "${project.build.sourceDirectory}", required = true)
     private File sourceDirectory;
 
-    @Parameter(defaultValue = "${basedir}/src/main/objc"/*, property = "outputDirectory"*/, required = true)
+    @Parameter(defaultValue = "${basedir}/src/main/objc", required = true)
     private File outputDirectory;
 
     @Parameter
@@ -34,8 +36,7 @@ public class JOSMojo extends AbstractMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		final Collection<File> files = FileUtils.listFiles(sourceDirectory,
 				FileFilterUtils.suffixFileFilter(".java"),
-//				  new RegexFileFilter("*.java"),
-				  DirectoryFileFilter.DIRECTORY);
+				DirectoryFileFilter.DIRECTORY);
 		final List<String> args = new ArrayList<String>();
 
 		args.add("-d");
@@ -57,6 +58,8 @@ public class JOSMojo extends AbstractMojo {
 		} catch (final IOException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
+
+        Options.getPlugins().add(new JOSPlugin());
 
 		J2ObjC.main(args.toArray(new String[args.size()]));
 	}

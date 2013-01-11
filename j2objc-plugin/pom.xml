@@ -7,10 +7,15 @@
   </parent>
   <artifactId>jos-j2objc-plugin</artifactId>
   <dependencies>
-  	<dependency>
-  		<groupId>com.google.j2objc</groupId>
-  		<artifactId>j2objc</artifactId>
-  		<version>0.8</version>
-  	</dependency>
+    <dependency>
+      <groupId>com.google.j2objc</groupId>
+      <artifactId>j2objc</artifactId>
+      <version>0.8</version>
+    </dependency>
+    <dependency>
+      <groupId>jos</groupId>
+      <artifactId>jos-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 </project>

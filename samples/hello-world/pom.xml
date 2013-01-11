@@ -6,7 +6,8 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>jos-hello-world-sample</artifactId>
-  <packaging>xcode-app</packaging>
+  <!-- <packaging>xcode-app</packaging> -->
+  <packaging>jar</packaging>
   <build>
     <plugins>
       <plugin>
@@ -29,10 +30,21 @@
     </plugins>
   </build>
   <dependencies>
-  	<dependency>
-  		<groupId>jos</groupId>
-  		<artifactId>jos-api</artifactId>
-  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
+    <dependency>
+      <groupId>jos</groupId>
+      <artifactId>jos-api</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <!-- <dependency>
+      <groupId>com.google.j2objc</groupId>
+      <artifactId>j2objc</artifactId>
+      <version>0.8</version>
+    </dependency>
+    <dependency>
+      <groupId>jos</groupId>
+      <artifactId>jos-j2objc-plugin</artifactId>
+      <version>${project.version}</version>
+    </dependency> -->
   </dependencies>
 </project>

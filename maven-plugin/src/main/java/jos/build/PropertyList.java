@@ -1,3 +1,6 @@
+/*
+ * Copyright (C) 2012 HipByte SPRL and contributors
+ */
 package jos.build;
 
 import java.util.Map;

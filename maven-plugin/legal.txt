@@ -1,0 +1,19 @@
+======================================================================
+LEGAL NOTICES
+======================================================================
+
+All code in this project is original work, except as disclosed below.
+
+-----------------------------------------------------------------------
+
+Licensed Software: RubyMotion
+Software Web Site: https://github.com/HipByte/RubyMotion
+Effective License: BSD 2-Clause License
+License Info Page: http://opensource.org/licenses/BSD-2-Clause
+
+The open source build system from RubyMotion was translated for this
+module.
+
+-----------------------------------------------------------------------
+
+[end]

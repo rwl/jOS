@@ -1,0 +1,19 @@
+======================================================================
+LEGAL NOTICES
+======================================================================
+
+All code in this project is original work, except as disclosed below.
+
+-----------------------------------------------------------------------
+
+Licensed Software: MonoMac
+Software Web Site: https://github.com/mono/monomac
+Effective License: Apache License version 2.0 or the MIT X11 license
+License Info Page: http://www.apache.org/licenses/LICENSE-2.0.txt
+
+The Parser class that is used to generate bindings was translated
+from the parse.cs file in the MonoMac project.
+
+-----------------------------------------------------------------------
+
+[end]

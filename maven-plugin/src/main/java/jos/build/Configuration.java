@@ -43,7 +43,7 @@ public class Configuration {
 
 	private File[] files;
 	private Map<String, String> info_plist;
-	private boolean detect_dependencies;
+	public boolean detect_dependencies;
 	private List<String> frameworks, weak_frameworks, framework_search_paths,
 			libs;
 	private String delegate_class, name;
@@ -56,7 +56,7 @@ public class Configuration {
 	private List<BackgroundMode> background_modes;
 	private List<String> icons;
 	private boolean prerendered_icon;
-	private List<Vendor> vendor_projects;
+	public List<Vendor> vendor_projects;
 	private Map<String, String> entitlements;
 	private File motiondir;
 
@@ -64,9 +64,9 @@ public class Configuration {
 			provisioning_profile, seed_id, fonts;
 	private float sdk_version, deployment_target;
 
-	private boolean spec_mode;
+	public boolean spec_mode;
 	private BuildMode build_mode, distribution_mode;
-	private Map<String, String> dependencies;
+	public Map<String, String> dependencies;
 
 	public File project_dir;
 	private List<String> setup_blocks;
@@ -101,7 +101,7 @@ public class Configuration {
 
 	public enum StatusBarStyle {DEFAULT, black_translucent, black_opaque}
 
-	public void initialize(final File project_dir, final BuildMode build_mode) {
+	public Configuration(final File project_dir, final BuildMode build_mode) {
 		this.project_dir = project_dir;
 		final Collection<File> files = FileUtils.listFiles(project_dir,
 				FileFilterUtils.suffixFileFilter(".java"),
@@ -153,7 +153,7 @@ public class Configuration {
 		return setup_blocks;
 	}
 
-	private void setup() {
+	public void setup() {
 		// if @setup_blocks
 		// @setup_blocks.each { |b| b.call(self) }
 		// @setup_blocks = nil
@@ -316,7 +316,7 @@ public class Configuration {
 		}
 	}
 
-	private File versionized_build_dir(final String platform) {
+	public File versionized_build_dir(final String platform) {
 		return new File(build_dir, platform + '-' + deployment_target + '-'
 				+ build_mode_name());
 	}
@@ -358,7 +358,7 @@ public class Configuration {
 
 	}
 
-	private void ordered_build_files() {
+	public void ordered_build_files() {
 
 	}
 
@@ -411,7 +411,7 @@ public class Configuration {
 		return stubs;
 	}
 
-	private List<File> bridgesupport_files() {
+	public List<File> bridgesupport_files() {
 		if (bridgesupport_files == null) {
 			bridgesupport_files = Lists.newArrayList();
 			Set<String> deps = Sets.newLinkedHashSet();
@@ -441,7 +441,7 @@ public class Configuration {
 
 	}
 
-	private File datadir() {
+	public File datadir() {
 		return null;
 	}
 
@@ -457,7 +457,7 @@ public class Configuration {
 		return new File(platforms_dir(), platform + ".platform");
 	}
 
-	private File bindir() {
+	public File bindir() {
 		return null;
 	}
 
@@ -493,12 +493,12 @@ public class Configuration {
 		return deployment_target;
 	}
 
-	private File sdk(final String platform) {
+	public File sdk(final String platform) {
 		return new File(new File(platform_dir(platform), "Developer/SDKs"),
 				platform + sdk_version + ".sdk");
 	}
 
-	private File locate_compiler(final String platform, String... execs) {
+	public File locate_compiler(final String platform, String... execs) {
 		final List<File> paths = Lists.newArrayList(new File(
 				platform_dir(platform), "Developer/usr/bin"));
 		paths.add(0, new File(xcode_dir,
@@ -517,7 +517,7 @@ public class Configuration {
 		return build_dir;
 	}
 
-	private Map<String, String> archs() {
+	public Map<String, String> archs() {
 		if (archs == null) {
 			Map<String, String> h = Maps.newHashMap();
 			for (String platform : Lists.newArrayList("iPhoneSimulator",

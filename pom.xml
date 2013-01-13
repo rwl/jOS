@@ -5,7 +5,7 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-    <module>api</module>
+    <module>jos</module>
     <module>j2objc-plugin</module>
     <module>maven-plugin</module>
     <module>samples</module>

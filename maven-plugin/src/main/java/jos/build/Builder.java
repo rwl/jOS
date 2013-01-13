@@ -3,44 +3,51 @@
  */
 package jos.build;
 
+import static jos.build.Application.read;
+import static jos.build.Application.sh;
+import static jos.build.Application.system;
+import static jos.build.Application.write;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class Builder {
 
-    public void build(final Configuration config, final String platform,
+    public File build(final Configuration config, final String platform,
     		final Map<String, String> opts) {
       final File datadir = config.datadir();
-      final String archs = config.archs().get(platform);
+      final List<String> archs = Lists.newArrayList(config.archs().get(platform));
 
-      final boolean static_library = opts.remove("static");
+      final boolean static_library = opts.remove("static") != null;
 
       final java.io.File ruby = new File(config.bindir(), "ruby");
       final File llc = new File(config.bindir(), "llc");
 
-      if (config.spec_mode && config.spec_files.isEmpty()) {
+      if (config.spec_mode && config.spec_files().isEmpty()) {
         Application.fail("No spec files in '"+config.specs_dir+"'");
       }
 
       // Locate SDK and compilers.
-      final String sdk = config.sdk(platform);
+      final File sdk = config.sdk(platform);
       final File cc = config.locate_compiler(platform, "gcc");
       final File cxx = config.locate_compiler(platform, "clang++");
 
-      final File build_dir = new File(config.versionized_build_dir(platform));
+      final File build_dir = config.versionized_build_dir(platform);
       Application.info("Build", build_dir);
 
       // Prepare the list of BridgeSupport files needed.
@@ -58,25 +65,30 @@ public class Builder {
       final File objs_build_dir = new File(build_dir, "objs");
       objs_build_dir.mkdirs();
       boolean any_obj_file_built = false;
-      {
-//      build_file = Proc.new do |path|
-//        rpath = path
-        path = path.getAbsolutePath();
-        final java.io.File obj = new File(objs_build_dir, path.getCanonicalPath() + ".o");
+
+      final Runnable build_file = new Runnable() {
+      public void run() {
+        File path = null;
+        final java.io.File obj = new File(objs_build_dir, path.getAbsolutePath() + ".o");
         final boolean should_rebuild = (!obj.exists()
             || path.lastModified() > obj.lastModified()
             || ruby.lastModified() > obj.lastModified());
 
         // Generate or retrieve init function.
-        final String init_func;// = should_rebuild ? "MREP_#{`/usr/bin/uuidgen`.strip.gsub('-', '')}" : `#{config.locate_binary('nm')} \"#{obj}\"`.scan(/T\s+_(MREP_.*)/)[0][0]
+        final String init_func = "";
+        if (should_rebuild) {
+        	//init_func = sh("/usr/bin/uuidgen").trim().gsub("-", "");
+        } else {
+        	//init_func = sh(config.locate_binary("nm") + obj).scan(/T\s+_(MREP_.*)/)[0][0];
+        }
 
         if (should_rebuild) {
-          Application.info("Compile", rpath);
+          Application.info("Compile", path);
           obj.getParentFile().mkdirs();
           final List<File> arch_objs = Lists.newArrayList();
-          for (final java.io.File arch : archs) {
+          for (final String arch : archs) {
             // Locate arch kernel.
-            final File kernel = new File(datadir, platform, "kernel-"+arch.getName()+".bc");
+            final File kernel = new File(new File(datadir, platform), "kernel-"+arch+".bc");
             if (!kernel.exists()) {
             	throw new IllegalStateException("Can't locate kernel file");
             }
@@ -85,10 +97,10 @@ public class Builder {
             final File bc = new File(objs_build_dir, path + arch + ".bc");
             final List<String> bs_flags_list = Lists.newArrayList();
             for (final File x : bs_files) {
-				bs_flags_list.add("--uses-bs \""+ x + "\" ");
+				bs_flags_list.add("--uses-bs \"" + x + "\" ");
 			}
             final String bs_flags = StringUtils.join(bs_flags_list, " ");
-            //sh "/usr/bin/env VM_KERNEL_PATH=\"#{kernel}\" VM_OPT_LEVEL=\"#{config.opt_level}\" #{ruby} #{bs_flags} --emit-llvm \"#{bc}\" #{init_func} \"#{path}\""
+            sh("/usr/bin/env VM_KERNEL_PATH=\""+kernel+"\" VM_OPT_LEVEL=\""+config.opt_level()+"\" "+ruby+" "+bs_flags+" --emit-llvm \""+bc+"\" " + init_func + "\" "+path+"\"");
 
             // Assembly.
             final File asm = new File(objs_build_dir, path + arch + ".s");
@@ -102,11 +114,11 @@ public class Builder {
             } else{
             	llc_arch = arch;
             }
-            //sh "#{llc} \"#{bc}\" -o=\"#{asm}\" -march=#{llc_arch} -relocation-model=pic -disable-fp-elim -jit-enable-eh -disable-cfi"
+            sh(llc + "\""+bc+"\" -o=\""+asm+"\" -march="+llc_arch+" -relocation-model=pic -disable-fp-elim -jit-enable-eh -disable-cfi");
 
             // Object.
-            final File arch_obj = new File(objs_build_dir, path + arch+".o");
-            //sh "#{cc} -fexceptions -c -arch #{arch} \"#{asm}\" -o \"#{arch_obj}\""
+            final File arch_obj = new File(objs_build_dir, path + arch + ".o");
+            sh(cc + " -fexceptions -c -arch "+arch+" \""+asm+"\" -o \""+arch_obj+"\"");
 
             bc.delete();
             asm.delete();
@@ -115,50 +127,56 @@ public class Builder {
 
           // Assemble fat binary.
           final String arch_objs_list = StringUtils.join(Lists.transform(arch_objs, new Function<File, String>() {
-        	  String apply(File x) { return "\"" + x+ "\""; }
-          }
-        		  ), " ");
-          //sh "/usr/bin/lipo -create #{arch_objs_list} -output \"#{obj}\""
+        	  public String apply(File x) { return "\"" + x+ "\""; }
+          }), " ");
+          sh("/usr/bin/lipo -create "+arch_objs_list+" -output \""+obj+"\"");
         }
 
-        any_obj_file_built = true;
+        //any_obj_file_built = true;
         //[obj, init_func]
-      }
+	  }
+      };
 
       // Create builders.
       int builders_count;
-      if (ENV["jobs"] != null) {
-    	  builders_count = Integer.valueOf(ENV["jobs"]);
+      if (System.getenv().containsKey("jobs")) {
+    	  builders_count = Integer.valueOf(System.getenv().get("jobs"));
       } else {
-    	  builders_count = 0;//`/usr/sbin/sysctl -n machdep.cpu.thread_count`.strip.to_i
+    	  builders_count = Integer.valueOf(sh("/usr/sbin/sysctl -n machdep.cpu.thread_count").trim());
       }
       if (builders_count < 1) {
     	  builders_count = 1;
       }
-//      builders = []
-//      builders_count.times do
-//        queue = []
-//        th = Thread.new do
-//          sleep
-//          objs = []
-//          while path = queue.shift
-//            objs << build_file.call(path)
-//          end
-//          queue.concat(objs)
-//        end
-//        builders << [queue, th]
-//      end
+      final List<List<File>> builder_queues = Lists.newArrayList();
+      final List<Runnable> builder_threads = Lists.newArrayList();
+      for (int i = 0; i < builders_count; i++) {
+        final List<File> queue = Lists.newArrayList();
+        final Runnable th = new Runnable() {
+
+			public void run() {
+				//Thread.sleep(100);
+				final List<File> objs = Lists.newArrayList();
+				while (queue.size() > 0) {
+					final File path = queue.get(0);
+					//objs.add(build_file.run(path));
+				}
+				queue.addAll(objs);
+			}
+		};
+		builder_queues.add(queue);
+		builder_threads.add(th);
+      }
 
       // Resolve file dependencies
       if (config.detect_dependencies) {
-        deps = new Dependency(config.files).run();
-        config.dependencies = deps.putAll(config.dependencies);
+//        deps = new Dependency(config.files).run();
+//        config.dependencies = deps.putAll(config.dependencies);
       }
 
       // Feed builders with work.
       int builder_i = 0;
       for (final File path : config.ordered_build_files()) {
-		builders[builder_i][0].add(path);
+		builder_queues.get(builder_i).add(path);
         builder_i += 1;
         if (builder_i == builders_count) {
         	builder_i = 0;
@@ -166,17 +184,16 @@ public class Builder {
       }
 
       // Start build.
-//      builders.each do |queue, th|
-//        sleep 0.01 while th.status != 'sleep'
-//        th.wakeup
-//      end
-//      builders.each { |queue, th| th.join }
+      for (int i = 0; i < builders_count; i++) {
+    	  final Runnable th = builder_threads.get(i);
+    	  new Thread(th).start();
+      }
 
       // Merge the result (based on build order).
       final List<File> objs = Lists.newArrayList();
-      int builder_i = 0;
+      builder_i = 0;
       for (final File path : config.ordered_build_files()) {
-        objs.add(builders[builder_i][0].remove(0));
+        objs.add(builder_queues.get(builder_i).remove(0));
         builder_i += 1;
         if (builder_i == builders_count) {
         	builder_i = 0;
@@ -184,22 +201,28 @@ public class Builder {
       }
 
       if (any_obj_file_built) {
-    	  FileUtils.touch(objs_build_dir);
+    	  try {
+			FileUtils.touch(objs_build_dir);
+		} catch (final IOException e) {
+			Application.warn("Error touching build directory: " + e.getMessage());
+		}
       }
 
-      app_objs = objs;
+      final List<File> app_objs = Lists.newArrayList(objs);
       final List<File> spec_objs = Lists.newArrayList();
       if (config.spec_mode) {
         // Build spec files too, but sequentially.
-        spec_objs = config.spec_files.map { |path| build_file.call(path) }
-        objs += spec_objs
+        for (final File path : config.spec_files()) {
+          //spec_objs.add(build_file.run(path));
+          objs.addAll(spec_objs);
+        }
       }
 
       // Generate init file.
-      final String init_txt =
+      String init_txt =
 "#import <UIKit/UIKit.h>\n" +
 "\n" +
-"extern "C" {\n" +
+"extern \"C\" {\n" +
 "    void ruby_sysinit(int *, char ***);\n" +
 "    void ruby_init(void);\n" +
 "    void ruby_init_loadpath(void);\n" +
@@ -210,12 +233,12 @@ public class Builder {
 "    void rb_vm_aot_feature_provide(const char *, void *);\n" +
 "    void *rb_vm_top_self(void);\n" +
 "    void rb_rb2oc_exc_handler(void);\n" +
-"    void rb_exit(int);\n"
+"    void rb_exit(int);\n";
 
 //      app_objs.each do |_, init_func|
 //        init_txt << "void #{init_func}(void *, void *);\n"
 //      end
-      init_txt += \
+      init_txt +=
 "}\n" +
 "\n" +
 "extern \"C\"\n" +
@@ -236,7 +259,7 @@ public class Builder {
 //      app_objs.each do |_, init_func|
 //        init_txt << "#{init_func}(self, 0);\n"
 //      end
-      init_txt += \
+      init_txt +=
 "	}\n" +
 "	catch (...) {\n" +
 "	    rb_rb2oc_exc_handler();\n" +
@@ -248,26 +271,26 @@ public class Builder {
       // Compile init file.
       final File init = new File(objs_build_dir, "init.mm");
       final File init_o = new File(objs_build_dir, "init.o");
-      if !(init.exists() && init_o.exist() && Files.read(init).equals(init_txt)) {
-        Files.open(init, 'w') { |io| io.write(init_txt) }
-        //sh "#{cxx} \"#{init}\" #{config.cflags(platform, true)} -c -o \"#{init_o}\""
+      if (!(init.exists() && init_o.exists() && read(init).equals(init_txt))) {
+        write(init, init_txt);
+        sh(cxx + " \"" + init + "\" "+config.cflags(platform, true)+" -c -o \""+init_o+"\"");
       }
 
       if (static_library) {
         // Create a static archive with all object files + the runtime.
         final File lib = new File(config.versionized_build_dir(platform), config.name + ".a");
         Application.info("Create", lib);
-        final File libmacruby = new File(datadir, platform, "libmacruby-static.a");
-        objs_list = objs.map { |path, _| path }.unshift(init_o, *config.frameworks_stubs_objects(platform)).map { |x| "\"#{x}\"" }.join(' ')
-        //sh "/usr/bin/libtool -static \"#{libmacruby}\" #{objs_list} -o \"#{lib}\""
+        final File libmacruby = new File(new File(datadir, platform), "libmacruby-static.a");
+        final String objs_list = "";//objs.map { |path, _| path }.unshift(init_o, *config.frameworks_stubs_objects(platform)).map { |x| "\"#{x}\"" }.join(' ')
+        sh("/usr/bin/libtool -static \""+libmacruby+"\" "+objs_list+" -o \""+lib+"\"");
         return lib;
       }
 
       // Generate main file.
-      String main_txt = \
+      String main_txt =
 "#import <UIKit/UIKit.h>\n" +
 "\n" +
-"extern "C" {\n" +
+"extern \"C\" {\n" +
 "    void rb_define_global_const(const char *, void *);\n" +
 "    void rb_rb2oc_exc_handler(void);\n" +
 "    void rb_exit(int);\n" +
@@ -281,7 +304,7 @@ public class Builder {
       main_txt += "}\n";
 
       if (config.spec_mode) {
-        main_txt += \
+        main_txt +=
 "@interface SpecLauncher : NSObject\n" +
 "@end\n" +
 "\n" +
@@ -331,13 +354,13 @@ public class Builder {
 //          main_txt << "#{init_func}(self, 0);\n"
 //        end
         main_txt += "[NSClassFromString(@\"Bacon\") performSelector:@selector(run)];\n";
-        main_txt += \
+        main_txt +=
 "}\n" +
 "\n" +
 "@end\n";
 
       }
-      main_txt += \
+      main_txt +=
 "int\n" +
 "main(int argc, char **argv)\n" +
 "{\n" +
@@ -348,7 +371,7 @@ public class Builder {
       if (config.spec_mode) {
     	  main_txt += "[SpecLauncher launcher];\n";
       }
-      main_txt += \
+      main_txt +=
 "        RubyMotionInit(argc, argv);\n";
 
       final String rubymotion_env;
@@ -359,7 +382,7 @@ public class Builder {
       }
       main_txt += "rb_define_global_const(\"RUBYMOTION_ENV\", @\"#{rubymotion_env}\");\n";
       main_txt += "rb_define_global_const(\"RUBYMOTION_VERSION\", @\"#{Motion::Version}\");\n";
-      main_txt += \
+      main_txt +=
 "        retval = UIApplicationMain(argc, argv, nil, @\"#{config.delegate_class}\");\n" +
 "        rb_exit(retval);\n" +
 "    }\n" +
@@ -373,9 +396,9 @@ public class Builder {
       // Compile main file.
       final File main = new File(objs_build_dir, "main.mm");
       final File main_o = new File(objs_build_dir, "main.o");
-      if (!(main.exists() && main_o.exists() && Files.read(main).equals(main_txt))) {
-        //Files.open(main, 'w') { |io| io.write(main_txt) }
-        //sh "#{cxx} \"#{main}\" #{config.cflags(platform, true)} -c -o \"#{main_o}\""
+      if (!(main.exists() && main_o.exists() && read(main).equals(main_txt))) {
+        write(main, main_txt);
+        sh(cxx+" \""+main+"\" "+config.cflags(platform, true)+" -c -o \""+main_o+"\"");
       }
 
       // Prepare bundle.
@@ -388,93 +411,136 @@ public class Builder {
       // Link executable.
       final File main_exec = config.app_bundle_executable(platform);
       boolean main_exec_created = false;
+      boolean modified = false;
+      for (final File path : objs) {
+    	  if (path.lastModified() > main_exec.lastModified()) {
+    		  modified = true;
+    		  break;
+    	  }
+      }
+      for (final File lib  : vendor_libs) {
+    	  if (lib.lastModified() > main_exec.lastModified()) {
+    		  modified = true;
+    		  break;
+    	  }
+      }
       if (!main_exec.exists()
-          || config.project_file.lastModified() > main_exec.lastModified()
-          || objs.any? { |path, _| path.lastModified() > main_exec.lastModified() }
+          || config.project_file().lastModified() > main_exec.lastModified()
+          || modified
           || main_o.lastModified() > main_exec.lastModified()
-          || vendor_libs.any? { |lib| lib.lastModified() > main_exec.lastModified() }
-          || new File(datadir, platform, "libmacruby-static.a").lastModified() > main_exec.lastModified()) {
+          || new File(new File(datadir, platform), "libmacruby-static.a").lastModified() > main_exec.lastModified()) {
         Application.info("Link", main_exec);
-        objs_list = objs.map { |path, _| path }.unshift(init_o, main_o, *config.frameworks_stubs_objects(platform)).map { |x| "\"#{x}\"" }.join(' ')
-        framework_search_paths = config.framework_search_paths.map { |x| "-F#{File.expand_path(x)}" }.join(' ')
-        frameworks = config.frameworks_dependencies.map { |x| "-framework #{x}" }.join(' ')
-        weak_frameworks = config.weak_frameworks.map { |x| "-weak_framework #{x}" }.join(' ')
-        sh "#{cxx} -o \"#{main_exec}\" #{objs_list} #{config.ldflags(platform)} -L#{new File(datadir, platform)} -lmacruby-static -lobjc -licucore #{framework_search_paths} #{frameworks} #{weak_frameworks} #{config.libs.join(' ')} #{vendor_libs.map { |x| '-force_load "' + x + '"' }.join(' ')}"
+        for (final File path : config.frameworks_stubs_objects(platform)) objs.add(0, path);
+        objs.add(0, main_o);
+        objs.add(0, init_o);
+        final String objs_list = StringUtils.join(Lists.transform(objs, new Function<File, String>() {
+			public String apply(final File x) {
+				return "\"" + x + "\"";
+			}
+		}), " ");
+        final String framework_search_paths = StringUtils.join(Lists.transform(config.framework_search_paths, new Function<File, String>() {
+        	public String apply(final File x) {
+				return "-F" + x.getAbsolutePath();
+        	}
+        }), " ");
+        final String frameworks = StringUtils.join(Lists.transform(config.frameworks_dependencies(), new Function<String, String>() {
+        	public String apply(final String x) {
+				return "-framework " + x;
+        	}
+        }), " ");
+        final String weak_frameworks = StringUtils.join(Lists.transform(config.weak_frameworks, new Function<String, String>() {
+        	public String apply(final String x) {
+				return "-weak_framework " + x;
+        	}
+        }), " ");
+        final String force_loads = StringUtils.join(Lists.transform(vendor_libs, new Function<File, String>() {
+        	public String apply(final File x) {
+				return "-force_load \"" + x + "\"";
+        	}
+        }), " ");
+
+        sh(cxx+" -o \""+main_exec+"\" "+objs_list+" "+config.ldflags(platform)+" -L"+new File(datadir, platform)+" -lmacruby-static -lobjc -licucore "+framework_search_paths+" "+frameworks+" "+weak_frameworks+" "+StringUtils.join(config.libs, " ") + " "+ force_loads);
         main_exec_created = true;
       }
 
       // Create bundle/Info.plist.
       final File bundle_info_plist = new File(bundle_path, "Info.plist");
-      if (!bundle_info_plist.exists() || config.project_file.lastModified() > bundle_info_plist.lastModified()) {
+      if (!bundle_info_plist.exists() || config.project_file().lastModified() > bundle_info_plist.lastModified()) {
         Application.info("Create", bundle_info_plist);
-        //File.open(bundle_info_plist, 'w') { |io| io.write(config.info_plist_data) }
-        //sh "/usr/bin/plutil -convert binary1 \"#{bundle_info_plist}\""
+        write(bundle_info_plist, config.info_plist_data());
+        sh("/usr/bin/plutil -convert binary1 \""+bundle_info_plist+"\"");
       }
 
       // Create bundle/PkgInfo.
       final File bundle_pkginfo = new File(bundle_path, "PkgInfo");
-      if (!bundle_pkginfo.exists() || config.project_file.lastModified() > bundle_pkginfo.lastModified()) {
+      if (!bundle_pkginfo.exists() || config.project_file().lastModified() > bundle_pkginfo.lastModified()) {
         Application.info("Create", bundle_pkginfo);
         //File.open(bundle_pkginfo, 'w') { |io| io.write(config.pkginfo_data) }
       }
 
       // Compile IB resources.
       if (config.resources_dir.exists()) {
-        final List<File> ib_resources = Lists.newArrayList();
-        ib_resources.concat((Dir.glob(new File(config.resources_dir, '**', '*.xib')) + Dir.glob(new File(config.resources_dir, '*.lproj', '*.xib'))).map { |xib| [xib, xib.sub(/\.xib$/, '.nib')] })
-        ib_resources.concat(Dir.glob(new File(config.resources_dir, '**', '*.storyboard')).map { |storyboard| [storyboard, storyboard.sub(/\.storyboard$/, '.storyboardc')] })
-        ib_resources.each do |src, dest|
-          if (!dest.exists() || src.lastModified() > dest.lastModified()) {
-            Application.info("Compile", src);
-            //sh "/usr/bin/ibtool --compile \"#{dest}\" \"#{src}\""
-          }
-        end
-      end
+        final List<File> ib_resources_src = Lists.newArrayList();
+        final List<File> ib_resources_dest = Lists.newArrayList();
+        for (final File path : FileUtils.listFiles(config.resources_dir, new String[] {"xib", "storyboard"}, true)) {
+        	ib_resources_src.add(path);
+        	ib_resources_dest.add(new File(path.getPath().replaceFirst(".xib", ".nib").replaceFirst(".storyboard", ".storyboardc")));
+        }
+        assert ib_resources_src.size() == ib_resources_dest.size();
+        for (int i = 0; i < ib_resources_src.size(); i++) {
+        	final File src = ib_resources_src.get(i);
+        	final File dest = ib_resources_dest.get(i);
+        	if (!dest.exists() || src.lastModified() > dest.lastModified()) {
+              Application.info("Compile", src);
+              sh("/usr/bin/ibtool --compile \""+dest+"\" \""+src+"\"");
+            }
+        }
+      }
 
       // Compile CoreData Model resources.
       if (config.resources_dir.exists()) {
-        final Collection<File> models = FileUtils.listFiles(
-        		config.resources_dir(),
-					FileFilterUtils.suffix(".xcdatamodeld"),
-					DirectoryFileFilter.DIRECTORY);
+        final Collection<File> models = FileUtils.listFiles(config.resources_dir, new String[] {"xcdatamodeld"}, true);
         for (final File model : models) {
-          momd = model.sub("\.xcdatamodeld$", ".momd");
+          final File momd = new File(model.getPath().replaceFirst(".xcdatamodeld", ".momd"));
           if (!momd.exists() || model.lastModified() > momd.lastModified()) {
             Application.info("Compile", model);
             // momc wants absolute paths.
-            //sh "\"" + Application.config.xcode_dir() + "/usr/bin/momc\" \"" + model.getAbsolutePath()+"\" \""+momd.getAbsolutePath()+"\"";
+            sh("\"" + config.xcode_dir() + "/usr/bin/momc\" \"" + model.getAbsolutePath() + "\" \"" + momd.getAbsolutePath() + "\"");
           }
         }
       }
 
       // Copy resources, handle subdirectories.
-      final String[] reserved_app_bundle_files = new String[] {
+      final Set<String> reserved_app_bundle_files = Sets.newHashSet(
         "_CodeSignature/CodeResources", "CodeResources", "embedded.mobileprovision",
         "Info.plist", "PkgInfo", "ResourceRules.plist",
         config.name
-      };
-      final List<String> resources_files = Lists.newArrayList();
+      );
+      Collection<File> resources_files = Lists.newArrayList();
       if (config.resources_dir.exists()) {
-        resources_files = Dir.chdir(config.resources_dir) do
-          Dir.glob('**{,/*/**}/*').reject { |x| ['.xib', '.storyboard', '.xcdatamodeld', '.lproj'].include?(File.extname(x)) }
-        end
-        for (final String res : resources_files) {
-          final File res_path = new File(config.resources_dir, res);
-          if (reserved_app_bundle_files.contains(res)) {
-            Application.fail("Cannot use `#{res_path}' as a resource file because it's a reserved application bundle file");
+    	  resources_files = FileUtils.listFilesAndDirs(config.resources_dir,
+        		new NotFileFilter(new SuffixFileFilter(new String[] {"xib", "storyboard", "xcdatamodeld", "lproj"})),
+        		DirectoryFileFilter.DIRECTORY);
+        for (final File res_path : resources_files) {
+          if (reserved_app_bundle_files.contains(res_path)) {
+            Application.fail("Cannot use '"+res_path+"' as a resource file because it's a reserved application bundle file");
           }
-          final File dest_path = new File(bundle_path, res);
+          final File dest_path = new File(bundle_path, res_path.getPath());
           if (!dest_path.exists() || res_path.lastModified() > dest_path.lastModified()) {
             dest_path.getParentFile().mkdirs();
             Application.info("Copy", res_path);
-            FileUtils.copy(res_path, dest_path.getParentFile());
+            try {
+				FileUtils.copyFileToDirectory(res_path, dest_path.getParentFile());
+			} catch (final IOException e) {
+				Application.warn("Error copying resource: " + res_path);
+			}
           }
         }
       }
 
       // Delete old resource files.
       final Collection<File> bundle_resources = FileUtils.listFiles(
-      		config.resources_dir(),
+      		config.resources_dir,
       		new WildcardFileFilter("**/*"),
       		DirectoryFileFilter.DIRECTORY);
       for (final File bundle_res : bundle_resources) {
@@ -482,21 +548,22 @@ public class Builder {
           if (reserved_app_bundle_files.contains(bundle_res)) continue;
           if (resources_files.contains(bundle_res)) continue;
           Application.warn("File `#{bundle_res}' found in app bundle but not in `#{config.resources_dir}', removing");
-          FileUtils.remove(bundle_res);
+          FileUtils.deleteQuietly(bundle_res);
       }
 
       // Generate dSYM.
       final File dsym_path = config.app_bundle_dsym(platform);
       if (!dsym_path.exists() || main_exec.lastModified() > dsym_path.lastModified()) {
         Application.info("Create", dsym_path);
-        //sh "/usr/bin/dsymutil \"#{main_exec}\" -o \"#{dsym_path}\""
+        sh("/usr/bin/dsymutil \""+main_exec+"\" -o \""+dsym_path+"\"");
       }
 
       // Strip all symbols. Only in distribution mode.
-      if (main_exec_created && config.distribution_mode()) {
+      if (main_exec_created && config.distribution_mode) {
         Application.info("Strip", main_exec);
-        //sh "#{config.locate_binary('strip')} \"#{main_exec}\""
+        sh(config.locate_binary("strip")+" \""+main_exec+"\"");
       }
+      return null;
     }
 
     public void codesign(final Configuration config, final String platform) {
@@ -509,10 +576,9 @@ public class Builder {
       final File resource_rules_plist = new File(bundle_path, "ResourceRules.plist");
       if (!resource_rules_plist.exists()) {
         Application.info("Create", resource_rules_plist);
-        File.open(resource_rules_plist, 'w') do |io|
-          io.write(
-"<?xml version="1.0" encoding="UTF-8"?>\n" +
-"<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" +
+        write(resource_rules_plist,
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+"<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" +
 "<plist version=\"1.0\">\n" +
 "<dict>\n" +
 "        <key>rules</key>\n" +
@@ -540,19 +606,23 @@ public class Builder {
 
       // Copy the provisioning profile.
       final File bundle_provision = new File(bundle_path, "embedded.mobileprovision");
-      if (!bundle_provision.exists() || config.provisioning_profile.lastmodified() > bundle_provision.lastmodified()) {
+      if (!bundle_provision.exists() || config.provisioning_profile().lastModified() > bundle_provision.lastModified()) {
         Application.info("Create", bundle_provision);
-        FileUtils.copy(config.provisioning_profile, bundle_provision);
+        try {
+			FileUtils.copyFile(config.provisioning_profile(), bundle_provision);
+		} catch (final IOException e) {
+			Application.warn("Error copying provisioning profile: " + e.getMessage());
+		}
       }
 
       // Codesign.
       final String codesign_cmd = "CODESIGN_ALLOCATE=\"#{new File(config.platform_dir(platform), 'Developer/usr/bin/codesign_allocate')}\" /usr/bin/codesign";
-      if (config.project_file.lastmodified() > bundle_path.lastmodified())
-          || !system("#{codesign_cmd} --verify \"#{bundle_path}\" >& /dev/null")) {
+      if (config.project_file().lastModified() > bundle_path.lastModified()
+          || !system(codesign_cmd+" --verify \""+bundle_path+"\" >& /dev/null")) {
         Application.info("Codesign", bundle_path);
         final File entitlements = new File(config.versionized_build_dir(platform), "Entitlements.plist");
-        //File.open(entitlements, 'w') { |io| io.write(config.entitlements_data) }
-        //sh "#{codesign_cmd} -f -s \"#{config.codesign_certificate}\" --resource-rules=\"#{resource_rules_plist}\" --entitlements #{entitlements} \"#{bundle_path}\"";
+        write(entitlements, config.entitlements_data());
+        sh(codesign_cmd+" -f -s \""+config.codesign_certificate()+"\" --resource-rules=\""+resource_rules_plist+"\" --entitlements "+entitlements+" \""+bundle_path+"\"");
       }
     }
 
@@ -562,16 +632,14 @@ public class Builder {
       final File archive = config.archive();
       if (!archive.exists() || app_bundle.lastModified() > archive.lastModified()) {
         Application.info("Create", archive);
-        final String tmp = "/tmp/ipa_root";
+        final File tmp = new File("/tmp/ipa_root");
         sh("/bin/rm -rf "+tmp);
         sh("/bin/mkdir -p "+tmp+"/Payload");
         sh("/bin/cp -r \""+app_bundle+"\" "+tmp+"/Payload");
-//        Dir.chdir(tmp) do
-//            sh "/bin/chmod -R 755 Payload"
-//            sh "/usr/bin/zip -q -r archive.zip Payload"
-//          end
-        sh("/bin/chmod -R 755 "+tmp+"/Payload";
-        sh("/usr/bin/zip -q -r "+tmp+"/archive.zip "+tmp+"/Payload");
+        sh("/bin/chmod -R 755 Payload", tmp);
+        sh("/usr/bin/zip -q -r archive.zip Payload", tmp);
+        //sh("/bin/chmod -R 755 "+tmp+"/Payload";
+        //sh("/usr/bin/zip -q -r "+tmp+"/archive.zip "+tmp+"/Payload");
         sh("/bin/cp "+tmp+"/archive.zip \""+archive+"\"");
       }
 
@@ -607,7 +675,7 @@ public class Builder {
 */
     }
 
-  private static class Dependency {
+/*  private static class Dependency {
 //      require 'ripper'
 //    rescue LoadError
 //      $:.unshift(File.expand_path(new File(File.dirname(__FILE__), '../../ripper18')))
@@ -678,7 +746,7 @@ public class Builder {
       return dependency;
     }
 
-    private static class Constant /*< Ripper::SexpBuilder*/ {
+    private static class Constant < Ripper::SexpBuilder {
       private List<Boolean> defined;
       private List<Boolean> referred;
 
@@ -711,5 +779,5 @@ public class Builder {
         on_var_ref(args);
       }
     }
-  }
+  }*/
 }

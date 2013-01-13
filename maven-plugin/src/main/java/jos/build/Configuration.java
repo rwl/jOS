@@ -4,11 +4,9 @@
 package jos.build;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +16,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.commons.io.filefilter.WildcardFilter;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -47,10 +44,14 @@ public class Configuration {
 	private File[] files;
 	private Map<String, String> info_plist;
 	public boolean detect_dependencies;
-	private List<String> frameworks, weak_frameworks, framework_search_paths,
-			libs;
-	private String delegate_class, name;
-	private File resources_dir, specs_dir, build_dir;
+	private List<String> frameworks;
+	public List<String> weak_frameworks, libs;
+	public List<File> framework_search_paths;
+	public String name;
+	private String delegate_class;
+	private File build_dir;
+	public File resources_dir;
+	public File specs_dir;
 	private Family[] device_family;
 	private String bundle_signature;
 	private List<Orientation> interface_orientations;
@@ -64,11 +65,13 @@ public class Configuration {
 	private File motiondir;
 
 	private String xcode_dir, identifier, codesign_certificate,
-			provisioning_profile, seed_id, fonts;
+			seed_id, fonts;
+	private File provisioning_profile;
 	private float sdk_version, deployment_target;
 
 	public boolean spec_mode;
-	private BuildMode build_mode, distribution_mode;
+	private BuildMode build_mode;
+	public boolean distribution_mode;
 	public Map<String, String> dependencies;
 
 	public File project_dir;
@@ -165,7 +168,7 @@ public class Configuration {
 		// self
 	}
 
-	private String xcode_dir() {
+	public String xcode_dir() {
 		if (xcode_dir == null) {
 			final String xcode_dot_app_path = "/Applications/Xcode.app/Contents/Developer";
 
@@ -206,7 +209,7 @@ public class Configuration {
 		return xcode_dir;
 	}
 
-	private File locate_binary(final String name) {
+	public File locate_binary(final String name) {
 		for (File dir : Lists.newArrayList(new File(xcode_dir, "usr/bin"),
 				new File("/usr/bin"))) {
 			final File path = new File(dir, name);
@@ -300,7 +303,7 @@ public class Configuration {
 		return StringUtils.capitalize(build_mode.toString().toLowerCase());
 	}
 
-	private boolean development() {
+	public boolean development() {
 		return build_mode == BuildMode.DEVELOPMENT;
 	}
 
@@ -308,7 +311,7 @@ public class Configuration {
 		return build_mode == BuildMode.RELEASE;
 	}
 
-	private int opt_level() {
+	public int opt_level() {
 		switch (build_mode) {
 		case DEVELOPMENT:
 			return 0;
@@ -324,7 +327,7 @@ public class Configuration {
 				+ build_mode_name());
 	}
 
-	private File project_file() {
+	public File project_file() {
 		return new File(project_dir, "Makefile");
 	}
 
@@ -361,11 +364,11 @@ public class Configuration {
 
 	}
 
-	public void ordered_build_files() {
-
+	public List<File> ordered_build_files() {
+		return null;
 	}
 
-	private List<String> frameworks_dependencies() {
+	public List<String> frameworks_dependencies() {
 		if (frameworks_dependencies == null) {
 			// Compute the list of frameworks, including dependencies, that the
 			// project uses.
@@ -399,7 +402,7 @@ public class Configuration {
 		return frameworks_dependencies;
 	}
 
-	private List<File> frameworks_stubs_objects(final String platform) {
+	public List<File> frameworks_stubs_objects(final String platform) {
 		final List<File> stubs = Lists.newArrayList();
 		final List<String> frameworks = Lists
 				.newArrayList(frameworks_dependencies());
@@ -440,8 +443,8 @@ public class Configuration {
 		return bridgesupport_files;
 	}
 
-	private void spec_files() {
-
+	public List<File> spec_files() {
+		return null;
 	}
 
 	public File datadir() {
@@ -551,11 +554,11 @@ public class Configuration {
 				+ sdk(platform) + "/System/Library/Frameworks";
 	}
 
-	private String cflags(final String platform, final boolean cplusplus) {
+	public String cflags(final String platform, final boolean cplusplus) {
 		return common_flags(platform) + " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2" + (cplusplus ? "" : " -std=c99");
 	}
 
-	private String ldflags(final String platform) {
+	public String ldflags(final String platform) {
 		String ldflags = common_flags(platform);
 		if (deployment_target < 5.0) {
 			ldflags += " -fobjc-arc";
@@ -567,19 +570,19 @@ public class Configuration {
 		return name + (spec_mode ? "_spec" : "");
 	}
 
-	private File app_bundle(final String platform) {
+	public File app_bundle(final String platform) {
 		return new File(versionized_build_dir(platform), bundle_name() + ".app");
 	}
 
-	private File app_bundle_dsym(final String platform) {
+	public File app_bundle_dsym(final String platform) {
 		return new File(versionized_build_dir(platform), bundle_name() + ".dSYM");
 	}
 
-    private File app_bundle_executable(final String platform) {
+    public File app_bundle_executable(final String platform) {
     	return new File(app_bundle(platform), name);
     }
 
-    private File archive() {
+    public File archive() {
     	return new File(versionized_build_dir("iPhoneOS"), bundle_name() + ".ipa");
     }
 
@@ -689,7 +692,7 @@ public class Configuration {
     	}
     }
 
-    private Map<String, String> info_plist_data() {
+    public String info_plist_data() {
     	final String ios_version_to_build;// = lambda do |vers|
         // XXX we should retrieve these values programmatically.
 //        switch (vers) {
@@ -741,14 +744,14 @@ public class Configuration {
       plist.put("DTPlatformVersion", String.valueOf(sdk_version()));
 //      plist.put("DTPlatformBuild", ios_version_to_build.call(sdk_version()));
       plist.putAll(info_plist);
-      return plist;
+      return plist.toString();
     }
 
     private String pkginfo_data() {
     	return "AAPL"+bundle_signature;
     }
 
-    private String codesign_certificate() {
+    public String codesign_certificate() {
     	if (codesign_certificate == null) {
         final String cert_type = (!development() ? "Distribution" : "Developer");
         List<String> certs = null;//"/usr/bin/security -q find-certificate -a".scan(/"iPhone #{cert_type}: [^"]+"/).uniq
@@ -773,11 +776,11 @@ public class Configuration {
       return device_id;
     }
 
-    private String provisioning_profile() {
+    public File provisioning_profile() {
     	return provisioning_profile("iOS Team Provisioning Profile");
     }
 
-    private String provisioning_profile(final String name) {
+    private File provisioning_profile(final String name) {
     	if (provisioning_profile == null) {
 			final Collection<File> files = FileUtils.listFiles(
 					new File("~/Library/MobileDevice/Provisioning Profiles"),
@@ -793,7 +796,7 @@ public class Configuration {
 			}else if (paths.size() > 1) {
 				Application.warn("Found "+paths.size()+" provisioning profiles named "+name+". Set the `provisioning_profile' project setting. Will use the first one: "+paths.get(0)+"'");
 			}
-			provisioning_profile = paths.get(0).getPath();
+			provisioning_profile = paths.get(0);
     	}
     	return provisioning_profile;
     }
@@ -825,7 +828,7 @@ public class Configuration {
     	return seed_id;
     }
 
-    private String entitlements_data() {
+    public String entitlements_data() {
     	Map<String, String> dict = entitlements;
     	if (!development()) {
     		if (!dict.containsKey("application-identifier")) {

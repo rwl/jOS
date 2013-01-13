@@ -8,8 +8,8 @@ import jos.graphicsimaging.CGRect;
 @Register(isWrapper = true)
 public class UIView extends UIResponder {
 
-	public CGPoint center;
-	public UIColor backgroundColor;
+    public CGPoint center;
+    public UIColor backgroundColor;
 
     @Export(selector = "initWithFrame:")
     public UIView(final CGRect frame) {

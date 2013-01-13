@@ -12,22 +12,22 @@ import jos.build.Application.Platform;
 
 public class Vendor {
 
-	private final File path;
-	public List<File> libs;
-	public List<File> bs_files;
+    private final File path;
+    public List<File> libs;
+    public List<File> bs_files;
 
-	public Vendor(final File path, final String type, final Configuration configuration,
-			final Map<String, String> opts) {
-		this.path = path;
-	}
+    public Vendor(final File path, final String type, final Configuration configuration,
+            final Map<String, String> opts) {
+        this.path = path;
+    }
 
-	public File getPath() {
-		return path;
-	}
+    public File getPath() {
+        return path;
+    }
 
-	public void build(final Platform platform) {
-	}
+    public void build(final Platform platform) {
+    }
 
-	public void clean() {
-	}
+    public void clean() {
+    }
 }

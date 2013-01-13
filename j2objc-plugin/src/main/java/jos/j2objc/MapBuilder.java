@@ -19,48 +19,48 @@ import com.google.devtools.j2objc.util.ErrorReportingASTVisitor;
 
 public class MapBuilder extends ErrorReportingASTVisitor {
 
-	private final IOSTypeBinding NSObject = new IOSTypeBinding("NSObject",
-			false);
+    private final IOSTypeBinding NSObject = new IOSTypeBinding("NSObject",
+            false);
 
-	private final Map<ITypeBinding, ITypeBinding> bindingMap = Maps
-			.newHashMap();
+    private final Map<ITypeBinding, ITypeBinding> bindingMap = Maps
+            .newHashMap();
 
-	public static Map<ITypeBinding, ITypeBinding> buildMap(
-			final CompilationUnit unit) {
-		final MapBuilder builder = new MapBuilder();
-		builder.run(unit);
-		return builder.bindingMap;
-	}
+    public static Map<ITypeBinding, ITypeBinding> buildMap(
+            final CompilationUnit unit) {
+        final MapBuilder builder = new MapBuilder();
+        builder.run(unit);
+        return builder.bindingMap;
+    }
 
-	private void put(ASTNode node, ITypeBinding binding) {
-		if (binding == null) {
-			return;
-		}
-		for (IAnnotationBinding ab : binding.getAnnotations()) {
-			if (ab.getAnnotationType().getQualifiedName()
-					.equals(Register.class.getName())) {
-				bindingMap.put(binding, new IOSTypeBinding(binding.getName(),
-						NSObject));
-			}
-		}
-	}
+    private void put(ASTNode node, ITypeBinding binding) {
+        if (binding == null) {
+            return;
+        }
+        for (IAnnotationBinding ab : binding.getAnnotations()) {
+            if (ab.getAnnotationType().getQualifiedName()
+                    .equals(Register.class.getName())) {
+                bindingMap.put(binding, new IOSTypeBinding(binding.getName(),
+                        NSObject));
+            }
+        }
+    }
 
-	@Override
-	public boolean visit(SimpleName node) {
-		put(node, getTypeBinding(node.resolveBinding()));
-		return true;
-	}
+    @Override
+    public boolean visit(SimpleName node) {
+        put(node, getTypeBinding(node.resolveBinding()));
+        return true;
+    }
 
-	private static ITypeBinding getTypeBinding(IBinding binding) {
-		if (binding instanceof ITypeBinding) {
-			return (ITypeBinding) binding;
-		} else if (binding instanceof IMethodBinding) {
-			IMethodBinding m = (IMethodBinding) binding;
-			return m.isConstructor() ? m.getDeclaringClass() : m
-					.getReturnType();
-		} else if (binding instanceof IVariableBinding) {
-			return ((IVariableBinding) binding).getType();
-		}
-		return null;
-	}
+    private static ITypeBinding getTypeBinding(IBinding binding) {
+        if (binding instanceof ITypeBinding) {
+            return (ITypeBinding) binding;
+        } else if (binding instanceof IMethodBinding) {
+            IMethodBinding m = (IMethodBinding) binding;
+            return m.isConstructor() ? m.getDeclaringClass() : m
+                    .getReturnType();
+        } else if (binding instanceof IVariableBinding) {
+            return ((IVariableBinding) binding).getType();
+        }
+        return null;
+    }
 }

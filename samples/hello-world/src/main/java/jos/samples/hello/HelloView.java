@@ -10,9 +10,9 @@ import jos.uikit.UIView;
 
 public class HelloView extends UIView {
 
-	public HelloView(CGRect frame) {
-		super(frame);
-		this.backgroundColor = UIColor.lightGrayColor;
+    public HelloView(CGRect frame) {
+        super(frame);
+        this.backgroundColor = UIColor.lightGrayColor;
 
         UILabel label = new UILabel(CGRectMake(0.0f, 0.0f, 320.0f, 30.0f));
         label.text = "Hello World";
@@ -21,6 +21,6 @@ public class HelloView extends UIView {
         label.textAlignment = NSTextAlignment.NSTextAlignmentCenter;
 
         addSubview(label);
-	}
+    }
 
 }

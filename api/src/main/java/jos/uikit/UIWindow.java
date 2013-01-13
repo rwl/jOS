@@ -16,7 +16,7 @@ public class UIWindow extends UIView {
         super(frame);
     }
 
-//    @Export
-    public void makeKeyAndVisible() {        
+    //    @Export
+    public void makeKeyAndVisible() {
     }
 }

@@ -7,7 +7,7 @@ import jos.uikit.UIViewController;
 
 public class HelloViewController extends UIViewController {
 
-	public UIView view;
+    public UIView view;
 
     public HelloViewController() {
         super("HelloWorldViewController", null);

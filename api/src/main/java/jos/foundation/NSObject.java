@@ -7,6 +7,6 @@ import jos.api.Register;
 public class NSObject {
 
     @Export(selector = "init")
-    public NSObject() {        
+    public NSObject() {
     }
 }

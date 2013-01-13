@@ -7,7 +7,7 @@ import jos.foundation.NSBundle;
 @Register(isWrapper = true)
 public class UIViewController extends UIResponder {
 
-	public UIView view;
+    public UIView view;
 
     @Export(selector = "initWithNibName:bundle:")
     public UIViewController(final String nibName, final NSBundle bundle) {
@@ -16,14 +16,14 @@ public class UIViewController extends UIResponder {
     public void loadView() {
     }
 
-//    @Export
+    //    @Export
     @Deprecated
     public boolean shouldAutorotateToInterfaceOrientation(
             final UIInterfaceOrientation toInterfaceOrientation) {
         return false;
     }
 
-//  @Export
+    //  @Export
     @Deprecated
     public void viewDidUnload() {
     }

@@ -8,7 +8,7 @@ import com.google.devtools.j2objc.Options;
 public class Translate {
 
     public static void main(String[] args) {
-    	System.out.println(System.getProperty("java.class.path"));
+        System.out.println(System.getProperty("java.class.path"));
 
         Options.getPlugins().add(new JOSPlugin());
 
@@ -16,8 +16,8 @@ public class Translate {
                 "/home/rwl/java/jOS/jos/samples/hello-world/src/main/java",
                 "-classpath",
                 System.getProperty("java.class.path"),
-//                "src/main/java/jos/samples/hello/Hello.java",
+                //                "src/main/java/jos/samples/hello/Hello.java",
                 "src/main/java/jos/samples/hello/AppDelegate.java",
-                "src/main/java/jos/samples/hello/HelloViewController.java"});
+        "src/main/java/jos/samples/hello/HelloViewController.java"});
     }
 }

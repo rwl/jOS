@@ -33,34 +33,34 @@ public class JOSMojo extends AbstractMojo {
     @Parameter
     private boolean ignoreMissingImports;
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
-		final Collection<File> files = FileUtils.listFiles(sourceDirectory,
-				FileFilterUtils.suffixFileFilter(".java"),
-				DirectoryFileFilter.DIRECTORY);
-		final List<String> args = new ArrayList<String>();
+    public void execute() throws MojoExecutionException, MojoFailureException {
+        final Collection<File> files = FileUtils.listFiles(sourceDirectory,
+                FileFilterUtils.suffixFileFilter(".java"),
+                DirectoryFileFilter.DIRECTORY);
+        final List<String> args = new ArrayList<String>();
 
-		args.add("-d");
-		try {
-			args.add(outputDirectory.getCanonicalPath());
-		} catch (final IOException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		}
+        args.add("-d");
+        try {
+            args.add(outputDirectory.getCanonicalPath());
+        } catch (final IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
 
-		if (ignoreMissingImports) {
-			args.add("--ignore-missing-imports");
-		}
+        if (ignoreMissingImports) {
+            args.add("--ignore-missing-imports");
+        }
 
-		try {
-			args.add(outputDirectory.getCanonicalPath());
-			for (final File file : files) {
-				args.add(file.getCanonicalPath());
-			}
-		} catch (final IOException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		}
+        try {
+            args.add(outputDirectory.getCanonicalPath());
+            for (final File file : files) {
+                args.add(file.getCanonicalPath());
+            }
+        } catch (final IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
 
         Options.getPlugins().add(new JOSPlugin());
 
-		J2ObjC.main(args.toArray(new String[args.size()]));
-	}
+        J2ObjC.main(args.toArray(new String[args.size()]));
+    }
 }

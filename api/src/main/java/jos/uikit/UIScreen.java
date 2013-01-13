@@ -7,4 +7,5 @@ import jos.graphicsimaging.CGRect;
 public class UIScreen {
     public static UIScreen mainScreen;
     public CGRect bounds;
+    public CGRect applicationFrame;
 }

@@ -9,16 +9,15 @@ import jos.uikit.UIWindow;
 
 public class AppDelegate extends UIApplicationDelegate {
 
-    private UIWindow window;
     private HelloViewController viewController;
 
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
-        window = new UIWindow(UIScreen.mainScreen.bounds);
+        this.window = new UIWindow(UIScreen.mainScreen.bounds);
 
         viewController = new HelloViewController();
-        window.rootViewController = viewController;
-        window.makeKeyAndVisible();
+        this.window.rootViewController = viewController;
+        this.window.makeKeyAndVisible();
 
         return true;
     }

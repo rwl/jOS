@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jos.build.Application.Platform;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -62,7 +64,7 @@ public class Configuration {
 	private boolean prerendered_icon;
 	public List<Vendor> vendor_projects;
 	private Map<String, String> entitlements;
-	private File motiondir;
+	public File motiondir;
 
 	private String xcode_dir, identifier, codesign_certificate,
 			seed_id, fonts;
@@ -70,7 +72,7 @@ public class Configuration {
 	private float sdk_version, deployment_target;
 
 	public boolean spec_mode;
-	private BuildMode build_mode;
+	public BuildMode build_mode;
 	public boolean distribution_mode;
 	public Map<String, String> dependencies;
 
@@ -99,7 +101,7 @@ public class Configuration {
 	}
 
 	public enum Retina {
-		TRUE, INCH_3_5, INCH_4
+		FALSE, TRUE, INCH_3_5, INCH_4
 	}
 
 	public enum BackgroundMode {audio, location, voip, newsstand_content,
@@ -144,7 +146,7 @@ public class Configuration {
 	float OSX_VERSION = 0;// `/usr/bin/sw_vers
 							// -productVersion`.strip.sub("\.\d+$", '').to_f";
 
-	private Map<String, String> variables() {
+	public Map<String, String> variables() {
 		final Map<String, String> map = Maps.newHashMap();
 		for (String sym : VARS) {
 			map.put(sym, sym);
@@ -282,7 +284,7 @@ public class Configuration {
 		return supported_versions;
 	}
 
-	private File build_dir() {
+	public File build_dir() {
 		if (!build_dir.isDirectory()) {
 			try {
 				build_dir.mkdirs();
@@ -322,8 +324,8 @@ public class Configuration {
 		}
 	}
 
-	public File versionized_build_dir(final String platform) {
-		return new File(build_dir, platform + '-' + deployment_target + '-'
+	public File versionized_build_dir(final Platform platform) {
+		return new File(build_dir, platform.platform() + '-' + deployment_target + '-'
 				+ build_mode_name());
 	}
 
@@ -373,7 +375,7 @@ public class Configuration {
 			// Compute the list of frameworks, including dependencies, that the
 			// project uses.
 			final Set<String> deps = Sets.newLinkedHashSet();
-			final File slf = new File(new File(new File(sdk("iPhoneSimulator"),
+			final File slf = new File(new File(new File(sdk(Platform.IPHONE_SIMULATOR),
 					"System"), "Library"), "Frameworks");
 			for (final String framework : frameworks) {
 				final File framework_path = new File(new File(slf, framework
@@ -402,13 +404,13 @@ public class Configuration {
 		return frameworks_dependencies;
 	}
 
-	public List<File> frameworks_stubs_objects(final String platform) {
+	public List<File> frameworks_stubs_objects(final Platform platform) {
 		final List<File> stubs = Lists.newArrayList();
 		final List<String> frameworks = Lists
 				.newArrayList(frameworks_dependencies());
 		frameworks.addAll(weak_frameworks);
 		for (String framework : frameworks) {
-			final File stubs_obj = new File(new File(datadir(), platform),
+			final File stubs_obj = new File(new File(datadir(), platform.platform()),
 					"#{framework}_stubs.o");
 			if (stubs_obj.exists()) {
 				stubs.add(stubs_obj);
@@ -459,7 +461,7 @@ public class Configuration {
 		return new File(xcode_dir, "Platforms");
 	}
 
-	private File platform_dir(final String platform) {
+	private File platform_dir(final Platform platform) {
 		return new File(platforms_dir(), platform + ".platform");
 	}
 
@@ -467,7 +469,7 @@ public class Configuration {
 		return null;
 	}
 
-	private float sdk_version() {
+	public float sdk_version() {
 		if (sdk_version == 0) {
 			final Collection<File> files = FileUtils.listFiles(platforms_dir(),
 					new WildcardFileFilter(
@@ -499,12 +501,12 @@ public class Configuration {
 		return deployment_target;
 	}
 
-	public File sdk(final String platform) {
+	public File sdk(final Platform platform) {
 		return new File(new File(platform_dir(platform), "Developer/SDKs"),
-				platform + sdk_version + ".sdk");
+				platform.platform() + sdk_version + ".sdk");
 	}
 
-	public File locate_compiler(final String platform, String... execs) {
+	public File locate_compiler(final Platform platform, String... execs) {
 		final List<File> paths = Lists.newArrayList(new File(
 				platform_dir(platform), "Developer/usr/bin"));
 		paths.add(0, new File(xcode_dir,
@@ -540,7 +542,7 @@ public class Configuration {
 		return archs;
 	}
 
-	private String arch_flags(final String platform) {
+	private String arch_flags(final Platform platform) {
 		final List<String> flags = Lists.newArrayList();
 		for (final String x : archs().values()) {
 			flags.add("-arch " + x);
@@ -548,17 +550,17 @@ public class Configuration {
 		return StringUtils.join(flags, " ");
 	}
 
-	private String common_flags(final String platform) {
+	private String common_flags(final Platform platform) {
 		return arch_flags(platform) + " -isysroot \"" + sdk(platform)
 				+ "\" -miphoneos-version-min=" + deployment_target() + " -F"
 				+ sdk(platform) + "/System/Library/Frameworks";
 	}
 
-	public String cflags(final String platform, final boolean cplusplus) {
+	public String cflags(final Platform platform, final boolean cplusplus) {
 		return common_flags(platform) + " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2" + (cplusplus ? "" : " -std=c99");
 	}
 
-	public String ldflags(final String platform) {
+	public String ldflags(final Platform platform) {
 		String ldflags = common_flags(platform);
 		if (deployment_target < 5.0) {
 			ldflags += " -fobjc-arc";
@@ -570,20 +572,20 @@ public class Configuration {
 		return name + (spec_mode ? "_spec" : "");
 	}
 
-	public File app_bundle(final String platform) {
+	public File app_bundle(final Platform platform) {
 		return new File(versionized_build_dir(platform), bundle_name() + ".app");
 	}
 
-	public File app_bundle_dsym(final String platform) {
+	public File app_bundle_dsym(final Platform platform) {
 		return new File(versionized_build_dir(platform), bundle_name() + ".dSYM");
 	}
 
-    public File app_bundle_executable(final String platform) {
+    public File app_bundle_executable(final Platform platform) {
     	return new File(app_bundle(platform), name);
     }
 
     public File archive() {
-    	return new File(versionized_build_dir("iPhoneOS"), bundle_name() + ".ipa");
+    	return new File(versionized_build_dir(Platform.IPHONE_OS), bundle_name() + ".ipa");
     }
 
     private String identifier() {
@@ -593,7 +595,7 @@ public class Configuration {
     	return spec_mode ? identifier + "_spec" : identifier;
     }
 
-    private int device_family_int(final Family family) {
+    public int device_family_int(final Family family) {
     	switch (family) {
 		case iphone:
 			return 1;
@@ -605,7 +607,7 @@ public class Configuration {
 		}
     }
 
-    private String device_family_string(final Family family, final float target,
+    public String device_family_string(final Family family, final float target,
     		final Retina retina) {
       String device = "";
       switch (family) {
@@ -625,7 +627,7 @@ public class Configuration {
       return device;
     }
 
-    private int[] device_family_ints() {
+    public int[] device_family_ints() {
     	final int[] ary = new int[device_family.length];
     	for (int i = 0; i < device_family.length; i++) {
 			final Family family = device_family[i];
@@ -765,7 +767,7 @@ public class Configuration {
       return codesign_certificate;
     }
 
-    private String device_id() {
+    public String device_id() {
       if (device_id == null) {
         final File deploy = new File(bindir(), "deploy");
         device_id = deploy+" -D".trim();
@@ -808,11 +810,11 @@ public class Configuration {
     	return null;
     }
 
-    private String[] provisioned_devices() {
+    public List<String> provisioned_devices() {
       if (provisioned_devices == null) {
     	  provisioned_devices = read_provisioned_profile_array("ProvisionedDevices");
       }
-      return provisioned_devices;
+      return Lists.newArrayList(provisioned_devices);
     }
 
     private String seed_id() {
@@ -863,7 +865,7 @@ public class Configuration {
     }
 
     private void gen_bridge_metadata(final List<String> headers, final File bs_file) {
-      final File sdk_path = sdk("iPhoneSimulator");
+      final File sdk_path = sdk(Platform.IPHONE_SIMULATOR);
       final Set<String> includes = Sets.newLinkedHashSet();
       for (String header : headers) {
     	  includes.add("-I" + new File(header).getParent());

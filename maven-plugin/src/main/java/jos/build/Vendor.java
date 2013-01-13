@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jos.build.Application.Platform;
+
 public class Vendor {
 
 	private final File path;
@@ -23,7 +25,9 @@ public class Vendor {
 		return path;
 	}
 
-	public void build(final String platform) {
+	public void build(final Platform platform) {
+	}
 
+	public void clean() {
 	}
 }

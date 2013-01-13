@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jos.build.Application.Platform;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
@@ -28,7 +30,7 @@ import com.google.common.collect.Sets;
 
 public class Builder {
 
-    public File build(final Configuration config, final String platform,
+    public File build(final Configuration config, final Platform platform,
     		final Map<String, String> opts) {
       final File datadir = config.datadir();
       final List<String> archs = Lists.newArrayList(config.archs().get(platform));
@@ -88,7 +90,7 @@ public class Builder {
           final List<File> arch_objs = Lists.newArrayList();
           for (final String arch : archs) {
             // Locate arch kernel.
-            final File kernel = new File(new File(datadir, platform), "kernel-"+arch+".bc");
+            final File kernel = new File(new File(datadir, platform.platform()), "kernel-"+arch+".bc");
             if (!kernel.exists()) {
             	throw new IllegalStateException("Can't locate kernel file");
             }
@@ -280,7 +282,7 @@ public class Builder {
         // Create a static archive with all object files + the runtime.
         final File lib = new File(config.versionized_build_dir(platform), config.name + ".a");
         Application.info("Create", lib);
-        final File libmacruby = new File(new File(datadir, platform), "libmacruby-static.a");
+        final File libmacruby = new File(new File(datadir, platform.platform()), "libmacruby-static.a");
         final String objs_list = "";//objs.map { |path, _| path }.unshift(init_o, *config.frameworks_stubs_objects(platform)).map { |x| "\"#{x}\"" }.join(' ')
         sh("/usr/bin/libtool -static \""+libmacruby+"\" "+objs_list+" -o \""+lib+"\"");
         return lib;
@@ -428,7 +430,7 @@ public class Builder {
           || config.project_file().lastModified() > main_exec.lastModified()
           || modified
           || main_o.lastModified() > main_exec.lastModified()
-          || new File(new File(datadir, platform), "libmacruby-static.a").lastModified() > main_exec.lastModified()) {
+          || new File(new File(datadir, platform.platform()), "libmacruby-static.a").lastModified() > main_exec.lastModified()) {
         Application.info("Link", main_exec);
         for (final File path : config.frameworks_stubs_objects(platform)) objs.add(0, path);
         objs.add(0, main_o);
@@ -459,7 +461,7 @@ public class Builder {
         	}
         }), " ");
 
-        sh(cxx+" -o \""+main_exec+"\" "+objs_list+" "+config.ldflags(platform)+" -L"+new File(datadir, platform)+" -lmacruby-static -lobjc -licucore "+framework_search_paths+" "+frameworks+" "+weak_frameworks+" "+StringUtils.join(config.libs, " ") + " "+ force_loads);
+        sh(cxx+" -o \""+main_exec+"\" "+objs_list+" "+config.ldflags(platform)+" -L"+new File(datadir, platform.platform())+" -lmacruby-static -lobjc -licucore "+framework_search_paths+" "+frameworks+" "+weak_frameworks+" "+StringUtils.join(config.libs, " ") + " "+ force_loads);
         main_exec_created = true;
       }
 
@@ -566,7 +568,7 @@ public class Builder {
       return null;
     }
 
-    public void codesign(final Configuration config, final String platform) {
+    public void codesign(final Configuration config, final Platform platform) {
       final File bundle_path = config.app_bundle(platform);
       if (bundle_path.exists()) {
     	  throw new IllegalStateException();
@@ -628,7 +630,7 @@ public class Builder {
 
     public void archive(final Configuration config) {
       // Create .ipa archive.
-      final File app_bundle = config.app_bundle("iPhoneOS");
+      final File app_bundle = config.app_bundle(Platform.IPHONE_OS);
       final File archive = config.archive();
       if (!archive.exists() || app_bundle.lastModified() > archive.lastModified()) {
         Application.info("Create", archive);

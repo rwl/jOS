@@ -22,6 +22,21 @@ public class Application {
 	private static final Logger logger = Logger.getLogger(Application.class
 			.getName());
 
+	public static enum Platform {
+		IPHONE_OS ("iPhoneOS"),
+		IPHONE_SIMULATOR ("iPhoneSimulator");
+
+		private final String platform ;
+
+		private Platform(final String platform) {
+			this.platform = platform;
+		}
+
+		public String platform() {
+			return platform;
+		}
+	}
+
 	public static boolean VERBOSE = false;
 
 	private static BuildMode config_mode;
@@ -74,19 +89,19 @@ public class Application {
 		return builder;
 	}
 
-	public static void build(final String platform) {
-		build(platform, Collections.<String, String> emptyMap());
+	public static File build(final Platform platform) {
+		return build(platform, Collections.<String, String> emptyMap());
 	}
 
-	public static void build(final String platform, Map<String, String> opts) {
-		builder().build(config(), platform, opts);
+	public static File build(final Platform platform, Map<String, String> opts) {
+		return builder().build(config(), platform, opts);
 	}
 
 	public static void archive() {
 		builder.archive(config());
 	}
 
-	public static void codesign(final String platform) {
+	public static void codesign(final Platform platform) {
 		builder().codesign(config(), platform);
 	}
 

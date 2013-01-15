@@ -12,7 +12,10 @@ public class Translate {
 
         Options.getPlugins().add(new JOSPlugin());
 
-        J2ObjC.main(new String[] {"-sourcepath",
+        J2ObjC.main(new String[] {
+                "--prefix",
+                "jos.samples.hello=JOS",
+                "-sourcepath",
                 "/home/rwl/java/jOS/jos/samples/hello-world/src/main/java",
                 "-classpath",
                 System.getProperty("java.class.path"),

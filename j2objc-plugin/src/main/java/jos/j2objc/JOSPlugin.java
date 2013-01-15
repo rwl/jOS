@@ -1,11 +1,13 @@
 package jos.j2objc;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
+import com.google.common.collect.Lists;
 import com.google.devtools.j2objc.Plugin;
 
 public class JOSPlugin extends Plugin {
@@ -19,8 +21,15 @@ public class JOSPlugin extends Plugin {
     public void populateSimpleTypeMap(final CompilationUnit unit, final Map<String, String> simpleTypeMap) {
     }
 
+    @Override
     public void mapMethods(final CompilationUnit unit, final Map<String, String> methodMappings) {
         methodMappings.putAll(MethodMapBuilder.buildMap(unit));
+    }
+
+    @Override
+    public List<ITypeBinding> getWrapperBindings(CompilationUnit unit) {
+        //return Lists.newArrayList();//WrapperListMapBuilder.buildList(unit);
+        return WrapperListBuilder.buildList(unit);
     }
 
     @Override

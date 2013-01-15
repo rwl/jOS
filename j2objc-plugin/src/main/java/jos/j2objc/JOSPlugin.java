@@ -12,11 +12,15 @@ public class JOSPlugin extends Plugin {
 
     @Override
     public void initializeTypeMap(final CompilationUnit unit, final Map<ITypeBinding, ITypeBinding> typeMap) {
-        typeMap.putAll(MapBuilder.buildMap(unit));
+        typeMap.putAll(TypeMapBuilder.buildMap(unit));
     }
 
     @Override
     public void populateSimpleTypeMap(final CompilationUnit unit, final Map<String, String> simpleTypeMap) {
+    }
+
+    public void mapMethods(final CompilationUnit unit, final Map<String, String> methodMappings) {
+        methodMappings.putAll(MethodMapBuilder.buildMap(unit));
     }
 
     @Override

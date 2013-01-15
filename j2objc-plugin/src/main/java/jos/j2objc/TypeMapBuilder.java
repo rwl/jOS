@@ -17,7 +17,7 @@ import com.google.common.collect.Maps;
 import com.google.devtools.j2objc.types.IOSTypeBinding;
 import com.google.devtools.j2objc.util.ErrorReportingASTVisitor;
 
-public class MapBuilder extends ErrorReportingASTVisitor {
+public class TypeMapBuilder extends ErrorReportingASTVisitor {
 
     private final IOSTypeBinding NSObject = new IOSTypeBinding("NSObject",
             false);
@@ -27,7 +27,7 @@ public class MapBuilder extends ErrorReportingASTVisitor {
 
     public static Map<ITypeBinding, ITypeBinding> buildMap(
             final CompilationUnit unit) {
-        final MapBuilder builder = new MapBuilder();
+        final TypeMapBuilder builder = new TypeMapBuilder();
         builder.run(unit);
         return builder.bindingMap;
     }

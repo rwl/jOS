@@ -7,7 +7,7 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.devtools.j2objc.Plugin;
 
 public class JOSPlugin extends Plugin {
@@ -23,7 +23,10 @@ public class JOSPlugin extends Plugin {
 
     @Override
     public void mapMethods(final CompilationUnit unit, final Map<String, String> methodMappings) {
-        methodMappings.putAll(MethodMapBuilder.buildMap(unit));
+
+        methodMappings.putAll(Maps.difference(MethodMapBuilder.buildMap(unit), methodMappings).entriesOnlyOnLeft());
+
+        //methodMappings.putAll(MethodMapBuilder.buildMap(unit));
     }
 
     @Override

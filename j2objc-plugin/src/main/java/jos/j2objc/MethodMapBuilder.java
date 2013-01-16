@@ -3,6 +3,8 @@ package jos.j2objc;
 import java.util.List;
 import java.util.Map;
 
+import jos.foundation.NSObject;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
@@ -50,7 +52,7 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
     }
 
     private static IMethodBinding getOverriddenMethod(final ITypeBinding typeBinding, final IMethodBinding methodBinding) {
-        if (typeBinding == null) {
+        if (typeBinding == null || typeBinding.getQualifiedName().equals(NSObject.class.getName())) {
             return null;
         }
         final IMethodBinding[] methodBindings = typeBinding.getDeclaredMethods();
@@ -68,7 +70,10 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
         if (method1 == method2) {
             return true;
         }
-        if (!method1.getName().equals(method2.getName())) {
+        if (method1.isConstructor() != method2.isConstructor()) {
+            return false;
+        }
+        if (!method1.isConstructor() && !method1.getName().equals(method2.getName())) {
             return false;
         }
         if (method1.getParameterTypes().length != method2.getParameterTypes().length) {

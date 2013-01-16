@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.SimpleName;
 
 import com.google.common.collect.Maps;
 import com.google.devtools.j2objc.types.IOSTypeBinding;
+import com.google.devtools.j2objc.types.Types;
 import com.google.devtools.j2objc.util.ErrorReportingASTVisitor;
 
 public class TypeMapBuilder extends ErrorReportingASTVisitor {
@@ -39,8 +40,13 @@ public class TypeMapBuilder extends ErrorReportingASTVisitor {
         for (IAnnotationBinding ab : binding.getAnnotations()) {
             if (ab.getAnnotationType().getQualifiedName()
                     .equals(Register.class.getName())) {
-                bindingMap.put(binding, new IOSTypeBinding(binding.getName(),
-                        NSObject));
+                if (Types.isInterface(binding)) {
+                    bindingMap.put(binding, new IOSTypeBinding(binding.getName(),
+                        true));
+                } else {
+                    bindingMap.put(binding, new IOSTypeBinding(binding.getName(),
+                            NSObject));  // FIXME
+                }
             }
         }
     }

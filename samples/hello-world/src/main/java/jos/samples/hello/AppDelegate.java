@@ -19,6 +19,13 @@ public class AppDelegate extends UIApplicationDelegate {
         this.window.rootViewController = viewController;
         this.window.makeKeyAndVisible();
 
+        System.out.println(toString());
+
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "AppDelegate [viewController=" + viewController + "]";
     }
 }

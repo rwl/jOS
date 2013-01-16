@@ -12,15 +12,12 @@ public class Translate {
 
         Options.getPlugins().add(new JOSPlugin());
 
-        J2ObjC.main(new String[] {
-                "--prefix",
-                "jos.samples.hello=JOS",
+        J2ObjC.main(new String[] { //"--prefix", "jos.samples.hello=J",
                 "-sourcepath",
                 "/home/rwl/java/jOS/jos/samples/hello-world/src/main/java",
-                "-classpath",
-                System.getProperty("java.class.path"),
-                //                "src/main/java/jos/samples/hello/Hello.java",
+                "-classpath", System.getProperty("java.class.path"),
                 "src/main/java/jos/samples/hello/AppDelegate.java",
-        "src/main/java/jos/samples/hello/HelloViewController.java"});
+                "src/main/java/jos/samples/hello/HelloViewController.java",
+                "src/main/java/jos/samples/hello/HelloView.java" });
     }
 }

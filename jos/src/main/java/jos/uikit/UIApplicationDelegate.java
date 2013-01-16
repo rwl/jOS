@@ -1,10 +1,12 @@
 package jos.uikit;
 
 import jos.api.Export;
+import jos.api.Model;
 import jos.api.Register;
 import jos.foundation.NSDictionary;
 import jos.foundation.NSObject;
 
+@Model
 @Register(isWrapper = true)
 public class UIApplicationDelegate extends NSObject {
 
@@ -14,7 +16,7 @@ public class UIApplicationDelegate extends NSObject {
     public UIApplicationDelegate() {
     }
 
-    @Export(selector = "application:didFinishLaunchingWithOptions:")
+    @Export(selector = "application:didFinishLaunchingWithOptions:") // application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
         return false;
     }

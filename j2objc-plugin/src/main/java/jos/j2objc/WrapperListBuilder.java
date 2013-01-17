@@ -4,7 +4,9 @@ import java.util.List;
 
 import jos.foundation.NSObject;
 
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMemberValuePairBinding;
@@ -36,6 +38,12 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
     public boolean visit(TypeDeclaration node) {
         final ITypeBinding typeBinding = node.resolveBinding();
         addIfWrapper(typeBinding);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ClassInstanceCreation node) {
+        addIfWrapper(node.resolveTypeBinding());
         return super.visit(node);
     }
 

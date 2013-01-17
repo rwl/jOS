@@ -23,10 +23,10 @@ public class TypeMapBuilder extends ErrorReportingASTVisitor {
     private final IOSTypeBinding NSObject = new IOSTypeBinding("NSObject",
             false);
 
-    private final Map<ITypeBinding, ITypeBinding> bindingMap = Maps
+    private final Map<ITypeBinding, IOSTypeBinding> bindingMap = Maps
             .newHashMap();
 
-    public static Map<ITypeBinding, ITypeBinding> buildMap(
+    public static Map<ITypeBinding, IOSTypeBinding> buildMap(
             final CompilationUnit unit) {
         final TypeMapBuilder builder = new TypeMapBuilder();
         builder.run(unit);

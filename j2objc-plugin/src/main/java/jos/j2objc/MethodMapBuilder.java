@@ -6,7 +6,9 @@ import java.util.Map;
 import jos.foundation.NSObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMemberValuePairBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -74,6 +76,12 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
     public boolean visit(TypeDeclaration node) {
         final ITypeBinding typeBinding = node.resolveBinding();
         putIfWrapper(typeBinding);
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(ClassInstanceCreation node) {
+        putIfWrapper(node.resolveTypeBinding());
         return super.visit(node);
     }
 

@@ -11,14 +11,12 @@ import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMemberValuePairBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.devtools.j2objc.types.Types;
 import com.google.devtools.j2objc.util.ErrorReportingASTVisitor;
-import com.google.devtools.j2objc.util.NameTable;
 
 public class MethodMapBuilder extends ErrorReportingASTVisitor {
 
@@ -32,26 +30,72 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
         return builder.bindingMap;
     }
 
-    private void put(final MethodDeclaration methodDeclaration, final IMethodBinding methodBinding) {
-        if (methodBinding == null) {
-            return;
-        }
-        final ITypeBinding superTypeBinding = methodBinding.getDeclaringClass().getSuperclass();
-        final IMethodBinding overriddenMethod = getOverriddenMethod(superTypeBinding, methodBinding);
-        if (overriddenMethod != null) {
-            final String signature = getSignature(overriddenMethod);
-            final String iosSignature = getIOSSignature(overriddenMethod, methodDeclaration);
-            bindingMap.put(signature, iosSignature);
-        }
-    }
+//    private void put(/*final MethodDeclaration methodDeclaration, */final IMethodBinding methodBinding) {
+//        if (methodBinding == null) {
+//            return;
+//        }
+//        final ITypeBinding superTypeBinding = methodBinding.getDeclaringClass().getSuperclass();
+//        final IMethodBinding overriddenMethod = getOverriddenMethod(superTypeBinding, methodBinding);
+//        if (overriddenMethod != null) {
+//            final String signature = getSignature(overriddenMethod);
+//            final String iosSignature = getIOSSignature(overriddenMethod/*, methodDeclaration*/);
+//            bindingMap.put(signature, iosSignature);
+//        }
+//    }
 
-    @Override
+    /*@Override
     public boolean visit(MethodDeclaration node) {
       put(node, node.resolveBinding());
       return true;
+    }*/
+
+    /*@Override
+    public boolean visit(MethodInvocation node) {
+        //put(node., node.resolveMethodBinding());
+        return true;
     }
 
-    private static IMethodBinding getOverriddenMethod(final ITypeBinding typeBinding, final IMethodBinding methodBinding) {
+    @Override
+    public boolean visit(ConstructorInvocation node) {
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SuperConstructorInvocation node) {
+        return super.visit(node);
+    }
+
+    @Override
+    public boolean visit(SuperMethodInvocation node) {
+        return super.visit(node);
+    }*/
+
+    @Override
+    public boolean visit(TypeDeclaration node) {
+        final ITypeBinding typeBinding = node.resolveBinding();
+        putIfWrapper(typeBinding);
+        return super.visit(node);
+    }
+
+    private void putIfWrapper(ITypeBinding typeBinding) {
+        if (typeBinding == null) {
+            return;
+        }
+        if (Types.isWrapper(typeBinding)) {
+            for (IMethodBinding methodBinding : typeBinding.getDeclaredMethods()) {
+                String signature = getSignature(methodBinding);
+                String iosSignature = getIOSSignature(methodBinding);
+                bindingMap.put(signature, iosSignature);
+            }
+        }
+        if (typeBinding.getQualifiedName().equals(NSObject.class.getName())) {
+            return;
+        }
+        putIfWrapper(typeBinding.getSuperclass());
+    }
+
+    /*private static IMethodBinding getOverriddenMethod(final ITypeBinding typeBinding,
+            final IMethodBinding methodBinding) {
         if (typeBinding == null || typeBinding.getQualifiedName().equals(NSObject.class.getName())) {
             return null;
         }
@@ -87,7 +131,7 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
             }
         }
         return true;
-    }
+    }*/
 
     private static String getSignature(final IMethodBinding methodBinding) {
         final String clazz = methodBinding.getDeclaringClass().getQualifiedName();
@@ -96,26 +140,32 @@ public class MethodMapBuilder extends ErrorReportingASTVisitor {
         return clazz + '.' + name + signature;
     }
 
-    private static String getIOSSignature(final IMethodBinding methodBinding, final MethodDeclaration methodDeclaration) {
+    private static String getIOSSignature(final IMethodBinding methodBinding/*,
+            final MethodDeclaration methodDeclaration*/) {
         for (IAnnotationBinding anno : methodBinding.getAnnotations()) {
             for (IMemberValuePairBinding pair : anno.getDeclaredMemberValuePairs()) {
                 if (pair.getName().equals("selector")) {
-                    return parameterizeSelector((String) pair.getValue(), methodBinding, methodDeclaration);
+                    return parameterizeSelector((String) pair.getValue(), methodBinding/*, methodDeclaration*/);
                 }
             }
         }
-        final String selector = methodBinding.getName() + StringUtils.repeat(": ", methodBinding.getParameterTypes().length).trim();
-        return parameterizeSelector(selector, methodBinding, methodDeclaration);
+        final String selector = methodBinding.getName()
+                + StringUtils.repeat(": ", methodBinding.getParameterTypes().length).trim();
+        return parameterizeSelector(selector, methodBinding/*, methodDeclaration*/);
     }
 
-    private static String parameterizeSelector(final String selector, final IMethodBinding methodBinding, final MethodDeclaration methodDeclaration) {
+    private static String parameterizeSelector(final String selector,
+            final IMethodBinding methodBinding/*, final MethodDeclaration methodDeclaration*/) {
         final ITypeBinding[] parameterTypes = methodBinding.getParameterTypes();
-        @SuppressWarnings("unchecked")
-        final List<SingleVariableDeclaration> params = methodDeclaration.parameters(); // safe by definition
+//        @SuppressWarnings("unchecked")
+//        final List<SingleVariableDeclaration> params = methodDeclaration.parameters(); // safe by definition
         final List<String> segments = Lists.newArrayList(selector.split(":"));
         assert parameterTypes.length == segments.size() - 1;
         for (int i = 0; i < parameterTypes.length; i++) {
-            String param = String.format(":(%s *)%s", parameterTypes[i].getName(), NameTable.getName(params.get(i).getName()));
+            String paramType = parameterTypes[i].getName();
+            String param = String.format(":(%s *)%s", paramType,
+                    StringUtils.uncapitalize(paramType) + "_"
+                    /*NameTable.getName(params.get(i).getName())*/);
             if (i != parameterTypes.length - 1) {
                 param += ' ';
             }

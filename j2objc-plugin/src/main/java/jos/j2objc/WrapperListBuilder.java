@@ -15,6 +15,7 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.google.common.collect.Lists;
+import com.google.devtools.j2objc.types.Types;
 import com.google.devtools.j2objc.util.ErrorReportingASTVisitor;
 
 public class WrapperListBuilder extends ErrorReportingASTVisitor {
@@ -34,11 +35,21 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
     @Override
     public boolean visit(TypeDeclaration node) {
         final ITypeBinding typeBinding = node.resolveBinding();
-        final ITypeBinding superTypeBinding = typeBinding.getSuperclass();
-        if (hasWrapperAnnotation(superTypeBinding)) {
-            add(superTypeBinding);
-        }
+        addIfWrapper(typeBinding);
         return super.visit(node);
+    }
+
+    private void addIfWrapper(ITypeBinding typeBinding) {
+        if (typeBinding == null) {
+            return;
+        }
+        if (Types.isWrapper(typeBinding)) {
+            add(typeBinding);
+        }
+        if (typeBinding.getQualifiedName().equals(NSObject.class.getName())) {
+            return;
+        }
+        addIfWrapper(typeBinding.getSuperclass());
     }
 
     /*@Override
@@ -53,7 +64,7 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
         return true;
     }*/
 
-    private static boolean isNSObjectSubclass(final ITypeBinding binding) {
+    /*private static boolean isNSObjectSubclass(final ITypeBinding binding) {
         if (binding.getQualifiedName().equals(NSObject.class.getName())) {
             return true;
         }
@@ -62,9 +73,9 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
             return isNSObjectSubclass(superTypeBinding);
         }
         return false;
-    }
+    }*/
 
-    private static boolean hasWrapperAnnotation(final ITypeBinding binding) {
+    /*private static boolean hasWrapperAnnotation(final ITypeBinding binding) {
         for (final IAnnotationBinding anno : binding.getAnnotations()) {
             for (final IMemberValuePairBinding pair : anno.getAllMemberValuePairs()) {
                 if (pair.getName().equals("isWrapper")) {
@@ -76,9 +87,9 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
             }
         }
         return false;
-    }
+    }*/
 
-    private static ITypeBinding getTypeBinding(IBinding binding) {
+    /*private static ITypeBinding getTypeBinding(IBinding binding) {
         if (binding instanceof ITypeBinding) {
             return (ITypeBinding) binding;
         } else if (binding instanceof IMethodBinding) {
@@ -89,5 +100,5 @@ public class WrapperListBuilder extends ErrorReportingASTVisitor {
             return ((IVariableBinding) binding).getType();
         }
         return null;
-    }
+    }*/
 }

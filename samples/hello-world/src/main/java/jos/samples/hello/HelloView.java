@@ -3,10 +3,10 @@ package jos.samples.hello;
 import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
 
 import jos.api.graphicsimaging.CGRect;
+import jos.api.uikit.NSTextAlignment;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
-import jos.api.uikit.NSText.NSTextAlignment;
 
 public class HelloView extends UIView {
 

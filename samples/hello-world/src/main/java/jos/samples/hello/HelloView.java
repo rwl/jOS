@@ -1,12 +1,12 @@
 package jos.samples.hello;
 
-import static jos.graphicsimaging.CGGeometry.CGRectMake;
+import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
 
-import jos.graphicsimaging.CGRect;
-import jos.uikit.NSText.NSTextAlignment;
-import jos.uikit.UIColor;
-import jos.uikit.UILabel;
-import jos.uikit.UIView;
+import jos.api.graphicsimaging.CGRect;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UILabel;
+import jos.api.uikit.UIView;
+import jos.api.uikit.NSText.NSTextAlignment;
 
 public class HelloView extends UIView {
 

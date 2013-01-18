@@ -1,10 +1,10 @@
 package jos.samples.hello;
 
-import jos.foundation.NSDictionary;
-import jos.uikit.UIApplication;
-import jos.uikit.UIApplicationDelegate;
-import jos.uikit.UIScreen;
-import jos.uikit.UIWindow;
+import jos.api.foundation.NSDictionary;
+import jos.api.uikit.UIApplication;
+import jos.api.uikit.UIApplicationDelegate;
+import jos.api.uikit.UIScreen;
+import jos.api.uikit.UIWindow;
 
 
 public class AppDelegate extends UIApplicationDelegate {
@@ -14,10 +14,11 @@ public class AppDelegate extends UIApplicationDelegate {
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
         this.window = new UIWindow(UIScreen.mainScreen.bounds);
+        setWindow(new UIWindow(UIScreen.mainScreen.bounds));
 
         viewController = new HelloViewController();
-        this.window.rootViewController = viewController;
-        this.window.makeKeyAndVisible();
+        getWindow().rootViewController = viewController;
+        getWindow().makeKeyAndVisible();
 
         System.out.println(toString());
 

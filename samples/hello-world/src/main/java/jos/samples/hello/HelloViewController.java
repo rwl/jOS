@@ -1,19 +1,12 @@
 package jos.samples.hello;
 
-import jos.api.Export;
-import jos.foundation.NSBundle;
-import jos.uikit.UIScreen;
-import jos.uikit.UIView;
-import jos.uikit.UIViewController;
+import jos.api.uikit.UIScreen;
+import jos.api.uikit.UIView;
+import jos.api.uikit.UIViewController;
 
 public class HelloViewController extends UIViewController {
 
     public UIView view;
-
-    @Export(selector = "initWithNibName:bundle:")
-    public HelloViewController(final String nibName, final NSBundle bundle) {
-        super(nibName, null);
-    }
 
     public HelloViewController() {
         super("HelloWorldViewController", null);

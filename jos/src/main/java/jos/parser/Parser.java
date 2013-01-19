@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Mono Project
+ * Copyright (C) 2012 Mono Project
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
@@ -28,24 +28,29 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 import org.apache.commons.lang.StringUtils;
 
 public class Parser {
 
     public static class Declaration {
         public String selector, retval, parameters;
-        public boolean is_abstract, is_static, appearance;
+        public boolean isAbstract, isStatic, appearance;
 
         public Declaration(String selector, String retval, String parameters,
-                boolean is_abstract, boolean is_static, boolean appearance) {
+                boolean isAbstract, boolean isStatic, boolean appearance) {
             this.selector = selector;
             this.retval = retval;
             this.parameters = parameters;
-            this.is_abstract = is_abstract;
-            this.is_static = is_static;
+            this.isAbstract = isAbstract;
+            this.isStatic = isStatic;
             this.appearance = appearance;
         }
 
@@ -105,7 +110,7 @@ public class Parser {
             return true;
         }
 
-        public final void generate(final String extraAttribute) {
+        public final void generate(final String extraAnnotation) {
             final List<Declaration> copy = decls;
             final List<String> properties = new ArrayList<String>();
             for (final Declaration d : copy) {
@@ -130,29 +135,28 @@ public class Parser {
                     continue;
                 }
 
-                if (extraAttribute != null) {
-                    gencs.printf("\t\t[%s]", extraAttribute);
+                if (extraAnnotation != null) {
+                    gencs.println("\t/**");
+                    gencs.printf("\t * @%s", extraAnnotation);
                     gencs.println();
-                }
-                if (d.is_abstract) {
-                    gencs.println("\t\t[Abstract]");
-                }
-                if (d.is_static) {
-                    gencs.println("\t\t[Static]");
+                    gencs.println("\t */");
                 }
                 if (d.appearance) {
-                    gencs.println("\t\t[Appearance]");
+                    gencs.println("\t@Appearance");
                 }
-                gencs.printf("\t\t[Export (\"%s\")]", d.selector);
+                gencs.printf("\t@Export(\"%s\")", d.selector);
                 gencs.println();
-                gencs.printf("\t\t%s %s (%s);", d.retval,
+                gencs.printf("\t%s%s%s %s(%s);",
+                        (d.isStatic ? "static " : ""),
+                        (d.isAbstract ? "abstract " : ""),
+                        d.retval,
                         Parser.cleanSelector(d.selector), d.parameters);
                 gencs.println();
                 gencs.println();
             }
 
             if (properties.size() > 0) {
-                gencs.println("\t\t//Detected properties");
+                gencs.println("\t//Detected properties");
             }
             for (String d : properties) {
                 Declaration decl = null;
@@ -168,16 +172,32 @@ public class Parser {
                             + sel.substring(3);
                 }
 
-                if (decl.is_abstract) {
-                    gencs.println("\t\t[Abstract]");
-                }
-                if (decl.is_static) {
-                    gencs.println("\t\t[Static]");
-                }
-                gencs.printf("\t\t[Export (\"%s\")]", sel);
+                gencs.printf("\t@Export(\"%s\")", sel);
                 gencs.println();
-                gencs.printf("\t\t%s %s {{ %sget; set; }}", decl.retval, sel,
-                        d.startsWith("is") ? "[Bind (\"" + d + "\")]" : "");
+                gencs.printf("\tpublic %s%s%s %s;",
+                        (decl.isStatic ? "static " : ""),
+                        (decl.isAbstract ? "abstract " : ""),
+                        decl.retval, sel);
+                gencs.println();
+                gencs.println();
+
+                if (d.startsWith("is")) {
+                    gencs.printf("\t@Bind(\"%s\")", d);
+                    gencs.println();
+                }
+                gencs.printf("\tpublic %s get%s() {", decl.retval, StringUtils.capitalize(sel));
+                gencs.println();
+                gencs.printf("\t\treturn this.%s;");
+                gencs.println();
+                gencs.printf("\t}");
+                gencs.println();
+                gencs.println();
+
+                gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(sel), decl.retval);
+                gencs.println();
+                gencs.printf("\t\tthis.%s = value;");
+                gencs.println();
+                gencs.printf("\t}");
                 gencs.println();
                 gencs.println();
             }
@@ -189,8 +209,9 @@ public class Parser {
 
     // Used to limit which APIs to include in the binding
     private String limit;
-    private String extraAttribute;
+    private String extraAnnotation;
     // private OptionSet options;
+    private boolean debug = false;
 
     private List<String> types = new ArrayList<String>();
 
@@ -213,7 +234,7 @@ public class Parser {
             int k = StringUtils.indexOfAny(sub.substring(j + 1), ",)") + j + 1; // TODO
             // check
             // translation
-            // System.out.println("j=%d k=%d str=%s", j, k, sub);
+            log("j=%d k=%d str=%s", j, k, sub);
             getter = sub.substring(j + 7, j + 7 + k - (j + 7));
         }
 
@@ -249,22 +270,45 @@ public class Parser {
             }
             selector.append(c);
         }
-        if (extraAttribute != null) {
-            gencs.printf("\t\t[{0}]", extraAttribute);
+        if (extraAnnotation != null) {
+            gencs.println("\t/**");
+            gencs.printf("\t * @%s", extraAnnotation);
             gencs.println();
+            gencs.println("\t */");
         }
         if (appearance) {
-            gencs.printf("\t\t[Appearance]");
+            gencs.printf("\t@Appearance");
             gencs.println();
         }
-        gencs.printf("\t\t[Export (\"%s\")]", selector);
+        gencs.printf("\t@Export(\"%s\")", selector);
         gencs.println();
 
-        gencs.printf("\t\t%s %s {{ %s %s }}", remapType(type.toString()),
-                selector.toString(), getter != null ? "[Bind (\"" + getter
-                        + "\")] get;" : "get;", ro ? "" : "set; ");
+        final String retval = remapType(type.toString());
+        gencs.printf("\tpublic %s %s;", retval, selector);
         gencs.println();
         gencs.println();
+
+        if (getter != null) {
+            gencs.printf("\t@Bind(\"" + getter + "\")");
+            gencs.println();
+        }
+        gencs.printf("\tpublic %s get%s() {", retval, StringUtils.capitalize(selector.toString()));
+        gencs.println();
+        gencs.printf("\t\treturn this.%s;", selector);
+        gencs.println();
+        gencs.printf("\t}");
+        gencs.println();
+        gencs.println();
+
+        if (!ro) {
+            gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(selector.toString()), retval);
+            gencs.println();
+            gencs.printf("\t\tthis.%s = value;", selector);
+            gencs.println();
+            gencs.printf("\t}");
+            gencs.println();
+            gencs.println();
+        }
     }
 
     private String makeSelector(final String sig) {
@@ -360,7 +404,7 @@ public class Parser {
 
         }
 
-        // System.out.println("  -> %s", sb.toString());
+        log("  -> %s", sb.toString());
         return sb.toString();
     }
 
@@ -413,9 +457,7 @@ public class Parser {
     private String rx4 = "UI_APPEARANCE_SELECTOR";
 
     private String cleanDeclaration(final String line) {
-        return rx4
-                .replaceAll(rx3.replaceAll(
-                        rx2.replaceAll(rx.replaceAll(line, ""), ""), ""), "");
+        return line.replaceAll(rx, "").replaceAll(rx2, "").replaceAll(rx3, "").replaceAll(rx4, "");
     }
 
     public static String cleanSelector(final String selector) {
@@ -453,12 +495,12 @@ public class Parser {
 
         if (line.startsWith("@property")) {
             if (isAbstract) {
-                gencs.println("\t\t[Abstract]");
+                gencs.println("\t@Abstract");
             }
             processProperty(line, appearance);
             return null;
         }
-        // System.out.println("PROCESSING: %s", line);
+        log("PROCESSING: %s", line);
         boolean isStatic = line.startsWith("+");
         int p, q;
         p = line.indexOf('(');
@@ -466,37 +508,40 @@ public class Parser {
             return null;
         }
         q = line.indexOf(')');
-        // System.out.println("->%s\np=%d q-p=%d", line, p, q-p);
+        log("->%s\np=%d q-p=%d", line, p, q-p);
         final String retval = remapType(line
                 .substring(p + 1, p + 1 + q - p - 1));
         p = line.indexOf(';');
         final String signature = StringUtils.strip(
                 line.substring(q + 1, q + 1 + p - q), " ;");
-        // System.out.println("SIG: %s %d", line, p);
+        log("SIG: %s %d", line, p);
         final String selector = makeSelector(signature);
         final String parameters = makeParameters(signature);
 
-        // System.out.println("signature: %s", signature);
-        // System.out.println("selector: %s", selector);
+        log("signature: %s", signature);
+        log("selector: %s", selector);
         return new Declaration(selector, retval, parameters, isAbstract,
                 isStatic, appearance);
     }
 
     private void processInterface(final String iface) throws IOException {
         boolean need_close = iface.indexOf("{") != -1;
-        String[] cols = iface.split("\\s+"); // TODO: check split translation
+        String[] cols = iface.split("\\s+");
         String line;
 
-        // System.out.println("**** %s ", iface);
+        log("**** %s ", iface);
         types.add(cols[1]);
-        if (extraAttribute != null) {
-            gencs.printf("\n\t[%s]", extraAttribute);
+        if (extraAnnotation != null) {
+            gencs.println("/**");
+            gencs.printf(" * @%s", extraAnnotation);
+            gencs.println();
+            gencs.println(" */");
         }
         if (cols.length >= 4) {
-            gencs.printf("\n\t[BaseType (typeof (%s))]", cols[3]);
+            gencs.printf("@BaseType(%s.class)", cols[3]);
             gencs.println();
         }
-        gencs.printf("\t%sinterface %s {{", limit == null ? ""
+        gencs.printf("%sclass %s {", limit == null ? ""
                 : "public partial ", cols[1]);
         gencs.println();
 
@@ -506,7 +551,7 @@ public class Parser {
          * } }
          */
         line = r.readLine();
-        if (line.equals("{")) {
+        if ("{".equals(line)) {
             need_close = true;
         }
         while (line != null && (need_close && !line.equals("}"))) {
@@ -527,8 +572,9 @@ public class Parser {
             }
             break;
         }
-        decl.generate(extraAttribute);
-        gencs.println("\t}");
+        decl.generate(extraAnnotation);
+        gencs.println("}");
+        gencs.println();
     }
 
     private void processProtocol(final String proto) throws IOException {
@@ -536,15 +582,17 @@ public class Parser {
         String line;
 
         types.add(d[1]);
-        if (extraAttribute != null) {
-            gencs.printf("\n\t[%s]", extraAttribute);
+        if (extraAnnotation != null) {
+            gencs.println("/**");
+            gencs.printf(" * @%s", extraAnnotation);
             gencs.println();
+            gencs.println(" */");
         }
-        gencs.printf("\n\t[BaseType (typeof (%s))]", d.length > 2 ? d[2]
+        gencs.printf("@BaseType(%s.class)", d.length > 2 ? d[2]
                 : "NSObject");
         gencs.println();
-        gencs.println("\t[Model]");
-        gencs.printf("\tinterface %s {{", d[1]);
+        gencs.println("@Model");
+        gencs.printf("class %s {", d[1]);
         gencs.println();
         boolean optional = false;
 
@@ -567,13 +615,15 @@ public class Parser {
                 break;
             }
         }
-        decl.generate(extraAttribute);
-        gencs.println("\t}");
+        decl.generate(extraAnnotation);
+        gencs.println("}");
+        gencs.println();
     }
 
-    private void showHelp() {
-        // options.writeOptionDescriptions(System.out);
-        System.exit(0);
+    private void log(String msg, Object ... args) {
+        if (debug) {
+            System.out.println(String.format(msg, args));
+        }
     }
 
     private String clean(final String prefix, final String line) {
@@ -582,38 +632,64 @@ public class Parser {
 
     public Parser() {
         gencs = new PrintWriter(System.out);
-
-        /*
-         * options = new OptionSet() { {"limit=",
-         * "Limit methods to methods for the specific API level (ex: 5_0)", arg
-         * => limit = arg}, {"extra=",
-         * "Extra attribute to add, for example: 'Since(6,0)'", arg =>
-         * extraAttribute = arg}, {"help", "Shows the help", a => ShowHelp()} };
-         */
     }
 
-    public void main(String[] args) {
-        List<String> sources = null;
+    public void parse(String[] args) {
+        final Options options = new Options();
+        options.addOption("h", "help", false, "Show usage info");
+        options.addOption("d", "debug", false, "Show debug info");
+        options.addOption("l", "limit", true, "Limit methods to methods for the specific API level (ex: 5_0)");
+        options.addOption("a", "annotation", true, "Comment annotation to add, for example: 'since 6.0'");
 
+        final CommandLineParser parser = new PosixParser();
+        CommandLine cmd = null;
+        List<String> sources = null;
         try {
-            // sources = options.parse(args);
-            sources = Arrays.asList(args);
-        } catch (java.lang.Exception e) {
-            System.out.println("Error parsing argument");
+            cmd = parser.parse(options, args);
+            @SuppressWarnings("unchecked")
+            final List<String> arglist = cmd.getArgList();
+            sources = arglist;
+        } catch (ParseException e) {
+            System.err.println("Error parsing command line: " + e.getMessage());
             return;
         }
-        if (sources.isEmpty()) {
-            showHelp();
+
+        if (sources == null || sources.isEmpty() || cmd.hasOption('h')) {
+            final HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("parse", options);
+            return;
         }
+
+        debug = cmd.hasOption('d');
+        limit = cmd.getOptionValue('l', null);
+        extraAnnotation = cmd.getOptionValue('a', null);
 
         for (final String f : sources) {
             final File fs = new File(f);
             try {
+                boolean multiLineComment = false;
                 r = new BufferedReader(new FileReader(fs));
                 String line;
                 while ((line = r.readLine()) != null) {
+                    line = line.trim();
                     line = line.replace("UIKIT_EXTERN_CLASS ", "");
 
+                    if (line.startsWith("/*")) {
+                        multiLineComment = true;
+                    }
+                    if (multiLineComment) {
+                        if (line.endsWith("*/")) {
+                            multiLineComment = false;
+                            continue;
+                        }
+                    }
+                    if (multiLineComment) {
+                        continue;
+                    }
+
+                    if (line.startsWith("//")) {
+                        continue;
+                    }
                     if (line.startsWith("#")) {
                         continue;
                     }
@@ -624,7 +700,7 @@ public class Parser {
                         continue;
                     }
 
-                    if (line.indexOf("UIKIT_CLASS_AVAILABLE") != -1) {
+                    if (line.indexOf("_CLASS_AVAILABLE") != -1) {
                         int p = line.indexOf('@');
                         if (p == -1) {
                             continue;
@@ -651,5 +727,9 @@ public class Parser {
             }
         }
         gencs.close();
+    }
+
+    public static void main(String[] args) {
+        new Parser().parse(args);
     }
 }

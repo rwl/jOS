@@ -53,7 +53,6 @@ public class Parser {
             this.isStatic = isStatic;
             this.appearance = appearance;
         }
-
     }
 
     public static class Declarations {
@@ -68,7 +67,6 @@ public class Parser {
             if (d == null) {
                 return;
             }
-
             decls.add(d);
         }
 
@@ -134,6 +132,7 @@ public class Parser {
                         || properties.contains(d.selector)) {
                     continue;
                 }
+                final String dummyReturn = Parser.mapDummyReturn(d.retval);
 
                 if (extraAnnotation != null) {
                     gencs.println("\t/**");
@@ -144,23 +143,29 @@ public class Parser {
                 if (d.appearance) {
                     gencs.println("\t@Appearance");
                 }
-                gencs.printf("\t@Export(\"%s\")", d.selector);
-                gencs.println();
-                gencs.printf("\t%s%s%s %s(%s);",
+                //gencs.printf("\t@Export(selector = \"%s\")", d.selector);
+                //gencs.println();
+                gencs.printf("\tpublic %s%s%s %s(%s) {",
                         (d.isStatic ? "static " : ""),
-                        (d.isAbstract ? "abstract " : ""),
+                        (d.isAbstract ? ""/*"abstract "*/ : ""),
                         d.retval,
                         Parser.cleanSelector(d.selector), d.parameters);
+                gencs.println();
+                if (dummyReturn != null) {
+                    gencs.printf("\t\treturn %s;", dummyReturn);
+                    gencs.println();
+                }
+                gencs.printf("\t}");
                 gencs.println();
                 gencs.println();
             }
 
             if (properties.size() > 0) {
-                gencs.println("\t//Detected properties");
+                gencs.println("\t// Detected properties");
             }
             for (String d : properties) {
                 Declaration decl = null;
-                for (Declaration x : decls) {
+                for (final Declaration x : decls) {
                     if (x.selector.equals(d)) {
                         decl = x;
                         break;
@@ -172,11 +177,11 @@ public class Parser {
                             + sel.substring(3);
                 }
 
-                gencs.printf("\t@Export(\"%s\")", sel);
-                gencs.println();
+                //gencs.printf("\t@Export(selector = \"%s\")", sel);
+                //gencs.println();
                 gencs.printf("\tpublic %s%s%s %s;",
                         (decl.isStatic ? "static " : ""),
-                        (decl.isAbstract ? "abstract " : ""),
+                        (decl.isAbstract ? ""/*"abstract "*/ : ""),
                         decl.retval, sel);
                 gencs.println();
                 gencs.println();
@@ -185,6 +190,8 @@ public class Parser {
                     gencs.printf("\t@Bind(\"%s\")", d);
                     gencs.println();
                 }
+                gencs.printf("\t@Export(selector = \"%s\")", sel);
+                gencs.println();
                 gencs.printf("\tpublic %s get%s() {", decl.retval, StringUtils.capitalize(sel));
                 gencs.println();
                 gencs.printf("\t\treturn this.%s;");
@@ -193,6 +200,8 @@ public class Parser {
                 gencs.println();
                 gencs.println();
 
+                gencs.printf("\t@Export(selector = \"set%s:\")", StringUtils.capitalize(sel));
+                gencs.println();
                 gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(sel), decl.retval);
                 gencs.println();
                 gencs.printf("\t\tthis.%s = value;");
@@ -231,9 +240,8 @@ public class Parser {
         }
         int j = sub.indexOf("getter=");
         if (j != -1) {
-            int k = StringUtils.indexOfAny(sub.substring(j + 1), ",)") + j + 1; // TODO
-            // check
-            // translation
+            int k = StringUtils.indexOfAny(sub.substring(j + 1), ",)") + j + 1;
+            // TODO check translation
             log("j=%d k=%d str=%s", j, k, sub);
             getter = sub.substring(j + 7, j + 7 + k - (j + 7));
         }
@@ -280,8 +288,8 @@ public class Parser {
             gencs.printf("\t@Appearance");
             gencs.println();
         }
-        gencs.printf("\t@Export(\"%s\")", selector);
-        gencs.println();
+        //gencs.printf("\t@Export(selector = \"%s\")", selector);
+        //gencs.println();
 
         final String retval = remapType(type.toString());
         gencs.printf("\tpublic %s %s;", retval, selector);
@@ -292,6 +300,8 @@ public class Parser {
             gencs.printf("\t@Bind(\"" + getter + "\")");
             gencs.println();
         }
+        gencs.printf("\t@Export(selector = \"%s\")", selector.toString());
+        gencs.println();
         gencs.printf("\tpublic %s get%s() {", retval, StringUtils.capitalize(selector.toString()));
         gencs.println();
         gencs.printf("\t\treturn this.%s;", selector);
@@ -301,6 +311,8 @@ public class Parser {
         gencs.println();
 
         if (!ro) {
+            gencs.printf("\t@Export(selector = \"set%s:\")", StringUtils.capitalize(selector.toString()));
+            gencs.println();
             gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(selector.toString()), retval);
             gencs.println();
             gencs.printf("\t\tthis.%s = value;", selector);
@@ -408,7 +420,7 @@ public class Parser {
         return sb.toString();
     }
 
-    private String remapType(String type) {
+    private static String remapType(String type) {
         if (type.endsWith("*")) {
             type = type.substring(0, type.length() - 1);
         }
@@ -418,23 +430,23 @@ public class Parser {
         } else if (type.equals("CGFloat") || type.equals("GLfloat")) {
             return "float";
         } else if (type.equals("NSTextAlignment")) {
-            return "uint";
+            return "int";
         } else if (type.equals("NSString") || type.equals("NSString *")) {
-            return "string";
-        } else if (type.equals("NSSize") || type.equals("CGSize")) {
+            return "String";
+        /*} else if (type.equals("NSSize") || type.equals("CGSize")) {
             return "SizeF";
         } else if (type.equals("NSRect") || type.equals("CGRect")) {
             return "RectangleF";
         } else if (type.equals("NSPoint") || type.equals("CGPoint")) {
-            return "PointF";
+            return "PointF";*/
         } else if (type.equals("NSGlyph")) {
-            return "uint";
+            return "int";
         } else if (type.equals("NSUInteger")) {
-            return "uint";
+            return "int";
         } else if (type.equals("instancetype") || type.equals("id")) {
             return "NSObject";
         } else if (type.equals("BOOL") || type.equals("GLboolean")) {
-            return "bool";
+            return "boolean";
         } else if (type.equals("SEL")) {
             return "Selector";
         } else if (type.equals("NSURL")) {
@@ -443,12 +455,30 @@ public class Parser {
             return "double";
         } else if (type.equals("dispatch_queue_t")) {
             return "DispatchQueue";
-        } else if (type.equals("SCNVector4")) {
+        /*} else if (type.equals("SCNVector4")) {
             return "Vector4";
         } else if (type.equals("SCNVector3")) {
-            return "Vector3";
+            return "Vector3";*/
         }
         return type;
+    }
+
+    private static String mapDummyReturn(final String type) {
+        if (type.equals("void")) {
+            return null;
+        } else if (type.equals("int")) {
+            return "0";
+        } else if (type.equals("float")) {
+            return "0.0f";
+        } else if (type.equals("String")) {
+            return "\"\"";
+        } else if (type.equals("boolean")) {
+            return "false";
+        } else if (type.equals("double")) {
+            return "0.0";
+        } else {
+            return "null";
+        }
     }
 
     private String rx = "(NS_AVAILABLE\\(.*\\)|NS_AVAILABLE_IOS\\([0-9_]+\\)|NS_AVAILABLE_MAC\\([0-9_]+\\)|__OSX_AVAILABLE_STARTING\\([_A-Z0-9,]+\\))";
@@ -537,13 +567,39 @@ public class Parser {
             gencs.println();
             gencs.println(" */");
         }
-        if (cols.length >= 4) {
-            gencs.printf("@BaseType(%s.class)", cols[3]);
-            gencs.println();
+
+        final List<String> baseTypes = new ArrayList<String>();
+        for (int i = 3; i < cols.length; i++) {
+            final String clazz = StringUtils.strip(cols[i], " ,<>{}");
+            if (!clazz.isEmpty() && !clazz.equals("NSObject")) {
+                baseTypes.add(clazz);
+            }
         }
-        gencs.printf("%sclass %s {", limit == null ? ""
-                : "public partial ", cols[1]);
-        gencs.println();
+
+        if (baseTypes.size() > 0) {
+            gencs.printf("@BaseType(");
+            if (baseTypes.size() > 1)
+                gencs.printf("{");
+            for (int i = 0; i < baseTypes.size(); i++) {
+                gencs.printf("%s.class", baseTypes.get(i));
+                if (i != baseTypes.size() - 1) gencs.printf(", ");
+            }
+            if (baseTypes.size() > 1)
+                gencs.printf("}");
+            gencs.println(")");
+        }
+
+        gencs.println("@Model");
+        gencs.printf("public class %s", cols[1]);
+        if (baseTypes.size() > 0) {
+            gencs.printf(" extends");
+            for (int i = 0; i < baseTypes.size(); i++) {
+                gencs.printf(" %s", baseTypes.get(i));
+                if (i != baseTypes.size() - 1) gencs.printf(",");
+            }
+        }
+        gencs.println(" {");
+
 
         /*
          * while ((line = r.readLine()) != null && (need_close &&
@@ -588,14 +644,40 @@ public class Parser {
             gencs.println();
             gencs.println(" */");
         }
-        gencs.printf("@BaseType(%s.class)", d.length > 2 ? d[2]
-                : "NSObject");
-        gencs.println();
-        gencs.println("@Model");
-        gencs.printf("class %s {", d[1]);
-        gencs.println();
-        boolean optional = false;
 
+        final List<String> baseTypes = new ArrayList<String>();
+        for (int i = 2; i < d.length; i++) {
+            final String clazz = StringUtils.strip(d[i], " ,");
+            if (!clazz.isEmpty() && !clazz.equals("NSObject")) {
+                baseTypes.add(clazz);
+            }
+        }
+
+        if (baseTypes.size() > 0) {
+            gencs.printf("@BaseType(");
+            if (baseTypes.size() > 1)
+                gencs.printf("{");
+            for (int i = 0; i < baseTypes.size(); i++) {
+                gencs.printf("%s.class", baseTypes.get(i));
+                if (i != baseTypes.size() - 1) gencs.printf(", ");
+            }
+            if (baseTypes.size() > 1)
+                gencs.printf("}");
+            gencs.println(")");
+        }
+
+        gencs.println("@Model");
+        gencs.printf("public class %s", d[1]);
+        if (baseTypes.size() > 0) {
+            gencs.printf(" extends");
+            for (int i = 0; i < baseTypes.size(); i++) {
+                gencs.printf(" %s", baseTypes.get(i));
+                if (i != baseTypes.size() - 1) gencs.printf(",");
+            }
+        }
+        gencs.println(" {");
+
+        boolean optional = false;
         Declarations decl = new Declarations(gencs);
         while ((line = r.readLine()) != null && !line.startsWith("@end")) {
             if (line.startsWith("@optional")) {
@@ -616,6 +698,37 @@ public class Parser {
             }
         }
         decl.generate(extraAnnotation);
+        gencs.println("}");
+        gencs.println();
+    }
+
+    private void processEnum(String line) {
+        final String[] types = line.split(",");
+        if (types.length < 2) {
+            throw new IllegalStateException();
+        }
+        final String name = StringUtils.strip(types[1], "){ ");
+        gencs.printf("public enum %s {", name);
+        gencs.println();
+        try {
+            boolean first = true;
+            while ((line = r.readLine()) != null) {
+                if (line.indexOf("};") != -1) {
+                    gencs.println(";");
+                    break;
+                } else if (!first) {
+                    gencs.println(",");
+                } else {
+                    first = false;
+                }
+                String enumValue = line.split("//")[0];
+                enumValue = enumValue.split(",")[0].trim();
+                enumValue = enumValue.split("=")[0].trim();
+                gencs.printf("\t%s", enumValue);
+            }
+        } catch (IOException e) {
+            System.err.println("Error parsing '" + line + "': " + e.getMessage());
+        }
         gencs.println("}");
         gencs.println();
     }
@@ -713,6 +826,9 @@ public class Parser {
                     }
                     if (line.indexOf("@protocol") != -1 && !line.endsWith(";") /*&& line.indexOf("<") != -1)*/) {
                         processProtocol(clean("@protocol", line));
+                    }
+                    if (line.indexOf("typedef NS_ENUM") != -1) {
+                        processEnum(clean("typedef NS_ENUM", line));
                     }
                 }
             } catch (final IOException e) {

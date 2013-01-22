@@ -724,6 +724,10 @@ public class Parser {
                 String enumValue = line.split("//")[0];
                 enumValue = enumValue.split(",")[0].trim();
                 enumValue = enumValue.split("=")[0].trim();
+                if (enumValue.startsWith(name)) {
+                    enumValue = "@Bind(\"" + enumValue + "\") "
+                            + enumValue.substring(name.length());
+                }
                 gencs.printf("\t%s", enumValue);
             }
         } catch (IOException e) {

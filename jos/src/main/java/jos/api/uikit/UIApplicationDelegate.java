@@ -13,7 +13,7 @@ public class UIApplicationDelegate extends NSObject {
 
     public UIWindow window;
 
-    @Export(selector = "window:")
+    @Export(selector = "window")
     public UIWindow getWindow() {
         return window;
     }
@@ -23,7 +23,7 @@ public class UIApplicationDelegate extends NSObject {
         this.window = window;
     }
 
-    @Export(selector = "init:")
+    @Export(selector = "init")
     public UIApplicationDelegate() {
     }
 

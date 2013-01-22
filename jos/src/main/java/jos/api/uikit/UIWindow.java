@@ -20,4 +20,14 @@ public class UIWindow extends UIView {
     //    @Export
     public void makeKeyAndVisible() {
     }
+
+    @Export(selector = "rootViewController")
+    public UIViewController getRootViewController() {
+        return rootViewController;
+    }
+
+    @Export(selector = "setRootViewController:")
+    public void setRootViewController(UIViewController rootViewController) {
+        this.rootViewController = rootViewController;
+    }
 }

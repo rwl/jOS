@@ -6,7 +6,6 @@
   <packaging>pom</packaging>
   <modules>
     <module>jos</module>
-    <module>j2objc-plugin</module>
     <module>maven-plugin</module>
     <module>samples</module>
   </modules>

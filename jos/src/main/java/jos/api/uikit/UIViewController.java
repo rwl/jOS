@@ -10,6 +10,10 @@ public class UIViewController extends UIResponder {
 
     public UIView view;
 
+    @Export(selector = "init")
+    public UIViewController() {
+    }
+
     @Export(selector = "initWithNibName:bundle:")
     public UIViewController(final String nibName, final NSBundle bundle) {
     }
@@ -33,5 +37,14 @@ public class UIViewController extends UIResponder {
      * Dispose of any resources that can be recreated.
      */
     public void didReceiveMemoryWarning() {
+    }
+
+    public void viewWillAppear(boolean animated) {
+    }
+
+    public void viewWillDisappear(boolean animated) {
+    }
+
+    public void viewDidLoad() {
     }
 }

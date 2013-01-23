@@ -1,6 +1,5 @@
 package jos.samples.controls.code;
 
-import jos.api.uikit.UITableViewController;
 import jos.api.uikit.UIViewController;
 
 public class NavItem {
@@ -28,7 +27,7 @@ public class NavItem {
      * property empty to lazy-instantiate the ViewController when the nav item is
      * clicked.
      */
-    public Class<? extends UITableViewController> controllerType;
+    public Class<? extends UIViewController> controllerType;
 
     /**
      * A list of the constructor args (if neccesary) for the controller. use this in
@@ -52,7 +51,7 @@ public class NavItem {
     /**
      * The types of constructor args.
      */
-    public Class<? extends UITableViewController>[] controllerConstructorTypes;
+    public Class<? extends UIViewController>[] controllerConstructorTypes;
 
     public NavItem () {
     }
@@ -67,12 +66,12 @@ public class NavItem {
         this.controller = controller;
     }
 
-    public NavItem (String name, Class<? extends UITableViewController> controllerType) {
+    public NavItem (String name, Class<? extends UIViewController> controllerType) {
         this(name);
         this.controllerType = controllerType;
     }
 
-    public NavItem (String name, Class<? extends UITableViewController> controllerType, Object[] controllerConstructorArgs) {
+    public NavItem (String name, Class<? extends UIViewController> controllerType, Object[] controllerConstructorArgs) {
         this(name, controllerType);
         setControllerConstructorArgs(controllerConstructorArgs);
     }
@@ -82,12 +81,12 @@ public class NavItem {
         this.imagePath = imagePath;
     }
 
-    public NavItem (String name, String imagePath, Class<? extends UITableViewController> controllerType) {
+    public NavItem (String name, String imagePath, Class<? extends UIViewController> controllerType) {
         this(name, controllerType);
         this.imagePath = imagePath;
     }
 
-    public NavItem (String name, String imagePath, Class<? extends UITableViewController> controllerType, Object[] controllerConstructorArgs) {
+    public NavItem (String name, String imagePath, Class<? extends UIViewController> controllerType, Object[] controllerConstructorArgs) {
         this(name, controllerType, controllerConstructorArgs);
         this.imagePath = imagePath;
     }

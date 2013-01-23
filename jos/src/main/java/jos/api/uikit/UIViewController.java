@@ -4,6 +4,8 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 
 import jos.api.foundation.NSBundle;
+import jos.api.foundation.NSCoder;
+import jos.api.system.IntPtr;
 
 @Register(isWrapper = true)
 public class UIViewController extends UIResponder {
@@ -16,6 +18,12 @@ public class UIViewController extends UIResponder {
 
     @Export(selector = "initWithNibName:bundle:")
     public UIViewController(final String nibName, final NSBundle bundle) {
+    }
+
+    public UIViewController(IntPtr handle) {
+    }
+
+    public UIViewController(NSCoder coder) {
     }
 
     public void loadView() {

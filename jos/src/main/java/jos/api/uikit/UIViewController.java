@@ -14,6 +14,8 @@ public class UIViewController extends UIResponder {
 
     public UIView view;
 
+    public UINavigationController navigationController;
+
     @Export(selector = "init")
     public UIViewController() {
     }

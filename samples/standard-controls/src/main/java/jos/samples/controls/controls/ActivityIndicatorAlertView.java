@@ -2,6 +2,7 @@ package jos.samples.controls.controls;
 
 import jos.api.graphicsimaging.CGGeometry;
 import jos.api.graphicsimaging.CGRect;
+import jos.api.uikit.UIAlertView;
 
 import com.google.j2objc.annotations.Export;
 

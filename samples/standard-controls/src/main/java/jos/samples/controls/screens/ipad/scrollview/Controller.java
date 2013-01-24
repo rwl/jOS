@@ -1,5 +1,7 @@
 package jos.samples.controls.screens.ipad.scrollview;
 
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIViewController;
 
 public class Controller extends UIViewController {

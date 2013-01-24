@@ -11,6 +11,10 @@ public class UIView extends UIResponder {
 
     public CGPoint center;
     public UIColor backgroundColor;
+    public CGRect frame;
+
+    public UIView() {
+    }
 
     @Export(selector = "initWithFrame:")
     public UIView(final CGRect frame) {

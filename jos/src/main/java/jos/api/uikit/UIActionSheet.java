@@ -6,6 +6,8 @@ public class UIActionSheet {
 
     public int destructiveButtonIndex;
 
+    public int cancelButtonIndex;
+
     public UIActionSheet(String string, Object object, String string2,
             String string3, Object object2) {
     }

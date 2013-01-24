@@ -4,16 +4,12 @@ import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIActionSheet;
 import jos.api.uikit.UIActionSheetDelegate;
-import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
-import jos.api.uikit.UIView;
-import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Connect;
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Selector;
 
-public class ActionSheets_iPad extends UIViewController {
+public class ActionSheets_iPad extends AbstractActionSheets_iPad {
 
     UIActionSheet actionSheet;
 
@@ -79,48 +75,5 @@ public class ActionSheets_iPad extends UIViewController {
             };
         };
         actionSheet.showInView(view);
-    }
-
-
-    private UIView __mt_view;
-
-    private UIButton __mt_btnActionSheetWithOtherButtons;
-
-    private UIButton __mt_btnSimpleActionSheet;
-
-    @Connect("view")
-    public UIView view() {
-        this.__mt_view = ((UIView) (getNativeField("view")));
-        return this.__mt_view;
-    }
-
-    @Connect("view")
-    public void setView(UIView value) {
-        this.__mt_view = value;
-        setNativeField("view", value);
-    }
-
-    @Connect("btnActionSheetWithOtherButtons")
-    public UIButton btnActionSheetWithOtherButtons() {
-        this.__mt_btnActionSheetWithOtherButtons = ((UIButton) (getNativeField("btnActionSheetWithOtherButtons")));
-        return this.__mt_btnActionSheetWithOtherButtons;
-    }
-
-    @Connect("btnActionSheetWithOtherButtons")
-    public void setBtnActionSheetWithOtherButtons(UIButton value) {
-        this.__mt_btnActionSheetWithOtherButtons = value;
-        setNativeField("btnActionSheetWithOtherButtons", value);
-    }
-
-    @Connect("btnSimpleActionSheet")
-    public UIButton btnSimpleActionSheet() {
-        this.__mt_btnSimpleActionSheet = ((UIButton) (getNativeField("btnSimpleActionSheet")));
-        return this.__mt_btnSimpleActionSheet;
-    }
-
-    @Connect("btnSimpleActionSheet")
-    public void setBtnSimpleActionSheet(UIButton value) {
-        this.__mt_btnSimpleActionSheet = value;
-        setNativeField("btnSimpleActionSheet", value);
     }
 }

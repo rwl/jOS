@@ -4,9 +4,8 @@ import com.google.j2objc.annotations.Export;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
-import jos.api.uikit.UIViewController;
 
-public class ActivitySpinnerScreen_iPhone extends UIViewController {
+public class ActivitySpinnerScreen_iPhone extends AbstractActivitySpinnerScreen_iPhone {
 
     public ActivitySpinnerScreen_iPhone(IntPtr handle) {
         super(handle);

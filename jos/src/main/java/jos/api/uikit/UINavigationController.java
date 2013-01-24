@@ -12,4 +12,7 @@ public class UINavigationController extends UIViewController {
     public void pushViewController(UIViewController iPhoneHome, boolean animated) {
     }
 
+    public void setNavigationBarHidden(boolean b, boolean c) {
+    }
+
 }

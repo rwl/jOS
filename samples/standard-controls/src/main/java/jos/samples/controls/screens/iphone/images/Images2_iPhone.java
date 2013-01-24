@@ -2,10 +2,13 @@ package jos.samples.controls.screens.iphone.images;
 
 import com.google.j2objc.annotations.Export;
 
+import jos.api.foundation.NSCoder;
 import jos.api.graphicsimaging.CGGeometry;
-import jos.api.uikit.UIViewController;
+import jos.api.system.IntPtr;
+import jos.api.uikit.UIImage;
+import jos.api.uikit.UIImageView;
 
-public class Images2_iPhone extends UIViewController {
+public class Images2_iPhone extends AbstractImages2_iPhone {
 
     UIImageView imageView1;
     UIImageView imgSpinningCircle;
@@ -38,7 +41,7 @@ public class Images2_iPhone extends UIViewController {
         // a simple image
         imageView1 = new UIImageView(
                 UIImage.fromBundle("Images/Icons/50_icon.png"));
-        imageView1.Frame = CGGeometry
+        imageView1.frame = CGGeometry
                 .CGRectMake(20, 20, imageView1.image.CGImage.width,
                         imageView1.image.CGImage.height);
         view.addSubview(imageView1);

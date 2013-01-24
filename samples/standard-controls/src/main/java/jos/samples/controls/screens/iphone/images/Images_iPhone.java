@@ -4,9 +4,8 @@ import com.google.j2objc.annotations.Export;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
-import jos.api.uikit.UIViewController;
 
-public class Images_iPhone extends UIViewController {
+public class Images_iPhone extends AbstractImages_iPhone {
 
     public Images_iPhone(IntPtr handle) {
         super(handle);

@@ -10,6 +10,9 @@ import com.google.j2objc.annotations.Model;
 @Model
 public class UITableViewController extends UIViewController {
 
+    public UITableViewController() {
+    }
+
     public UITableViewController(UITableViewStyle grouped) {
     }
 

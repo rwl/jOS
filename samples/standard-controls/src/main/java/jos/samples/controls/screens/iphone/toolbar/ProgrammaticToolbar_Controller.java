@@ -1,6 +1,8 @@
 package jos.samples.controls.screens.iphone.toolbar;
 
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIBarButtonItem;
+import jos.api.uikit.UIColor;
 import jos.api.uikit.UIViewController;
 
 public class ProgrammaticToolbar_Controller extends UIViewController {
@@ -37,7 +39,7 @@ public class ProgrammaticToolbar_Controller extends UIViewController {
 
         // fixed width
         UIBarButtonItem fixedWidth = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
-        fixedWidth.Width = 25;
+        fixedWidth.width = 25;
 
         // button two
         UIBarButtonItem btnTwo = new UIBarButtonItem("second", UIBarButtonItemStyle.Bordered, null);

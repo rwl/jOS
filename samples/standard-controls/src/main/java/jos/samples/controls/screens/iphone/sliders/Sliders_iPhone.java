@@ -4,9 +4,10 @@ import com.google.j2objc.annotations.Export;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
-import jos.api.uikit.UIViewController;
+import jos.api.uikit.UIControlState;
+import jos.api.uikit.UIImage;
 
-public class Sliders_iPhone extends UIViewController {
+public class Sliders_iPhone extends AbstractSliders_iPhone {
 
     public Sliders_iPhone(IntPtr handle) {
         super(handle);
@@ -33,7 +34,7 @@ public class Sliders_iPhone extends UIViewController {
 
         this.title = "Sliders";
 
-        this.sldrWithImages.setThumbImage(
+        this.sldrWithImages().setThumbImage(
                 UIImage.fromFile("images/icons/29_icon.png"),
                 UIControlState.Normal);
     }

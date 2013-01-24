@@ -4,6 +4,7 @@ import com.google.j2objc.annotations.Export;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
+import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIViewController;
 
 public class ToolbarItems extends UIViewController {

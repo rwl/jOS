@@ -9,6 +9,10 @@ public class UIImage extends NSObject {
         return null;
     }
 
+    public static UIImage fromFile(String string) {
+        return null;
+    }
+
     public CGImage CGImage;
 
 }

@@ -1,10 +1,12 @@
 package jos.samples.controls.screens.iphone.progressbar;
 
+import jos.api.foundation.NSCoder;
+import jos.api.system.IntPtr;
+
 import com.google.j2objc.annotations.Export;
 
-import jos.api.uikit.UIViewController;
 
-public class ProgressBars_iPhone extends UIViewController {
+public class ProgressBars_iPhone extends AbstractProgressBars_iPhone {
 
     public ProgressBars_iPhone (IntPtr handle) {
         super(handle);

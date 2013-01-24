@@ -1,7 +1,10 @@
 package jos.samples.controls.screens.iphone.taptozoomscrollview;
 
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIViewController;
+import jos.samples.controls.controls.TapZoomScrollView;
 
 public class Controller extends UIViewController {
 

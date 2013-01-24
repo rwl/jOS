@@ -3,11 +3,15 @@ package jos.samples.controls.screens.iphone.pickerview;
 import java.util.ArrayList;
 import java.util.List;
 
+import jos.api.foundation.NSCoder;
+import jos.api.system.IntPtr;
+import jos.api.uikit.UIPickerView;
+import jos.api.uikit.UIPickerViewModel;
+
 import com.google.j2objc.annotations.Export;
 
-import jos.api.uikit.UIViewController;
 
-public class PickerView1_iPhone extends UIViewController {
+public class PickerView1_iPhone extends AbstractPickerView1_iPhone {
 
     PickerDataModel pickerDataModel;
 
@@ -45,15 +49,19 @@ public class PickerView1_iPhone extends UIViewController {
         pickerDataModel.items.add ("fourth item!");
 
         // set it on our picker class
-        this.pkrMain.source = pickerDataModel;
+        this.pkrMain().source = pickerDataModel;
 
         // wire up the value change method
-        pickerDataModel.valueChanged += (s, e) => {
-            this.lblSelectedItem.text = pickerDataModel.selectedItem;
+        pickerDataModel.delegate = new PickerDataModelDelegate() {
+
+            @Override
+            public void onValueChanged(PickerDataModel model) {
+                lblSelectedItem().text = pickerDataModel.selectedItem();
+            }
         };
 
         // set our initial selection on the label
-        this.lblSelectedItem.text = pickerDataModel.selectedItem;
+        this.lblSelectedItem().text = pickerDataModel.selectedItem();
     }
 
     /**
@@ -62,7 +70,7 @@ public class PickerView1_iPhone extends UIViewController {
      */
     protected class PickerDataModel extends UIPickerViewModel {
 
-        public/* event */EventHandler<EventArgs> valueChanged;
+        public PickerDataModelDelegate delegate;
 
         /**
          * The items to show up in the picker
@@ -113,9 +121,14 @@ public class PickerView1_iPhone extends UIViewController {
         @Override
         public void selected(UIPickerView picker, int row, int component) {
             selectedIndex = row;
-            if (this.valueChanged != null) {
-                this.valueChanged(this, new EventArgs());
+            if (this.delegate != null) {
+                this.delegate.onValueChanged(this);
             }
         }
+    }
+
+    protected interface PickerDataModelDelegate {
+
+        void onValueChanged(PickerDataModel model);
     }
 }

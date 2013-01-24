@@ -1,6 +1,5 @@
 package jos.samples.controls.screens.iphone.pickerview;
 
-import java.beans.EventHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +7,12 @@ import java.util.Map;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
-import jos.api.uikit.UIViewController;
+import jos.api.uikit.UIPickerView;
+import jos.api.uikit.UIPickerViewModel;
 
 import com.google.j2objc.annotations.Export;
 
-public class PickerWithMultipleComponents_iPhone extends UIViewController {
+public class PickerWithMultipleComponents_iPhone extends AbstractPickerWithMultipleComponents_iPhone {
 
     PickerDataModel pickerDataModel;
 
@@ -49,26 +49,30 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
         items.add ("1");
         items.add ("2");
         items.add ("3");
-        pickerDataModel.items.add (0, items);
+        pickerDataModel.items.put (0, items);
 
         items = new ArrayList<String> ();
         items.add ("Red");
         items.add ("Green");
         items.add ("Blue");
         items.add ("Alpha");
-        pickerDataModel.items.add (1, items);
+        pickerDataModel.items.put (1, items);
 
         // set it on our picker class
-        this.pkrMain.model = pickerDataModel;
+        this.pkrMain().model = pickerDataModel;
 
 
         // wire up the item selected method
-        pickerDataModel.valueChanged += (s, e) => {
-        //  this.lblSelectedItem.text = pickerDataModel.selectedItem;
+        pickerDataModel.delegate = new PickerDataModelDelegate() {
+
+            @Override
+            public void onValueChanged(PickerDataModel model) {
+                //lblSelectedItem().text = pickerDataModel.selectedItem;
+            }
         };
 
         // set our initial selection on the label
-        //this.lblSelectedItem.text = pickerDataModel.selectedItem;
+        //this.lblSelectedItem().text = pickerDataModel.selectedItem;
     }
 
     /**
@@ -76,7 +80,7 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
      */
     protected class PickerDataModel extends UIPickerViewModel {
 
-        public/* event */EventHandler<EventArgs> valueChanged;
+        public PickerDataModelDelegate delegate;
 
         /**
          * The items to show up in the picker
@@ -117,11 +121,15 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
          */
         @Override
         public void selected(UIPickerView picker, int row, int component) {
-            // selectedIndex = row;
-            if (this.valueChanged != null) {
-                this.valueChanged(this, new EventArgs());
+            if (this.delegate != null) {
+                this.delegate.onValueChanged(this);
             }
         }
+    }
+
+    protected interface PickerDataModelDelegate {
+
+        void onValueChanged(PickerDataModel model);
     }
 
 }

@@ -1,16 +1,16 @@
 package jos.samples.controls.screens.iphone.labels;
 
-import com.google.j2objc.annotations.Export;
-
 import jos.api.foundation.NSCoder;
 import jos.api.graphicsimaging.CGGeometry;
-import jos.api.graphicsimaging.CGRect;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIColor;
+import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
-import jos.api.uikit.UIViewController;
+import jos.api.uikit.UILineBreakMode;
 
-public class LabelsScreen_iPhone extends UIViewController {
+import com.google.j2objc.annotations.Export;
+
+public class LabelsScreen_iPhone extends AbstractLabelsScreen_iPhone {
 
     UILabel customLabel;
 
@@ -49,6 +49,5 @@ public class LabelsScreen_iPhone extends UIViewController {
         customLabel.lines = 1;
 
         view.addSubview(customLabel);
-
     }
 }

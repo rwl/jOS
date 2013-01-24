@@ -12,5 +12,6 @@ public class UIColor extends NSObject {
     public static UIColor clearColor;
     @Bind("whiteColor")
     public static UIColor white;
+    public static UIColor blue;
 
 }

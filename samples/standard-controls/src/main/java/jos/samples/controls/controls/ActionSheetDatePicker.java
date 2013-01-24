@@ -2,6 +2,11 @@ package jos.samples.controls.controls;
 
 import jos.api.graphicsimaging.CGGeometry;
 import jos.api.graphicsimaging.CGRect;
+import jos.api.uikit.UIActionSheet;
+import jos.api.uikit.UIButton;
+import jos.api.uikit.UIDatePicker;
+import jos.api.uikit.UILabel;
+import jos.api.uikit.UIView;
 
 import com.google.j2objc.annotations.Register;
 

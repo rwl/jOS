@@ -10,6 +10,8 @@ import jos.api.system.IntPtr;
 @Register(isWrapper = true)
 public class UIViewController extends UIResponder {
 
+    public String title;
+
     public UIView view;
 
     @Export(selector = "init")

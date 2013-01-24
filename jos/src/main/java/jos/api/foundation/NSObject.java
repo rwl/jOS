@@ -9,4 +9,11 @@ public class NSObject {
     @Export(selector = "init")
     public NSObject() {
     }
+
+    public NSObject getNativeField(String string) {
+        return null;
+    }
+
+    public void setNativeField(String name, NSObject object) {
+    }
 }

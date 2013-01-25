@@ -1,5 +1,6 @@
 package jos.api.uikit;
 
+import com.google.j2objc.annotations.Bind;
 import com.google.j2objc.annotations.Register;
 
 import jos.api.foundation.NSObject;
@@ -7,7 +8,14 @@ import jos.api.foundation.NSObject;
 @Register(isWrapper = true)
 public class UIColor extends NSObject {
 
-    public static UIColor lightGrayColor;
-    public static UIColor clearColor;
+    public static UIColor lightGray;
+    @Bind("whiteColor")
+    public static UIColor white;
+    public static UIColor blue;
+    public static UIColor clear;
+    public static UIColor lightTextColor;
 
+    public static UIColor fromRGB(float f, float g, float i) {
+        return null;
+    }
 }

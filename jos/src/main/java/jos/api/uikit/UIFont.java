@@ -8,4 +8,8 @@ public class UIFont extends NSObject {
         return null;
     }
 
+    public static UIFont boldSystemFontOfSize(int size) {
+        return null;
+    }
+
 }

@@ -1,6 +1,12 @@
 package jos.samples.controls.screens.iphone.scrollview;
 
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UIImage;
+import jos.api.uikit.UIImageView;
+import jos.api.uikit.UIScrollView;
+import jos.api.uikit.UIScrollViewDelegate;
+import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
 public class Controller extends UIViewController {
@@ -24,8 +30,8 @@ public class Controller extends UIViewController {
 
         // create our scroll view
         scrollView = new UIScrollView (
-            CGGeometry.CGRectMake(0, 0, this.view.frame.width,
-                    this.view.frame.height - this.navigationController.navigationBar.frame.height));
+            CGGeometry.CGRectMake(0, 0, this.view.frame.size.width,
+                    this.view.frame.size.height - this.navigationController.navigationBar.frame.size.height));
         this.view.addSubview (scrollView);
 
         // create our image view
@@ -35,6 +41,11 @@ public class Controller extends UIViewController {
         scrollView.minimumZoomScale = .1f;
         scrollView.addSubview (imageView);
 
-        scrollView.viewForZoomingInScrollView += (UIScrollView sv) => { return imageView; };
+        scrollView.delegate = new UIScrollViewDelegate() {
+            @Override
+            public UIView viewForZoomingInScrollView(UIScrollView view) {
+                return imageView;
+            }
+        };
     }
 }

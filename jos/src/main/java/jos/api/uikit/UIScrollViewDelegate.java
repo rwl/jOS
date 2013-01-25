@@ -12,4 +12,8 @@ public abstract class UIScrollViewDelegate extends NSObject {
     public void scrolled(UIScrollView view) {
     }
 
+    @Export(selector = "viewForZoomingInScrollView:scrollView")
+    public UIView viewForZoomingInScrollView(UIScrollView view) {
+        return null;
+    }
 }

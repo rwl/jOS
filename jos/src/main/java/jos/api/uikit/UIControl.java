@@ -5,7 +5,7 @@ import com.google.j2objc.annotations.Selector;
 
 import jos.api.foundation.NSObject;
 
-public class UIControl extends NSObject {
+public class UIControl extends UIView {
 
     public void addTarget(EventListener listener, UIControlEvent controlEvents) {
     }

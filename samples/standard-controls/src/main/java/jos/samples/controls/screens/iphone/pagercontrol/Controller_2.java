@@ -1,6 +1,8 @@
 package jos.samples.controls.screens.iphone.pagercontrol;
 
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 
 public class Controller_2 extends UIViewController {
@@ -19,9 +21,8 @@ public class Controller_2 extends UIViewController {
         this.view.backgroundColor = UIColor.lightGray;
 
         lblMain = new UILabel(CGGeometry.CGRectMake(20, 200, 280, 33));
-        lblMain.Text = "Controller 2";
-        lblMain.BackgroundColor = UIColor.clear;
+        lblMain.text = "Controller 2";
+        lblMain.backgroundColor = UIColor.clear;
         this.view.addSubview(lblMain);
     }
-
 }

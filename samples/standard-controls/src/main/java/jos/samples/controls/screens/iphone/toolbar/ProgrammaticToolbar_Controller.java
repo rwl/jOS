@@ -1,8 +1,16 @@
 package jos.samples.controls.screens.iphone.toolbar;
 
+import com.google.j2objc.annotations.Selector;
+
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIBarButtonItem;
+import jos.api.uikit.UIBarButtonItemStyle;
+import jos.api.uikit.UIBarButtonSystemItem;
 import jos.api.uikit.UIColor;
+import jos.api.uikit.UIInterfaceOrientation;
+import jos.api.uikit.UIToolbar;
+import jos.api.uikit.UIViewAutoresizing;
 import jos.api.uikit.UIViewController;
 
 public class ProgrammaticToolbar_Controller extends UIViewController {
@@ -25,17 +33,16 @@ public class ProgrammaticToolbar_Controller extends UIViewController {
         // new up the toolbar
         float toolbarHeight = 44;
         toolbar = new UIToolbar(CGGeometry.CGRectMake(0,
-                this.view.frame.height - this.navigationController.navigationBar.frame.height,
-                this.view.frame.width, toolbarHeight));
-        toolbar.autoresizingMask = UIViewAutoresizing.FlexibleTopMargin | UIViewAutoresizing.FlexibleWidth;
+                this.view.frame.size.height - this.navigationController.navigationBar.frame.size.height,
+                this.view.frame.size.width, toolbarHeight));
+        toolbar.autoresizingMask = /*UIViewAutoresizing.FlexibleTopMargin |*/ UIViewAutoresizing.FlexibleWidth;
 
 
         // button one
         String buttonTitle = "One";
         UIBarButtonItem btnOne = new UIBarButtonItem(buttonTitle, UIBarButtonItemStyle.Bordered, null);
-        btnOne.Clicked += (s, e) => {
-            new UIAlertView("click!", "btnOne clicked", null, "OK", null).show();
-        };
+        btnOne.target = this;
+        btnOne.action = new Selector("onButtonOne");
 
         // fixed width
         UIBarButtonItem fixedWidth = new UIBarButtonItem(UIBarButtonSystemItem.FixedSpace);
@@ -62,6 +69,10 @@ public class ProgrammaticToolbar_Controller extends UIViewController {
 
         // add the toolbar to the page
         this.view.addSubview(toolbar);
+    }
+
+    protected void onButtonOne() {
+        new UIAlertView("click!", "btnOne clicked", null, "OK", null).show();
     }
 
     @Override

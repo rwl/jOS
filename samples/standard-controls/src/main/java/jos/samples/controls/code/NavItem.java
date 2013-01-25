@@ -44,7 +44,7 @@ public class NavItem {
 
         controllerConstructorTypes = new Class[controllerConstructorArgs.length];
         for (int i = 0; i < controllerConstructorArgs.length; i++) {
-            controllerConstructorTypes[i] = controllerConstructorArgs[i].getClass();
+            controllerConstructorTypes[i] = (Class<? extends UIViewController>) controllerConstructorArgs[i].getClass();
         }
     }
 

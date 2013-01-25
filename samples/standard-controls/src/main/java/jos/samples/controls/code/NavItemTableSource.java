@@ -1,9 +1,16 @@
 package jos.samples.controls.code;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import jos.api.foundation.NSIndexPath;
+import jos.api.uikit.UIImage;
 import jos.api.uikit.UINavigationController;
 import jos.api.uikit.UITableView;
+import jos.api.uikit.UITableViewCell;
+import jos.api.uikit.UITableViewCellAccessory;
+import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITableViewSource;
 import jos.api.uikit.UIViewController;
 
@@ -58,13 +65,13 @@ public class NavItemTableSource extends UITableViewSource {
      */
     @Override
     public UITableViewCell getCell(UITableView tableView, NSIndexPath indexPath) {
-        NavItem navItem = navItems.get(indexPath.Section).items.get(indexPath.row);
+        NavItem navItem = navItems.get(indexPath.section).items.get(indexPath.row);
         UIImage navIcon = null;
 
-        DequeueReusableCell cell = tableView.dequeueReusableCell(this.cellIdentifier);
+        UITableViewCell cell = tableView.dequeueReusableCell(this.cellIdentifier);
         if (cell == null) {
             cell = new UITableViewCell (UITableViewCellStyle.Default, this.cellIdentifier);
-            cell.tag = Environment.TickCount;
+            cell.tag = (int) System.currentTimeMillis();
         }
 
         // set the cell properties
@@ -93,27 +100,43 @@ public class NavItemTableSource extends UITableViewSource {
             navigationController.navigationBarHidden = false;
         } else {
             if (navItem.controllerType != null) {
-                ConstructorInfo ctor = null;
+                Constructor<? extends UIViewController> ctor = null;
 
                 // if the nav item has constructor aguments
-                if (navItem.controllerConstructorArgs.length > 0) {
-                    // look for the constructor
-                    ctor = navItem.controllerType.getConstructor(navItem.controllerConstructorTypes);
-                } else {
-                    // search for the default constructor
-                    ctor = navItem.controllerType.getConstructor(System.Type.EmptyTypes);
+                try {
+                    if (navItem.getControllerConstructorArgs().length > 0) {
+                        // look for the constructor
+                        ctor = navItem.controllerType.getConstructor(navItem.controllerConstructorTypes);
+                    } else {
+                        // search for the default constructor
+                        ctor = navItem.controllerType.getConstructor();
+                    }
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
                 }
 
                 // if we found the constructor
                 if (ctor != null) {
                     UIViewController instance = null;
 
-                    if (navItem.controllerConstructorArgs.length > 0) {
-                        // instance the view controller
-                        instance = ctor.invoke(navItem.controllerConstructorArgs) as UIViewController;
-                    } else {
-                        // instance the view controller
-                        instance = ctor.Invoke (null) as UIViewController;
+                    try {
+                        if (navItem.getControllerConstructorArgs().length > 0) {
+                            // instance the view controller
+                            instance = (UIViewController) ctor.newInstance(navItem.getControllerConstructorArgs());
+                        } else {
+                            // instance the view controller
+                            instance = (UIViewController) ctor.newInstance(new Object[] {null});
+                        }
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
                     }
 
                     if (instance != null) {

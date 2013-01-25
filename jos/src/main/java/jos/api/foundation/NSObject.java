@@ -16,4 +16,7 @@ public class NSObject {
 
     public void setNativeField(String name, NSObject object) {
     }
+
+    public void invokeOnMainThread(NSAction delegate) {
+    }
 }

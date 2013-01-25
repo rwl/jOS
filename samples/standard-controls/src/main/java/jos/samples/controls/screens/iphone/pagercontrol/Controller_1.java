@@ -1,6 +1,8 @@
 package jos.samples.controls.screens.iphone.pagercontrol;
 
 import jos.api.graphicsimaging.CGGeometry;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 
 public class Controller_1 extends UIViewController {

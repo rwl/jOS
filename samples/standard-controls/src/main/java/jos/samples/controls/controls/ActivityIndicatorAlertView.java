@@ -1,8 +1,16 @@
 package jos.samples.controls.controls;
 
+import jos.api.foundation.NSAction;
+import jos.api.foundation.NSCoder;
 import jos.api.graphicsimaging.CGGeometry;
 import jos.api.graphicsimaging.CGRect;
+import jos.api.system.IntPtr;
+import jos.api.uikit.UIActivityIndicatorView;
+import jos.api.uikit.UIActivityIndicatorViewStyle;
 import jos.api.uikit.UIAlertView;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UILabel;
+import jos.api.uikit.UITextAlignment;
 
 import com.google.j2objc.annotations.Export;
 
@@ -33,6 +41,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     }
 
     public ActivityIndicatorAlertView() {
+        super();
     }
 
     /**
@@ -43,8 +52,8 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     public void layoutSubviews() {
         super.layoutSubviews();
         // resize the control
-        this.frame = CGGeometry.CGRectMake(this.frame.x, this.frame.y,
-                this.frame.width, 120);
+        this.frame = CGGeometry.CGRectMake(this.frame.point.x,
+                this.frame.point.y, this.frame.size.width, 120);
     }
 
     /**
@@ -58,7 +67,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
             // if we have a message
             if (message != null || !message.isEmpty()) {
                 lblMessage = new UILabel(CGGeometry.CGRectMake(20, 10,
-                        rect.width - 40, 33));
+                        rect.size.width - 40, 33));
                 lblMessage.backgroundColor = UIColor.clear;
                 lblMessage.textColor = UIColor.lightTextColor;
                 lblMessage.textAlignment = UITextAlignment.Center;
@@ -68,11 +77,12 @@ public class ActivityIndicatorAlertView extends UIAlertView {
 
             // instantiate a new activity indicator
             activityIndicator = new UIActivityIndicatorView(
-                    UIActivityIndicatorViewStyle.white);
-            activityIndicator.frame = CGGeometry.CGRectMake((rect.width / 2)
-                    - (activityIndicator.frame.width / 2), 50,
-                    activityIndicator.frame.width,
-                    activityIndicator.frame.height);
+                    UIActivityIndicatorViewStyle.White);
+            activityIndicator.frame = CGGeometry.CGRectMake(
+                    (rect.size.width / 2)
+                            - (activityIndicator.frame.size.width / 2), 50,
+                    activityIndicator.frame.size.width,
+                    activityIndicator.frame.size.height);
             this.addSubview(activityIndicator);
             activityIndicator.startAnimating();
         }
@@ -83,9 +93,12 @@ public class ActivityIndicatorAlertView extends UIAlertView {
      * Dismisses the alert view. makes sure to call it on the main UI thread in
      * case it's called from a worker thread.
      */
-    public void hide (boolean animated) {
-        this.invokeOnMainThread (delegate {
-            this.dismissWithClickedButtonIndex(0, animated);
+    public void hide(final boolean animated) {
+        this.invokeOnMainThread(new NSAction() {
+            @Override
+            public void action() {
+                dismissWithClickedButtonIndex(0, animated);
+            }
         });
     }
 }

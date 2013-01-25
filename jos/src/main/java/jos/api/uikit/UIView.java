@@ -12,6 +12,8 @@ public class UIView extends UIResponder {
     public CGPoint center;
     public UIColor backgroundColor;
     public CGRect frame;
+    public int tag;
+    public UIViewAutoresizing autoresizingMask;
 
     public UIView() {
     }
@@ -28,5 +30,11 @@ public class UIView extends UIResponder {
     }
 
     public void addSubview(UIView view) {
+    }
+
+    public void layoutSubviews() {
+    }
+
+    public void draw(CGRect rect) {
     }
 }

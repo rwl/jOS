@@ -9,11 +9,6 @@
   <packaging>maven-plugin</packaging>
   <dependencies>
     <dependency>
-      <groupId>jos</groupId>
-      <artifactId>jos-j2objc-plugin</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
       <version>2.0</version>
@@ -30,12 +25,21 @@
       <version>2.4</version>
     </dependency>
     <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>13.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.j2objc</groupId>
+      <artifactId>j2objc</artifactId>
+      <version>0.5.7-SNAPSHOT</version>
+    </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>

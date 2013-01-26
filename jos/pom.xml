@@ -18,9 +18,9 @@
       <version>1.2</version>
     </dependency>
     <dependency>
-    	<groupId>com.google.j2objc</groupId>
-    	<artifactId>j2objc</artifactId>
-    	<version>0.8</version>
+      <groupId>com.github.j2objc</groupId>
+      <artifactId>j2objc</artifactId>
+      <version>0.5.7-SNAPSHOT</version>
     </dependency>
   </dependencies>
 </project>

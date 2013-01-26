@@ -15,10 +15,14 @@
         <artifactId>jos-maven-plugin</artifactId>
         <version>${project.version}</version>
         <configuration>
-          <ignoreMissingImports>true</ignoreMissingImports>
+          <prefix>jos.samples.hello=HW</prefix>
+          <verbose>true</verbose>
+          <useARC>true</useARC>
+          <noPackageDirectories>true</noPackageDirectories>
+          <outputDirectory>${basedir}/src/xcode</outputDirectory>
         </configuration>
       </plugin>
-      <plugin>
+      <!-- <plugin>
         <groupId>com.sap.prd.mobile.ios.mios</groupId>
         <artifactId>xcode-maven-plugin</artifactId>
         <version>1.7.0</version>
@@ -26,25 +30,14 @@
         <configuration>
           <sourceDirectory>${basedir}/src/main/objc</sourceDirectory>
         </configuration>
-      </plugin>
+      </plugin> -->
     </plugins>
   </build>
   <dependencies>
     <dependency>
       <groupId>jos</groupId>
       <artifactId>jos-api</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-
-    <!-- <dependency>
-      <groupId>com.google.j2objc</groupId>
-      <artifactId>j2objc</artifactId>
-      <version>0.8</version>
-    </dependency>
-    <dependency>
-      <groupId>jos</groupId>
-      <artifactId>jos-j2objc-plugin</artifactId>
       <version>${project.version}</version>
-    </dependency> -->
+    </dependency>
   </dependencies>
 </project>

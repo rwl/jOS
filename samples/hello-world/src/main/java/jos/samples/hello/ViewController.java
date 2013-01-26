@@ -4,17 +4,17 @@ import jos.api.uikit.UIScreen;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
-public class HelloViewController extends UIViewController {
+public class ViewController extends UIViewController {
 
     public UIView view;
 
-    public HelloViewController() {
+    public ViewController() {
         super("HelloWorldViewController", null);
     }
 
     @Override
     public void loadView() {
-        this.view = new HelloView(UIScreen.mainScreen.applicationFrame);
+        this.view = new View(UIScreen.mainScreen.applicationFrame);
     }
 
     /*@Override

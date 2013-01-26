@@ -16,7 +16,7 @@
         <version>${project.version}</version>
         <configuration>
           <prefix>jos.samples.hello=HW</prefix>
-          <verbose>true</verbose>
+          <!-- <verbose>true</verbose> -->
           <useARC>true</useARC>
           <noPackageDirectories>true</noPackageDirectories>
           <outputDirectory>${basedir}/src/xcode</outputDirectory>

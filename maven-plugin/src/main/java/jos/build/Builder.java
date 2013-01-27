@@ -280,7 +280,7 @@ public class Builder {
 
         if (static_library) {
             // Create a static archive with all object files + the runtime.
-            final File lib = new File(config.versionized_build_dir(platform), config.name + ".a");
+            final File lib = new File(config.versionized_build_dir(platform), config.getName() + ".a");
             Application.info("Create", lib);
             final File libmacruby = new File(new File(datadir, platform.platform()), "libmacruby-static.a");
             final String objs_list = "";//objs.map { |path, _| path }.unshift(init_o, *config.frameworks_stubs_objects(platform)).map { |x| "\"#{x}\"" }.join(' ')
@@ -481,10 +481,10 @@ public class Builder {
         }
 
         // Compile IB resources.
-        if (config.resources_dir.exists()) {
+        if (config.getResourcesDir().exists()) {
             final List<File> ib_resources_src = Lists.newArrayList();
             final List<File> ib_resources_dest = Lists.newArrayList();
-            for (final File path : FileUtils.listFiles(config.resources_dir, new String[] {"xib", "storyboard"}, true)) {
+            for (final File path : FileUtils.listFiles(config.getResourcesDir(), new String[] {"xib", "storyboard"}, true)) {
                 ib_resources_src.add(path);
                 ib_resources_dest.add(new File(path.getPath().replaceFirst(".xib", ".nib").replaceFirst(".storyboard", ".storyboardc")));
             }
@@ -500,8 +500,8 @@ public class Builder {
         }
 
         // Compile CoreData Model resources.
-        if (config.resources_dir.exists()) {
-            final Collection<File> models = FileUtils.listFiles(config.resources_dir, new String[] {"xcdatamodeld"}, true);
+        if (config.getResourcesDir().exists()) {
+            final Collection<File> models = FileUtils.listFiles(config.getResourcesDir(), new String[] {"xcdatamodeld"}, true);
             for (final File model : models) {
                 final File momd = new File(model.getPath().replaceFirst(".xcdatamodeld", ".momd"));
                 if (!momd.exists() || model.lastModified() > momd.lastModified()) {
@@ -516,11 +516,11 @@ public class Builder {
         final Set<String> reserved_app_bundle_files = Sets.newHashSet(
                 "_CodeSignature/CodeResources", "CodeResources", "embedded.mobileprovision",
                 "Info.plist", "PkgInfo", "ResourceRules.plist",
-                config.name
+                config.getName()
                 );
         Collection<File> resources_files = Lists.newArrayList();
-        if (config.resources_dir.exists()) {
-            resources_files = FileUtils.listFilesAndDirs(config.resources_dir,
+        if (config.getResourcesDir().exists()) {
+            resources_files = FileUtils.listFilesAndDirs(config.getResourcesDir(),
                     new NotFileFilter(new SuffixFileFilter(new String[] {"xib", "storyboard", "xcdatamodeld", "lproj"})),
                     DirectoryFileFilter.DIRECTORY);
             for (final File res_path : resources_files) {
@@ -542,7 +542,7 @@ public class Builder {
 
         // Delete old resource files.
         final Collection<File> bundle_resources = FileUtils.listFiles(
-                config.resources_dir,
+                config.getResourcesDir(),
                 new WildcardFileFilter("**/*"),
                 DirectoryFileFilter.DIRECTORY);
         for (final File bundle_res : bundle_resources) {

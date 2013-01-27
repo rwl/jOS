@@ -156,12 +156,12 @@ public class Project {
      * Clear build objects.
      */
     public static void clean() {
-        Application.info("Delete", Application.config().build_dir());
-        FileUtils.deleteQuietly(Application.config().build_dir());
+        Application.info("Delete", Application.config().getBuildDir());
+        FileUtils.deleteQuietly(Application.config().getBuildDir());
         for (final Vendor vendor : Application.config().vendor_projects) {
             vendor.clean();
         }
-        for (final File p : FileUtils.listFiles(Application.config().resources_dir, new String[] {"nib", "storyboardc", "momd"}, true)) {
+        for (final File p : FileUtils.listFiles(Application.config().getResourcesDir(), new String[] {"nib", "storyboardc", "momd"}, true)) {
             Application.info("Delete", p);
             FileUtils.deleteQuietly(p);
         }
@@ -205,7 +205,7 @@ public class Project {
                 return "\"" + Application.build(platform, opts) + "\"";
             }
         }), " ");
-        final File fat_lib = new File(Application.config().build_dir(), Application.config().name + "-universal.a");
+        final File fat_lib = new File(Application.config().getBuildDir(), Application.config().getName() + "-universal.a");
         Application.info("Create", fat_lib);
         sh("/usr/bin/lipo -create "+libs+" -output \""+fat_lib+"\"");
     }

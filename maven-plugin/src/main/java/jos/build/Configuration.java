@@ -49,10 +49,10 @@ public class Configuration {
     private List<String> frameworks;
     public List<String> weak_frameworks, libs;
     public List<File> framework_search_paths;
-    public String name;
+    private String name;
     private String delegate_class;
     private File build_dir;
-    public File resources_dir;
+    private File resources_dir;
     public File specs_dir;
     private Family[] device_family;
     private String bundle_signature;
@@ -284,7 +284,7 @@ public class Configuration {
         return supported_versions;
     }
 
-    public File build_dir() {
+    public File getBuildDir() {
         if (!build_dir.isDirectory()) {
             try {
                 build_dir.mkdirs();
@@ -875,5 +875,25 @@ public class Configuration {
         //      sdk_version_headers = ((Integer.valueOf(a[0]) * 10000) + (Integer.valueOf(a[1]) * 100)).toString();
         final String extra_flags = OSX_VERSION >= 10.7 ? "--no-64-bit" : "";
         //      sh "RUBYOPT='' /usr/bin/gen_bridge_metadata --format complete #{extra_flags} --cflags \"-isysroot #{sdk_path} -miphoneos-version-min=#{sdk_version} -D__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__=#{sdk_version_headers} -I. #{includes.join(' ')}\" #{headers.map { |x| "\"#{x}\"" }.join(' ')} -o \"#{bs_file}\""
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBuildDir(final File buildDir) {
+        this.build_dir = buildDir;
+    }
+
+    public File getResourcesDir() {
+        return resources_dir;
+    }
+
+    public void setResourcesDir(File resources_dir) {
+        this.resources_dir = resources_dir;
     }
 }

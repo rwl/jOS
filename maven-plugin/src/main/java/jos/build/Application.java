@@ -68,7 +68,7 @@ public class Application {
         if (configs == null) {
             configs = Maps.newHashMap();
         }
-        if (!configs.containsKey(config_mode)) {
+        if (!configs.containsKey(config_mode())) {
             configs.put(config_mode(),
                     new Configuration(new File(System.getProperty("user.dir")),
                             config_mode()));

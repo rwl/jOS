@@ -37,6 +37,22 @@ public class Application {
         }
     }
 
+    public static enum Architecture {
+        I386 ("x86"),
+        X86_64 ("x86-64"),
+        ARM ("arm");
+
+        private final String arch;
+
+        private Architecture(final String arch) {
+            this.arch = arch;
+        }
+
+        public String getArch() {
+            return arch;
+        }
+    }
+
     public static boolean VERBOSE = false;
 
     private static BuildMode configMode;

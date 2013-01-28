@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jos.build.Application.Architecture;
 import jos.build.Application.Platform;
 
 import org.apache.commons.io.FileUtils;
@@ -30,10 +31,23 @@ import com.google.common.collect.Sets;
 
 public class Builder {
 
+    private static abstract class Buildlet /*implements Runnable*/ {
+
+//        private final File path;
+
+        public abstract File build(final File path);
+
+        /*public void run() {
+            // TODO Auto-generated method stub
+
+        }*/
+
+    }
+
     public static File build(final Configuration config, final Platform platform,
             final Map<String, String> opts) {
         final File dataDir = config.getDataDir();
-        final List<String> archs = Lists.newArrayList(config.getArchs().get(platform));
+        final List<Architecture> archs = config.getArchs().get(platform);
 
         final boolean isStaticLibrary = opts.remove("static") != null;
 
@@ -66,29 +80,30 @@ public class Builder {
         // Build object files.
         final File objsBuildDir = new File(buildDir, "objs");
         objsBuildDir.mkdirs();
-        boolean anyObjFileBuilt = false;
+//        final boolean anyObjFileBuilt;
 
-        final Runnable buildFile = new Runnable() {
-            public void run() {
-                File path = null;
+        final Buildlet buildFile = new Buildlet() {
+
+            @Override
+            public File build(File path) {
                 final File obj = new File(objsBuildDir, path.getAbsolutePath() + ".o");
                 final boolean shouldRebuild = (!obj.exists()
                         || path.lastModified() > obj.lastModified()
                         || ruby.lastModified() > obj.lastModified());
 
                 // Generate or retrieve init function.
-                final String initFunc = "";
+                final String initFunc;
                 if (shouldRebuild) {
-                    //initFunc = sh("/usr/bin/uuidgen").trim().gsub("-", "");
+                    initFunc = "";//sh("/usr/bin/uuidgen").trim().gsub("-", "");
                 } else {
-                    //initFunc = sh(config.locate_binary("nm") + obj).scan(/T\s+_(MREP_.*)/)[0][0];
+                    initFunc = "";//sh(config.locate_binary("nm") + obj).scan(/T\s+_(MREP_.*)/)[0][0];
                 }
 
                 if (shouldRebuild) {
                     Application.info("Compile", path);
                     obj.getParentFile().mkdirs();
                     final List<File> archObjs = Lists.newArrayList();
-                    for (final String arch : archs) {
+                    for (final Architecture arch : archs) {
                         // Locate arch kernel.
                         final File kernel = new File(new File(dataDir, platform.getPlatform()), "kernel-"+arch+".bc");
                         if (!kernel.exists()) {
@@ -96,7 +111,7 @@ public class Builder {
                         }
 
                         // LLVM bitcode.
-                        final File bc = new File(objsBuildDir, path + arch + ".bc");
+                        final File bc = new File(objsBuildDir, path + arch.getArch() + ".bc");
                         final List<String> bsFlagsList = Lists.newArrayList();
                         for (final File x : bsFiles) {
                             bsFlagsList.add("--uses-bs \"" + x + "\" ");
@@ -105,21 +120,12 @@ public class Builder {
                         sh("/usr/bin/env VM_KERNEL_PATH=\""+kernel+"\" VM_OPT_LEVEL=\""+config.getOptLevel()+"\" "+ruby+" "+bsFlags+" --emit-llvm \""+bc+"\" " + initFunc + "\" "+path+"\"");
 
                         // Assembly.
-                        final File asm = new File(objsBuildDir, path + arch + ".s");
-                        final String llcArch;
-                        if (arch.equals("i386")) {
-                            llcArch = "x86";
-                        } else if (arch.equals("x86_64")) {
-                            llcArch = "x86-64";
-                        } else if (arch.matches("^arm")) {
-                            llcArch = "arm";
-                        } else{
-                            llcArch = arch;
-                        }
+                        final File asm = new File(objsBuildDir, path + arch.getArch() + ".s");
+                        final String llcArch = arch.getArch();
                         sh(llc + "\""+bc+"\" -o=\""+asm+"\" -march="+llcArch+" -relocation-model=pic -disable-fp-elim -jit-enable-eh -disable-cfi");
 
                         // Object.
-                        final File archObj = new File(objsBuildDir, path + arch + ".o");
+                        final File archObj = new File(objsBuildDir, path + arch.getArch() + ".o");
                         sh(cc + " -fexceptions -c -arch "+arch+" \""+asm+"\" -o \""+archObj+"\"");
 
                         bc.delete();
@@ -136,8 +142,9 @@ public class Builder {
                     sh("/usr/bin/lipo -create "+archObjsList+" -output \""+obj+"\"");
                 }
 
-                //any_obj_file_built = true;
+//                anyObjFileBuilt = true;
                 //[obj, init_func]
+                return obj;
             }
         };
 
@@ -158,11 +165,15 @@ public class Builder {
             final Runnable th = new Runnable() {
 
                 public void run() {
-                    //Thread.sleep(100);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
                     final List<File> objs = Lists.newArrayList();
                     while (queue.size() > 0) {
-                        final File path = queue.get(0);
-                        //objs.add(build_file.run(path));
+                        final File path = queue.remove(0);
+                        objs.add(buildFile.build(path));
                     }
                     queue.addAll(objs);
                 }
@@ -204,13 +215,13 @@ public class Builder {
             }
         }
 
-        if (anyObjFileBuilt) {
+        //if (anyObjFileBuilt) {
             try {
                 FileUtils.touch(objsBuildDir);
             } catch (final IOException e) {
                 Application.warn("Error touching build directory: " + e.getMessage());
             }
-        }
+        //}
 
         final List<File> appObjs = Lists.newArrayList(objs);
         final List<File> specObjs = Lists.newArrayList();

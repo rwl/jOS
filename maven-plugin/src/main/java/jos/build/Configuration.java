@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jos.build.Application.Architecture;
 import jos.build.Application.Platform;
 
 import org.apache.commons.io.FileUtils;
@@ -82,7 +83,7 @@ public class Configuration {
     private float[] supportedVersions;
     private List<String> frameworksDependencies;
     private List<File> bridgeSupportFiles;
-    private Map<String, String> archs;
+    private Map<Platform, List<Architecture>> archs;
     private String[] readProvisionedProfileArray;
     private String deviceId;
     private String[] provisionedDevices;
@@ -265,14 +266,13 @@ public class Configuration {
                 return xcodeDotAppPath;
             }
 
-            Application
-            .fail("Can't locate any version of Xcode on the system.");
+            Application.fail("Can't locate any version of Xcode on the system.");
         }
         return xcodeDir;
     }
 
     public File locateBinary(final String name) {
-        for (File dir : Lists.newArrayList(new File(xcodeDir, "usr/bin"),
+        for (File dir : Lists.newArrayList(new File(getXcodeDir(), "usr/bin"),
                 new File("/usr/bin"))) {
             final File path = new File(dir, name);
             if (path.exists()) {
@@ -518,11 +518,11 @@ public class Configuration {
     }
 
     private File getPlatformsDir() {
-        return new File(xcodeDir, "Platforms");
+        return new File(getXcodeDir(), "Platforms");
     }
 
     private File getPlatformDir(final Platform platform) {
-        return new File(getPlatformsDir(), platform + ".platform");
+        return new File(getPlatformsDir(), platform.getPlatform() + ".platform");
     }
 
     public File getBinDir() {
@@ -569,7 +569,7 @@ public class Configuration {
     public File locateCompiler(final Platform platform, String... execs) {
         final List<File> paths = Lists.newArrayList(new File(
                 getPlatformDir(platform), "Developer/usr/bin"));
-        paths.add(0, new File(xcodeDir,
+        paths.add(0, new File(getXcodeDir(),
                 "Toolchains/XcodeDefault.xctoolchain/usr/bin"));
 
         for (String exec : execs) {
@@ -585,29 +585,25 @@ public class Configuration {
         return buildDir;
     }
 
-    public Map<String, String> getArchs() {
+    public Map<Platform, List<Architecture>> getArchs() {
         if (archs == null) {
-            Map<String, String> h = Maps.newHashMap();
-            for (String platform : Lists.newArrayList("iPhoneSimulator",
-                    "iPhoneOS")) {
-                final Collection<File> files = FileUtils.listFiles(getDataDir(),
-                        FileFilterUtils.suffixFileFilter(".bc"),
-                        DirectoryFileFilter.DIRECTORY);
-                for (File path : files) {
-                    h.put(platform, ""/* path.scan(/kernel-(.+).bc$/)[0][0] */);
-                }
+            archs = Maps.newHashMap();
+            for (final Platform platform : Platform.values()) {
+//                final Collection<File> files = FileUtils.listFiles(getDataDir(),
+//                        FileFilterUtils.suffixFileFilter(".bc"),
+//                        DirectoryFileFilter.DIRECTORY);
+//                for (File path : files) {
+//                    archs.put(platform, ""/* path.scan(/kernel-(.+).bc$/)[0][0] */);
+//                }
+                archs.put(platform, Lists.newArrayList(Architecture.I386,
+                        Architecture.X86_64));
             }
-            archs = h;
         }
         return archs;
     }
 
     private String getArchFlags(final Platform platform) {
-        final List<String> flags = Lists.newArrayList();
-        for (final String x : getArchs().values()) {
-            flags.add("-arch " + x);
-        }
-        return StringUtils.join(flags, " ");
+        return "-arch " + StringUtils.join(getArchs().get(platform), " ");
     }
 
     private String getCommonFlags(final Platform platform) {

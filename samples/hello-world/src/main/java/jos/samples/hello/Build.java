@@ -16,7 +16,7 @@ public class Build {
         final File base = new File(System.getProperty("user.dir"));
 
         final Configuration config = new Configuration(base, BuildMode.DEVELOPMENT);
-        config.setBuildDir(new File(base, "target/jos"));
+        config.setBuildDir(new File(base, "target"));
         config.setResourcesDir(new File(base, "src/main/resources"));
         config.setName("hello");
 

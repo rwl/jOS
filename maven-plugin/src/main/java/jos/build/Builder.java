@@ -31,17 +31,8 @@ import com.google.common.collect.Sets;
 
 public class Builder {
 
-    private static abstract class Buildlet /*implements Runnable*/ {
-
-//        private final File path;
-
-        public abstract File build(final File path);
-
-        /*public void run() {
-            // TODO Auto-generated method stub
-
-        }*/
-
+    private interface Buildlet {
+        File build(final File path);
     }
 
     public static File build(final Configuration config, final Platform platform,
@@ -71,7 +62,7 @@ public class Builder {
 
         // Build vendor libraries.
         final List<File> vendorLibs = Lists.newArrayList();
-        for (Vendor vendorProject : config.getVendorProjects()) {
+        for (final Vendor vendorProject : config.getVendorProjects()) {
             vendorProject.build(platform);
             vendorLibs.addAll(vendorProject.libs);
             bsFiles.addAll(vendorProject.bsFiles);
@@ -85,7 +76,7 @@ public class Builder {
         final Buildlet buildFile = new Buildlet() {
 
             @Override
-            public File build(File path) {
+            public File build(final File path) {
                 final File obj = new File(objsBuildDir, path.getAbsolutePath() + ".o");
                 final boolean shouldRebuild = (!obj.exists()
                         || path.lastModified() > obj.lastModified()
@@ -201,7 +192,8 @@ public class Builder {
         // Start build.
         for (int i = 0; i < buildersCount; i++) {
             final Runnable th = builderThreads.get(i);
-            new Thread(th).start();
+            th.run();
+            //new Thread(th).start();
         }
 
         // Merge the result (based on build order).

@@ -44,7 +44,7 @@ public class Configuration {
         }
     }
 
-    private File[] files;
+    private List<File> files;
     private Map<String, String> infoPlist;
     private boolean detectDependencies;
     private List<String> frameworks;
@@ -176,9 +176,9 @@ public class Configuration {
     public Configuration(final File projectDir, final BuildMode buildMode) {
         this.projectDir = projectDir;
         final Collection<File> files = FileUtils.listFiles(projectDir,
-                FileFilterUtils.suffixFileFilter(".java"),
+                FileFilterUtils.suffixFileFilter(".m"),
                 DirectoryFileFilter.DIRECTORY);
-        this.files = files.toArray(new File[files.size()]);
+        this.files = Lists.newArrayList(files);
         infoPlist = Maps.newHashMap();
         dependencies = Maps.newHashMap();
         detectDependencies = true;
@@ -238,7 +238,7 @@ public class Configuration {
             // First, honor /usr/bin/xcode-select
             final String xcodeselect = "/usr/bin/xcode-select";
             if (new File(xcodeselect).exists()) {
-                final String path = xcodeselect + " -print-path".trim();
+                final String path = (xcodeselect + " -print-path").trim();
                 if (path.matches("^/Developer/")
                         && new File(xcodeDotAppPath).exists()) {
                     xcodeErrorPrinted |= false;
@@ -427,7 +427,7 @@ public class Configuration {
     }
 
     public List<File> getOrderedBuildFiles() {
-        return null;
+        return files;
     }
 
     public List<String> getFrameworksDependencies() {
@@ -482,7 +482,7 @@ public class Configuration {
     public List<File> getBridgeSupportFiles() {
         if (bridgeSupportFiles == null) {
             bridgeSupportFiles = Lists.newArrayList();
-            Set<String> deps = Sets.newLinkedHashSet();
+            /*Set<String> deps = Sets.newLinkedHashSet();
             deps.add("jOS");
             deps.addAll(getFrameworksDependencies());
             deps.addAll(weakFrameworks);
@@ -500,7 +500,7 @@ public class Configuration {
                         bridgeSupportFiles.add(bs_path);
                     }
                 }
-            }
+            }*/
         }
         return bridgeSupportFiles;
     }
@@ -509,6 +509,7 @@ public class Configuration {
         return null;
     }
 
+    @Deprecated
     public File getDataDir() {
         return null;
     }
@@ -525,6 +526,7 @@ public class Configuration {
         return new File(getPlatformsDir(), platform.getPlatform() + ".platform");
     }
 
+    @Deprecated
     public File getBinDir() {
         return null;
     }

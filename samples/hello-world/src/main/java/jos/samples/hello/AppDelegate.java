@@ -1,32 +1,28 @@
 package jos.samples.hello;
 
+import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
 import jos.api.foundation.NSDictionary;
 import jos.api.uikit.UIApplication;
 import jos.api.uikit.UIApplicationDelegate;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UIScreen;
+import jos.api.uikit.UITextAlignment;
 import jos.api.uikit.UIWindow;
 
-
 public class AppDelegate extends UIApplicationDelegate {
-
-    private ViewController viewController;
 
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
         this.window = new UIWindow(UIScreen.mainScreen.bounds);
-        setWindow(new UIWindow(UIScreen.mainScreen.bounds));
 
-        viewController = new ViewController();
-        getWindow().rootViewController = viewController;
-        getWindow().makeKeyAndVisible();
+        UILabel label = new UILabel(CGRectMake(0.0f, 0.0f, 320.0f, 30.0f));
+        label.text = "Hello World";
+        label.textAlignment = UITextAlignment.Center;
 
-        System.out.println(toString());
+        this.window.addSubview(label);
+        this.window.makeKeyAndVisible();
 
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "AppDelegate [viewController=" + viewController + "]";
-    }
 }

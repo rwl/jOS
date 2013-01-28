@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
 import com.google.devtools.j2objc.J2ObjC;
 
 @Mojo(name = "translate", defaultPhase = LifecyclePhase.GENERATE_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
-public class JOSMojo extends AbstractMojo {
+public class TranslateMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.compileClasspathElements}", required = true, readonly = true)
     @SuppressWarnings("rawtypes")

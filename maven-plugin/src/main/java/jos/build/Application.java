@@ -26,67 +26,75 @@ public class Application {
         IPHONE_OS ("iPhoneOS"),
         IPHONE_SIMULATOR ("iPhoneSimulator");
 
-        private final String platform ;
+        private final String platform;
 
         private Platform(final String platform) {
             this.platform = platform;
         }
 
-        public String platform() {
+        public String getPlatform() {
             return platform;
+        }
+    }
+
+    public static enum Architecture {
+        I386 ("x86"),
+        X86_64 ("x86-64"),
+        ARM ("arm");
+
+        private final String arch;
+
+        private Architecture(final String arch) {
+            this.arch = arch;
+        }
+
+        public String getArch() {
+            return arch;
         }
     }
 
     public static boolean VERBOSE = false;
 
-    private static BuildMode config_mode;
+    private static BuildMode configMode;
     private static Map<BuildMode, Configuration> configs;
-    private static Builder builder;
 
-    public static BuildMode config_mode() {
-        if (config_mode == null) {
+    public static BuildMode getConfigMode() {
+        if (configMode == null) {
             if (System.getenv().containsKey("mode")) {
                 final BuildMode mode = BuildMode.valueOf(System.getenv().get(
                         "mode"));
                 switch (mode) {
                 case DEVELOPMENT:
                 case RELEASE:
-                    config_mode = mode;
+                    configMode = mode;
                 default:
                     fail("Invalid value for build mode `" + mode
                             + "' (must be DEVELOPMENT or RELEASE)");
-                    config_mode = BuildMode.DEVELOPMENT;
+                    configMode = BuildMode.DEVELOPMENT;
                 }
             } else {
-                config_mode = BuildMode.DEVELOPMENT;
+                configMode = BuildMode.DEVELOPMENT;
             }
         }
-        return config_mode;
+        return configMode;
     }
 
-    public static Configuration config_without_setup() {
+    public static Configuration getConfigWithoutSetup() {
         if (configs == null) {
             configs = Maps.newHashMap();
         }
-        if (!configs.containsKey(config_mode)) {
-            configs.put(config_mode(),
+        if (!configs.containsKey(getConfigMode())) {
+            configs.put(getConfigMode(),
                     new Configuration(new File(System.getProperty("user.dir")),
-                            config_mode()));
+                            getConfigMode()));
         }
-        return configs.get(config_mode());
+        return configs.get(getConfigMode());
     }
 
-    public static Configuration config() {
-        final Configuration c = config_without_setup();
+    public static Configuration getConfig() {
+        final Configuration c = getConfigWithoutSetup();
         c.setup();
         return c;
-    }
-
-    public static Builder builder() {
-        if (builder == null) {
-            builder = new Builder();
-        }
-        return builder;
     }
 
     public static File build(final Platform platform) {
@@ -94,15 +102,15 @@ public class Application {
     }
 
     public static File build(final Platform platform, Map<String, String> opts) {
-        return builder().build(config(), platform, opts);
+        return Builder.build(getConfig(), platform, opts);
     }
 
     public static void archive() {
-        builder.archive(config());
+        Builder.archive(getConfig());
     }
 
-    public static void codesign(final Platform platform) {
-        builder().codesign(config(), platform);
+    public static void codeSign(final Platform platform) {
+        Builder.codeSign(getConfig(), platform);
     }
 
     public static void fail(final String msg) {

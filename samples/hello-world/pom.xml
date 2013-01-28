@@ -8,6 +8,19 @@
   <artifactId>jos-hello-world-sample</artifactId>
   <!-- <packaging>xcode-app</packaging> -->
   <packaging>jar</packaging>
+  <dependencies>
+    <dependency>
+      <groupId>jos</groupId>
+      <artifactId>jos-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+    	<groupId>jos</groupId>
+    	<artifactId>jos-maven-plugin</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<type>maven-plugin</type>
+    </dependency>
+  </dependencies>
   <build>
     <plugins>
       <plugin>
@@ -33,11 +46,4 @@
       </plugin> -->
     </plugins>
   </build>
-  <dependencies>
-    <dependency>
-      <groupId>jos</groupId>
-      <artifactId>jos-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
 </project>

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import jos.build.Application.Architecture;
 import jos.build.Application.Platform;
 
 import org.apache.commons.io.FileUtils;
@@ -44,56 +45,89 @@ public class Configuration {
     }
 
     private File[] files;
-    private Map<String, String> info_plist;
-    public boolean detect_dependencies;
+    private Map<String, String> infoPlist;
+    private boolean detectDependencies;
     private List<String> frameworks;
-    public List<String> weak_frameworks, libs;
-    public List<File> framework_search_paths;
-    public String name;
-    private String delegate_class;
-    private File build_dir;
-    public File resources_dir;
-    public File specs_dir;
-    private Family[] device_family;
-    private String bundle_signature;
-    private List<Orientation> interface_orientations;
-    private String version, short_version;
-    private StatusBarStyle status_bar_style;
-    private List<BackgroundMode> background_modes;
+    private List<String> weakFrameworks, libs;
+    private List<File> frameworkSearchPaths;
+    private String name;
+    private String delegateClass;
+    private File buildDir;
+    private File resourcesDir;
+    private File specsDir;
+    private Family[] deviceFamily;
+    private String bundleSignature;
+    private List<Orientation> interfaceOrientations;
+    private String version, shortVersion;
+    private StatusBarStyle statusBarStyle;
+    private List<BackgroundMode> backgroundModes;
     private List<String> icons;
-    private boolean prerendered_icon;
-    public List<Vendor> vendor_projects;
+    private boolean prerenderedIcon;
+    private List<Vendor> vendorProjects;
     private Map<String, String> entitlements;
-    public File motiondir;
+    private File motionDir;
 
-    private String xcode_dir, identifier, codesign_certificate,
-    seed_id, fonts;
-    private File provisioning_profile;
-    private float sdk_version, deployment_target;
+    private String xcodeDir, identifier, codeSignCertificate, seedId, fonts;
+    private File provisioningProfile;
+    private float sdkVersion, deploymentTarget;
 
-    public boolean spec_mode;
-    public BuildMode build_mode;
-    public boolean distribution_mode;
-    public Map<String, String> dependencies;
+    private boolean specMode;
+    private BuildMode buildMode;
+    private boolean distributionMode;
+    private Map<String, String> dependencies;
 
-    public File project_dir;
-    private List<String> setup_blocks;
-    private boolean xcode_error_printed;
-    private float[] xcode_version;
-    private float[] supported_versions;
-    private List<String> frameworks_dependencies;
-    private List<File> bridgesupport_files;
-    private Map<String, String> archs;
-    private String[] read_provisioned_profile_array;
-    private String device_id;
-    private String[] provisioned_devices;
+    private File projectDir;
+    private List<String> setupBlocks;
+    private boolean xcodeErrorPrinted;
+    private float[] xcodeVersion;
+    private float[] supportedVersions;
+    private List<String> frameworksDependencies;
+    private List<File> bridgeSupportFiles;
+    private Map<Platform, List<Architecture>> archs;
+    private String[] readProvisionedProfileArray;
+    private String deviceId;
+    private String[] provisionedDevices;
+
+    float OSX_VERSION = 0;// `/usr/bin/sw_vers
+    // -productVersion`.strip.sub("\.\d+$", '').to_f";
 
     public enum Orientation {
-        portrait, landscape_left, landscape_right, portrait_upside_down
+        PORTRAIT ("UIInterfaceOrientationPortrait"),
+        LANDSCAPE_LEFT ("UIInterfaceOrientationLandscapeLeft"),
+        LANDSCAPE_RIGHT ("UIInterfaceOrientationLandscapeRight"),
+        PORTRAIT_UPSIDE_DOWN ("UIInterfaceOrientationPortraitUpsideDown");
+
+        private final String constant;
+
+        private Orientation(final String constant) {
+            this.constant = constant;
+        }
+
+        public String getConstant() {
+            return this.constant;
+        }
     }
 
     public enum Family {
-        iphone, ipad
+        IPHONE (1, "iPhone"),
+        IPAD (2, "iPad");
+
+        private final int familyInt;
+
+        private final String familyName;
+
+        private Family(final int familyInt, final String familyName) {
+            this.familyInt = familyInt;
+            this.familyName = familyName;
+        }
+
+        public String getFamilyName() {
+            return familyName;
+        }
+
+        public int getFamilyInt() {
+            return familyInt;
+        }
     }
 
     public enum BuildMode {
@@ -104,47 +138,74 @@ public class Configuration {
         FALSE, TRUE, INCH_3_5, INCH_4
     }
 
-    public enum BackgroundMode {audio, location, voip, newsstand_content,
-        external_accessory, bluetooth_central}
+    public enum BackgroundMode {
+        AUDIO ("audio"),
+        LOCATION ("location"),
+        VOIP ("voip"),
+        NEWSSTAND_CONTENT ("newsstand-content"),
+        EXTERNAL_ACCESSORY ("external-accessory"),
+        BLUETOOTH_CENTRAL ("bluetooth-central");
 
-    public enum StatusBarStyle {DEFAULT, black_translucent, black_opaque}
+        private final String modeName;
 
-    public Configuration(final File project_dir, final BuildMode build_mode) {
-        this.project_dir = project_dir;
-        final Collection<File> files = FileUtils.listFiles(project_dir,
+        private BackgroundMode(final String modeName) {
+            this.modeName = modeName;
+        }
+
+        public String getModeName() {
+            return modeName;
+        }
+    }
+
+    public enum StatusBarStyle {
+        DEFAULT ("UIStatusBarStyleDefault"),
+        black_translucent ("UIStatusBarStyleBlackTranslucent"),
+        black_opaque ("UIStatusBarStyleBlackOpaque");
+
+        private final String constant;
+
+        private StatusBarStyle(final String constant) {
+            this.constant = constant;
+        }
+
+        public String getConstant() {
+            return constant;
+        }
+    }
+
+    public Configuration(final File projectDir, final BuildMode buildMode) {
+        this.projectDir = projectDir;
+        final Collection<File> files = FileUtils.listFiles(projectDir,
                 FileFilterUtils.suffixFileFilter(".java"),
                 DirectoryFileFilter.DIRECTORY);
         this.files = files.toArray(new File[files.size()]);
-        info_plist = Maps.newHashMap();
+        infoPlist = Maps.newHashMap();
         dependencies = Maps.newHashMap();
-        detect_dependencies = true;
+        detectDependencies = true;
         frameworks = Lists.newArrayList("UIKit", "Foundation", "CoreGraphics");
-        weak_frameworks = Lists.newArrayList();
-        framework_search_paths = Lists.newArrayList();
+        weakFrameworks = Lists.newArrayList();
+        frameworkSearchPaths = Lists.newArrayList();
         libs = Lists.newArrayList();
-        delegate_class = "AppDelegate";
+        delegateClass = "AppDelegate";
         name = "Untitled";
-        resources_dir = new File(project_dir, "resources");
-        build_dir = new File(project_dir, "build");
-        specs_dir = new File(project_dir, "spec");
-        device_family = new Family[] {Family.iphone};
-        bundle_signature = "????";
-        interface_orientations = Lists.newArrayList(Orientation.portrait,
-                Orientation.landscape_left, Orientation.landscape_right);
+        resourcesDir = new File(projectDir, "resources");
+        buildDir = new File(projectDir, "build");
+        specsDir = new File(projectDir, "spec");
+        deviceFamily = new Family[] {Family.IPHONE};
+        bundleSignature = "????";
+        interfaceOrientations = Lists.newArrayList(Orientation.PORTRAIT,
+                Orientation.LANDSCAPE_LEFT, Orientation.LANDSCAPE_RIGHT);
         version = "1.0";
-        short_version = "1";
-        status_bar_style = StatusBarStyle.DEFAULT;
-        background_modes = Lists.newArrayList();
+        shortVersion = "1";
+        statusBarStyle = StatusBarStyle.DEFAULT;
+        backgroundModes = Lists.newArrayList();
         icons = Lists.newArrayList();
-        prerendered_icon = false;
-        vendor_projects = Lists.newArrayList();
+        prerenderedIcon = false;
+        vendorProjects = Lists.newArrayList();
         entitlements = Maps.newHashMap();
-        spec_mode = false;
-        this.build_mode = build_mode;
+        specMode = false;
+        this.buildMode = buildMode;
     }
-
-    float OSX_VERSION = 0;// `/usr/bin/sw_vers
-    // -productVersion`.strip.sub("\.\d+$", '').to_f";
 
     public Map<String, String> variables() {
         final Map<String, String> map = Maps.newHashMap();
@@ -154,11 +215,11 @@ public class Configuration {
         return map;
     }
 
-    private List<String> setup_blocks() {
-        if (setup_blocks == null) {
-            setup_blocks = Lists.newArrayList();
+    private List<String> getSetupBlocks() {
+        if (setupBlocks == null) {
+            setupBlocks = Lists.newArrayList();
         }
-        return setup_blocks;
+        return setupBlocks;
     }
 
     public void setup() {
@@ -170,18 +231,18 @@ public class Configuration {
         // self
     }
 
-    public String xcode_dir() {
-        if (xcode_dir == null) {
-            final String xcode_dot_app_path = "/Applications/Xcode.app/Contents/Developer";
+    public String getXcodeDir() {
+        if (xcodeDir == null) {
+            final String xcodeDotAppPath = "/Applications/Xcode.app/Contents/Developer";
 
             // First, honor /usr/bin/xcode-select
             final String xcodeselect = "/usr/bin/xcode-select";
             if (new File(xcodeselect).exists()) {
                 final String path = xcodeselect + " -print-path".trim();
                 if (path.matches("^/Developer/")
-                        && new File(xcode_dot_app_path).exists()) {
-                    xcode_error_printed |= false;
-                    if (!xcode_error_printed) {
+                        && new File(xcodeDotAppPath).exists()) {
+                    xcodeErrorPrinted |= false;
+                    if (!xcodeErrorPrinted) {
                         System.err
                         .println("===============================================================================\n"
                                 + "It appears that you have a version of Xcode installed in /Applications that has\n"
@@ -191,7 +252,7 @@ public class Configuration {
                                 + "To fix this problem, you can type the following command in the terminal:\n"
                                 + "    $ sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer\n"
                                 + "===============================================================================");
-                        xcode_error_printed = true;
+                        xcodeErrorPrinted = true;
                     }
                 }
                 if (new File(path).exists()) {
@@ -201,18 +262,17 @@ public class Configuration {
 
             // Since xcode-select is borked, we assume the user installed Xcode
             // as an app (new in Xcode 4.3).
-            if (new File(xcode_dot_app_path).exists()) {
-                return xcode_dot_app_path;
+            if (new File(xcodeDotAppPath).exists()) {
+                return xcodeDotAppPath;
             }
 
-            Application
-            .fail("Can't locate any version of Xcode on the system.");
+            Application.fail("Can't locate any version of Xcode on the system.");
         }
-        return xcode_dir;
+        return xcodeDir;
     }
 
-    public File locate_binary(final String name) {
-        for (File dir : Lists.newArrayList(new File(xcode_dir, "usr/bin"),
+    public File locateBinary(final String name) {
+        for (File dir : Lists.newArrayList(new File(getXcodeDir(), "usr/bin"),
                 new File("/usr/bin"))) {
             final File path = new File(dir, name);
             if (path.exists()) {
@@ -223,52 +283,52 @@ public class Configuration {
         return null;
     }
 
-    private float[] xcode_version() {
-        if (xcode_version == null) {
-            final String txt = locate_binary("xcodebuild").getPath()
+    private float[] getXcodeVersion() {
+        if (xcodeVersion == null) {
+            final String txt = locateBinary("xcodebuild").getPath()
                     + "-version";
             final float vers = Float.valueOf(txt);// .scan("Xcode\s(.+)")[0][0];
             final float build = Float.valueOf(txt);// .scan("Build
             // version\s(.+)")[0][0];
             return new float[] { vers, build };
         }
-        return xcode_version;
+        return xcodeVersion;
     }
 
     private void validate() {
         // Xcode version
-        if (xcode_version()[0] < 4.0) {
+        if (getXcodeVersion()[0] < 4.0) {
             Application.fail("Xcode 4.x or greater is required");
         }
 
         // SDK version
         for (String platform : Lists
                 .newArrayList("iPhoneSimulator", "iPhoneOS")) {
-            final File sdk_path = new File(new File(platforms_dir(), platform
+            final File sdkPath = new File(new File(getPlatformsDir(), platform
                     + ".platform"),
                     "Developer/SDKs/#{platform}#{sdk_version}.sdk");
-            if (!sdk_path.exists()) {
+            if (!sdkPath.exists()) {
                 Application
                 .fail("Can't locate #{platform} SDK #{sdk_version} at `#{sdk_path}'");
             }
         }
 
         // Deployment target
-        if (deployment_target > sdk_version) {
-            Application.fail("Deployment target '" + deployment_target
+        if (deploymentTarget > sdkVersion) {
+            Application.fail("Deployment target '" + deploymentTarget
                     + "' must be equal or lesser than SDK version '"
-                    + sdk_version + "')");
+                    + sdkVersion + "')");
         }
-        if (!datadir().exists()) {
-            Application.fail("iOS deployment target '" + deployment_target
+        if (!getDataDir().exists()) {
+            Application.fail("iOS deployment target '" + deploymentTarget
                     + "' is not supported by this version of jOS");
         }
     }
 
-    private float[] supported_versions() {
-        if (supported_versions == null) {
+    private float[] getSupportedVersions() {
+        if (supportedVersions == null) {
             final List<Float> versions = Lists.newArrayList();
-            final Collection<File> files = FileUtils.listFiles(motiondir,
+            final Collection<File> files = FileUtils.listFiles(motionDir,
                     new WildcardFileFilter("data/*"),
                     DirectoryFileFilter.DIRECTORY);
             for (final File path : files) {
@@ -276,45 +336,45 @@ public class Configuration {
                     versions.add(Float.valueOf(path.getName()));
                 }
             }
-            supported_versions = new float[versions.size()];
+            supportedVersions = new float[versions.size()];
             for (int i = 0; i < versions.size(); i++) {
-                supported_versions[i] = versions.get(i);
+                supportedVersions[i] = versions.get(i);
             }
         }
-        return supported_versions;
+        return supportedVersions;
     }
 
-    public File build_dir() {
-        if (!build_dir.isDirectory()) {
+    public File getBuildDir() {
+        if (!buildDir.isDirectory()) {
             try {
-                build_dir.mkdirs();
-            } catch (SecurityException e) {
+                buildDir.mkdirs();
+            } catch (final SecurityException e) {
                 final File tmp = Files.createTempDir();
                 Application
                 .warn("Cannot create build directory '"
-                        + build_dir
+                        + buildDir
                         + "'. Check the permissions. Using a temporary build directory instead: '"
                         + tmp + "'");
-                build_dir = tmp;
+                buildDir = tmp;
             }
         }
-        return build_dir;
+        return buildDir;
     }
 
-    private String build_mode_name() {
-        return StringUtils.capitalize(build_mode.toString().toLowerCase());
+    private String getBuildModeName() {
+        return StringUtils.capitalize(buildMode.toString().toLowerCase());
     }
 
-    public boolean development() {
-        return build_mode == BuildMode.DEVELOPMENT;
+    public boolean isDevelopment() {
+        return buildMode == BuildMode.DEVELOPMENT;
     }
 
-    private boolean release() {
-        return build_mode == BuildMode.RELEASE;
+    private boolean isRelease() {
+        return buildMode == BuildMode.RELEASE;
     }
 
-    public int opt_level() {
-        switch (build_mode) {
+    public int getOptLevel() {
+        switch (buildMode) {
         case DEVELOPMENT:
             return 0;
         case RELEASE:
@@ -324,16 +384,16 @@ public class Configuration {
         }
     }
 
-    public File versionized_build_dir(final Platform platform) {
-        return new File(build_dir, platform.platform() + '-' + deployment_target + '-'
-                + build_mode_name());
+    public File getVersionedBuildDir(final Platform platform) {
+        return new File(buildDir, platform.getPlatform() + '-' + deploymentTarget + '-'
+                + getBuildModeName());
     }
 
-    public File project_file() {
-        return new File(project_dir, "Makefile");
+    public File getProjectFile() {
+        return new File(projectDir, "Makefile");
     }
 
-    private void files_dependencies(Map<File, String> deps_hash) {
+    private void getFilesDependencies(Map<File, String> deps_hash) {
         // res_path = lambda do |x|
         // path = /^\./.match(x) ? x : File.join('.', x)
         // unless @files.include?(path)
@@ -347,40 +407,40 @@ public class Configuration {
         // end
     }
 
-    private void vendor_project(final File path, final String type,
+    private void vendorProject(final File path, final String type,
             Map<String, String> opts) {
-        vendor_projects.add(new Vendor(path, type, this, opts));
+        vendorProjects.add(new Vendor(path, type, this, opts));
     }
 
-    private void unvendor_project(final File path) {
-        final Iterator<Vendor> iterator = vendor_projects.iterator();
+    private void unvendorProject(final File path) {
+        final Iterator<Vendor> iterator = vendorProjects.iterator();
         while (iterator.hasNext()) {
             final Vendor vendor = (Vendor) iterator.next();
             if (vendor.getPath().equals(path)) {
-                vendor_projects.remove(vendor);
+                vendorProjects.remove(vendor);
             }
         }
     }
 
-    private void file_dependencies(final File file) {
+    private void fileDependencies(final File file) {
 
     }
 
-    public List<File> ordered_build_files() {
+    public List<File> getOrderedBuildFiles() {
         return null;
     }
 
-    public List<String> frameworks_dependencies() {
-        if (frameworks_dependencies == null) {
+    public List<String> getFrameworksDependencies() {
+        if (frameworksDependencies == null) {
             // Compute the list of frameworks, including dependencies, that the
             // project uses.
             final Set<String> deps = Sets.newLinkedHashSet();
-            final File slf = new File(new File(new File(sdk(Platform.IPHONE_SIMULATOR),
+            final File slf = new File(new File(new File(getSdk(Platform.IPHONE_SIMULATOR),
                     "System"), "Library"), "Frameworks");
             for (final String framework : frameworks) {
-                final File framework_path = new File(new File(slf, framework
+                final File frameworkPath = new File(new File(slf, framework
                         + ".framework"), framework);
-                if (framework_path.exists()) {
+                if (frameworkPath.exists()) {
                     // for (String dep : locate_binary("otool") +
                     // " -L \"#{framework_path}\"".scan("\t([^\s]+)\s\(")) {
                     // // Only care about public, non-umbrella frameworks (for
@@ -395,22 +455,22 @@ public class Configuration {
                 deps.add(framework);
             }
             // deps.uniq!
-            if (framework_search_paths.isEmpty()) {
+            if (frameworkSearchPaths.isEmpty()) {
                 // deps = deps.select { |dep| File.exist?(File.join(datadir,
                 // 'BridgeSupport', dep + '.bridgesupport')) };
             }
-            frameworks_dependencies = Lists.newArrayList(deps);
+            frameworksDependencies = Lists.newArrayList(deps);
         }
-        return frameworks_dependencies;
+        return frameworksDependencies;
     }
 
-    public List<File> frameworks_stubs_objects(final Platform platform) {
+    public List<File> getFrameworksStubsObjects(final Platform platform) {
         final List<File> stubs = Lists.newArrayList();
         final List<String> frameworks = Lists
-                .newArrayList(frameworks_dependencies());
-        frameworks.addAll(weak_frameworks);
-        for (String framework : frameworks) {
-            final File stubs_obj = new File(new File(datadir(), platform.platform()),
+                .newArrayList(getFrameworksDependencies());
+        frameworks.addAll(weakFrameworks);
+        for (final String framework : frameworks) {
+            final File stubs_obj = new File(new File(getDataDir(), platform.getPlatform()),
                     "#{framework}_stubs.o");
             if (stubs_obj.exists()) {
                 stubs.add(stubs_obj);
@@ -419,59 +479,59 @@ public class Configuration {
         return stubs;
     }
 
-    public List<File> bridgesupport_files() {
-        if (bridgesupport_files == null) {
-            bridgesupport_files = Lists.newArrayList();
+    public List<File> getBridgeSupportFiles() {
+        if (bridgeSupportFiles == null) {
+            bridgeSupportFiles = Lists.newArrayList();
             Set<String> deps = Sets.newLinkedHashSet();
             deps.add("jOS");
-            deps.addAll(frameworks_dependencies());
-            deps.addAll(weak_frameworks);
-            if (spec_mode) {
+            deps.addAll(getFrameworksDependencies());
+            deps.addAll(weakFrameworks);
+            if (specMode) {
                 deps.add("UIAutomation");
             }
             for (final String framework : deps) {
-                for (final float ver : supported_versions()) {
-                    if (ver < deployment_target || sdk_version < ver) {
+                for (final float ver : getSupportedVersions()) {
+                    if (ver < deploymentTarget || sdkVersion < ver) {
                         continue;
                     }
-                    final File bs_path = new File(new File(datadir(ver),
+                    final File bs_path = new File(new File(getDataDir(ver),
                             "BridgeSupport"), framework + ".bridgesupport");
                     if (bs_path.exists()) {
-                        bridgesupport_files.add(bs_path);
+                        bridgeSupportFiles.add(bs_path);
                     }
                 }
             }
         }
-        return bridgesupport_files;
+        return bridgeSupportFiles;
     }
 
-    public List<File> spec_files() {
+    public List<File> getSpecFiles() {
         return null;
     }
 
-    public File datadir() {
+    public File getDataDir() {
         return null;
     }
 
-    private File datadir(final float target) {
+    private File getDataDir(final float target) {
         return null;
     }
 
-    private File platforms_dir() {
-        return new File(xcode_dir, "Platforms");
+    private File getPlatformsDir() {
+        return new File(getXcodeDir(), "Platforms");
     }
 
-    private File platform_dir(final Platform platform) {
-        return new File(platforms_dir(), platform + ".platform");
+    private File getPlatformDir(final Platform platform) {
+        return new File(getPlatformsDir(), platform.getPlatform() + ".platform");
     }
 
-    public File bindir() {
+    public File getBinDir() {
         return null;
     }
 
-    public float sdk_version() {
-        if (sdk_version == 0) {
-            final Collection<File> files = FileUtils.listFiles(platforms_dir(),
+    public float getSdkVersion() {
+        if (sdkVersion == 0) {
+            final Collection<File> files = FileUtils.listFiles(getPlatformsDir(),
                     new WildcardFileFilter(
                             "iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk"),
                             DirectoryFileFilter.DIRECTORY);
@@ -489,27 +549,27 @@ public class Configuration {
                 .fail("jOS doesn't support any of these SDK versions: "
                         + StringUtils.join(versions, ", "));
             }
-            sdk_version = supported_vers;
+            sdkVersion = supported_vers;
         }
-        return sdk_version;
+        return sdkVersion;
     }
 
-    private float deployment_target() {
-        if (deployment_target == 0) {
-            deployment_target = sdk_version();
+    private float getDeploymentTarget() {
+        if (deploymentTarget == 0) {
+            deploymentTarget = getSdkVersion();
         }
-        return deployment_target;
+        return deploymentTarget;
     }
 
-    public File sdk(final Platform platform) {
-        return new File(new File(platform_dir(platform), "Developer/SDKs"),
-                platform.platform() + sdk_version + ".sdk");
+    public File getSdk(final Platform platform) {
+        return new File(new File(getPlatformDir(platform), "Developer/SDKs"),
+                platform.getPlatform() + sdkVersion + ".sdk");
     }
 
-    public File locate_compiler(final Platform platform, String... execs) {
+    public File locateCompiler(final Platform platform, String... execs) {
         final List<File> paths = Lists.newArrayList(new File(
-                platform_dir(platform), "Developer/usr/bin"));
-        paths.add(0, new File(xcode_dir,
+                getPlatformDir(platform), "Developer/usr/bin"));
+        paths.add(0, new File(getXcodeDir(),
                 "Toolchains/XcodeDefault.xctoolchain/usr/bin"));
 
         for (String exec : execs) {
@@ -522,103 +582,81 @@ public class Configuration {
         }
         Application.fail("Can't locate compilers for platform '" + platform
                 + "'");
-        return build_dir;
+        return buildDir;
     }
 
-    public Map<String, String> archs() {
+    public Map<Platform, List<Architecture>> getArchs() {
         if (archs == null) {
-            Map<String, String> h = Maps.newHashMap();
-            for (String platform : Lists.newArrayList("iPhoneSimulator",
-                    "iPhoneOS")) {
-                final Collection<File> files = FileUtils.listFiles(datadir(),
-                        FileFilterUtils.suffixFileFilter(".bc"),
-                        DirectoryFileFilter.DIRECTORY);
-                for (File path : files) {
-                    h.put(platform, ""/* path.scan(/kernel-(.+).bc$/)[0][0] */);
-                }
+            archs = Maps.newHashMap();
+            for (final Platform platform : Platform.values()) {
+//                final Collection<File> files = FileUtils.listFiles(getDataDir(),
+//                        FileFilterUtils.suffixFileFilter(".bc"),
+//                        DirectoryFileFilter.DIRECTORY);
+//                for (File path : files) {
+//                    archs.put(platform, ""/* path.scan(/kernel-(.+).bc$/)[0][0] */);
+//                }
+                archs.put(platform, Lists.newArrayList(Architecture.I386,
+                        Architecture.X86_64));
             }
-            archs = h;
         }
         return archs;
     }
 
-    private String arch_flags(final Platform platform) {
-        final List<String> flags = Lists.newArrayList();
-        for (final String x : archs().values()) {
-            flags.add("-arch " + x);
-        }
-        return StringUtils.join(flags, " ");
+    private String getArchFlags(final Platform platform) {
+        return "-arch " + StringUtils.join(getArchs().get(platform), " ");
     }
 
-    private String common_flags(final Platform platform) {
-        return arch_flags(platform) + " -isysroot \"" + sdk(platform)
-                + "\" -miphoneos-version-min=" + deployment_target() + " -F"
-                + sdk(platform) + "/System/Library/Frameworks";
+    private String getCommonFlags(final Platform platform) {
+        return getArchFlags(platform) + " -isysroot \"" + getSdk(platform)
+                + "\" -miphoneos-version-min=" + getDeploymentTarget() + " -F"
+                + getSdk(platform) + "/System/Library/Frameworks";
     }
 
-    public String cflags(final Platform platform, final boolean cplusplus) {
-        return common_flags(platform) + " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2" + (cplusplus ? "" : " -std=c99");
+    public String getCFlags(final Platform platform, final boolean cplusplus) {
+        return getCommonFlags(platform) + " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2" + (cplusplus ? "" : " -std=c99");
     }
 
-    public String ldflags(final Platform platform) {
-        String ldflags = common_flags(platform);
-        if (deployment_target < 5.0) {
+    public String getLdFlags(final Platform platform) {
+        String ldflags = getCommonFlags(platform);
+        if (deploymentTarget < 5.0) {
             ldflags += " -fobjc-arc";
         }
         return ldflags;
     }
 
-    private String bundle_name() {
-        return name + (spec_mode ? "_spec" : "");
+    private String getBundleName() {
+        return name + (specMode ? "_spec" : "");
     }
 
-    public File app_bundle(final Platform platform) {
-        return new File(versionized_build_dir(platform), bundle_name() + ".app");
+    public File getAppBundle(final Platform platform) {
+        return new File(getVersionedBuildDir(platform), getBundleName() + ".app");
     }
 
-    public File app_bundle_dsym(final Platform platform) {
-        return new File(versionized_build_dir(platform), bundle_name() + ".dSYM");
+    public File getAppBundle_dSym(final Platform platform) {
+        return new File(getVersionedBuildDir(platform), getBundleName() + ".dSYM");
     }
 
-    public File app_bundle_executable(final Platform platform) {
-        return new File(app_bundle(platform), name);
+    public File getAppBundleExecutable(final Platform platform) {
+        return new File(getAppBundle(platform), name);
     }
 
-    public File archive() {
-        return new File(versionized_build_dir(Platform.IPHONE_OS), bundle_name() + ".ipa");
+    public File getArchive() {
+        return new File(getVersionedBuildDir(Platform.IPHONE_OS), getBundleName() + ".ipa");
     }
 
     private String identifier() {
         if (identifier == null) {
             //    		identifier = "com.yourcompany.#{@name.gsub(/\s/, '')}";
         }
-        return spec_mode ? identifier + "_spec" : identifier;
+        return specMode ? identifier + "_spec" : identifier;
     }
 
-    public int device_family_int(final Family family) {
-        switch (family) {
-        case iphone:
-            return 1;
-        case ipad:
-            return 2;
-        default:
-            Application.fail("Unknown device_family value: " + family);
-            return 0;
-        }
-    }
-
-    public String device_family_string(final Family family, final float target,
+    public String getDeviceFamilyString(final Family family, final float target,
             final Retina retina) {
-        String device = "";
-        switch (family) {
-        case iphone:
-            device += "iPhone";
-        case ipad:
-            device += "iPad";
-        }
+        String device = family.getFamilyName();
         switch (retina) {
         case TRUE:
-            device += ((device_family_int(family) == 1 && target >= 6.0) ? " (Retina 4-inch)" : " (Retina)");
+            device += ((family.getFamilyInt() == 1 && target >= 6.0) ? " (Retina 4-inch)" : " (Retina)");
         case INCH_3_5:
             device += " (Retina 3.5-inch)";
         case INCH_4:
@@ -627,74 +665,32 @@ public class Configuration {
         return device;
     }
 
-    public int[] device_family_ints() {
-        final int[] ary = new int[device_family.length];
-        for (int i = 0; i < device_family.length; i++) {
-            final Family family = device_family[i];
-            ary[i] = device_family_int(family);
+    public int[] getDeviceFamilyInts() {
+        final int[] ary = new int[deviceFamily.length];
+        for (int i = 0; i < deviceFamily.length; i++) {
+            final Family family = deviceFamily[i];
+            ary[i] = family.getFamilyInt();
         }
         return ary;
     }
 
-    private String[] interface_orientations_consts() {
-        final String[] consts = new String[interface_orientations.size()];
-        for (int i = 0; i < interface_orientations.size(); i++) {
-            final Orientation ori = interface_orientations.get(i);
-            switch (ori) {
-            case portrait:
-                consts[i] = "UIInterfaceOrientationPortrait";
-            case landscape_left:
-                consts[i] = "UIInterfaceOrientationLandscapeLeft";
-            case landscape_right:
-                consts[i] = "UIInterfaceOrientationLandscapeRight";
-            case portrait_upside_down:
-                consts[i] = "UIInterfaceOrientationPortraitUpsideDown";
-            default:
-                Application.fail("Unknown interface_orientation value: " + ori);
-            }
+    private String[] getInterfaceOrientationsConsts() {
+        final String[] consts = new String[interfaceOrientations.size()];
+        for (int i = 0; i < interfaceOrientations.size(); i++) {
+            consts[i] = interfaceOrientations.get(i).getConstant();
         }
         return consts;
     }
 
-    private String[] background_modes_consts() {
-        final String[] consts = new String[background_modes.size()];
-        for (int i = 0; i < background_modes.size(); i++) {
-            final BackgroundMode mode = background_modes.get(i);
-            switch (mode) {
-            case audio:
-                consts[i] = "audio";
-            case location:
-                consts[i] = "location";
-            case voip:
-                consts[i] = "voip";
-            case newsstand_content:
-                consts[i] = "newsstand-content";
-            case external_accessory:
-                consts[i] = "external-accessory";
-            case bluetooth_central:
-                consts[i] = "bluetooth-central";
-            default:
-                Application.fail("Unknown background_modes value: " + mode);
-            }
+    private String[] getBackgroundModesConsts() {
+        final String[] consts = new String[backgroundModes.size()];
+        for (int i = 0; i < backgroundModes.size(); i++) {
+            consts[i] = backgroundModes.get(i).getModeName();
         }
         return consts;
     }
 
-    private String status_bar_style_const() {
-        switch (status_bar_style) {
-        case DEFAULT:
-            return "UIStatusBarStyleDefault";
-        case black_translucent:
-            return "UIStatusBarStyleBlackTranslucent";
-        case black_opaque:
-            return "UIStatusBarStyleBlackOpaque";
-        default:
-            Application.fail("Unknown status_bar_style value: " + status_bar_style);
-            return null;
-        }
-    }
-
-    public String info_plist_data() {
+    public String getInfoPlistData() {
         final String ios_version_to_build;// = lambda do |vers|
         // XXX we should retrieve these values programmatically.
         //        switch (vers) {
@@ -705,7 +701,7 @@ public class Configuration {
         //        }
         final Map<String, String> plist = Maps.newHashMap();
         plist.put("BuildMachineOSBuild", "sw_vers -buildVersion".trim());
-        plist.put("MinimumOSVersion", String.valueOf(deployment_target()));
+        plist.put("MinimumOSVersion", String.valueOf(getDeploymentTarget()));
         plist.put("CFBundleDevelopmentRegion", "en");
         plist.put("CFBundleName", name);
         plist.put("CFBundleDisplayName", name);
@@ -714,8 +710,8 @@ public class Configuration {
         plist.put("CFBundleInfoDictionaryVersion", "6.0");
         plist.put("CFBundlePackageType", "APPL");
         plist.put("CFBundleResourceSpecification", "ResourceRules.plist");
-        plist.put("CFBundleShortVersionString", short_version);
-        plist.put("CFBundleSignature", bundle_signature);
+        plist.put("CFBundleShortVersionString", shortVersion);
+        plist.put("CFBundleSignature", bundleSignature);
         plist.put("CFBundleSupportedPlatforms", "iPhoneOS");
         plist.put("CFBundleVersion", version);
         //      plist.put("CFBundleIconFiles", icons);
@@ -738,24 +734,24 @@ public class Configuration {
         //            "0" + vers
         //          end
         //        end,
-        plist.put("DTXcodeBuild", String.valueOf(xcode_version()[1]));
-        plist.put("DTSDKName", "iphoneos" + sdk_version());
+        plist.put("DTXcodeBuild", String.valueOf(getXcodeVersion()[1]));
+        plist.put("DTSDKName", "iphoneos" + getSdkVersion());
         //      plist.put("DTSDKBuild", ios_version_to_build.call(sdk_version()));
         plist.put("DTPlatformName", "iphoneos");
         plist.put("DTCompiler", "com.apple.compilers.llvm.clang.1_0");
-        plist.put("DTPlatformVersion", String.valueOf(sdk_version()));
+        plist.put("DTPlatformVersion", String.valueOf(getSdkVersion()));
         //      plist.put("DTPlatformBuild", ios_version_to_build.call(sdk_version()));
-        plist.putAll(info_plist);
+        plist.putAll(infoPlist);
         return plist.toString();
     }
 
-    private String pkginfo_data() {
-        return "AAPL"+bundle_signature;
+    private String getPkgInfoData() {
+        return "AAPL"+bundleSignature;
     }
 
-    public String codesign_certificate() {
-        if (codesign_certificate == null) {
-            final String cert_type = (!development() ? "Distribution" : "Developer");
+    public String getCodeSignCertificate() {
+        if (codeSignCertificate == null) {
+            final String cert_type = (!isDevelopment() ? "Distribution" : "Developer");
             List<String> certs = null;//"/usr/bin/security -q find-certificate -a".scan(/"iPhone #{cert_type}: [^"]+"/).uniq
             if (certs.size() == 0) {
                 Application.fail("Can't find an iPhone Developer certificate in the keychain");
@@ -764,26 +760,26 @@ public class Configuration {
             }
             //        codesign_certificate = certs[0][1..-2] // trim trailing `"` characters
         }
-        return codesign_certificate;
+        return codeSignCertificate;
     }
 
-    public String device_id() {
-        if (device_id == null) {
-            final File deploy = new File(bindir(), "deploy");
-            device_id = deploy+" -D".trim();
-            if (device_id.isEmpty()) {
+    public String getDeviceId() {
+        if (deviceId == null) {
+            final File deploy = new File(getBinDir(), "deploy");
+            deviceId = deploy+" -D".trim();
+            if (deviceId.isEmpty()) {
                 Application.fail("Can't find an iOS device connected on USB");
             }
         }
-        return device_id;
+        return deviceId;
     }
 
-    public File provisioning_profile() {
-        return provisioning_profile("iOS Team Provisioning Profile");
+    public File getProvisioningProfile() {
+        return getProvisioningProfile("iOS Team Provisioning Profile");
     }
 
-    private File provisioning_profile(final String name) {
-        if (provisioning_profile == null) {
+    private File getProvisioningProfile(final String name) {
+        if (provisioningProfile == null) {
             final Collection<File> files = FileUtils.listFiles(
                     new File("~/Library/MobileDevice/Provisioning Profiles"),
                     FileFilterUtils.suffixFileFilter(".mobileprovision"),
@@ -795,46 +791,46 @@ public class Configuration {
 
             if (paths.size() == 0) {
                 Application.fail("Can't find a provisioning profile named '"+name+"'");
-            }else if (paths.size() > 1) {
+            } else if (paths.size() > 1) {
                 Application.warn("Found "+paths.size()+" provisioning profiles named "+name+". Set the `provisioning_profile' project setting. Will use the first one: "+paths.get(0)+"'");
             }
-            provisioning_profile = paths.get(0);
+            provisioningProfile = paths.get(0);
         }
-        return provisioning_profile;
+        return provisioningProfile;
     }
 
-    private String[] read_provisioned_profile_array(final String key) {
+    private String[] getReadProvisionedProfileArray(final String key) {
         //      text = File.read(provisioning_profile)
         //      text.force_encoding('binary') if RUBY_VERSION >= '1.9.0'
         //      text.scan(/<key>\s*#{key}\s*<\/key>\s*<array>(.*?)\s*<\/array>/m)[0][0].scan(/<string>(.*?)<\/string>/).map { |str| str[0].strip }
         return null;
     }
 
-    public List<String> provisioned_devices() {
-        if (provisioned_devices == null) {
-            provisioned_devices = read_provisioned_profile_array("ProvisionedDevices");
+    public List<String> getProvisionedDevices() {
+        if (provisionedDevices == null) {
+            provisionedDevices = getReadProvisionedProfileArray("ProvisionedDevices");
         }
-        return Lists.newArrayList(provisioned_devices);
+        return Lists.newArrayList(provisionedDevices);
     }
 
-    private String seed_id() {
-        if (seed_id == null) {
-            String[] seed_ids = read_provisioned_profile_array("ApplicationIdentifierPrefix");
-            if (seed_ids.length == 0) {
-                Application.fail("Can't find an application seed ID in the provisioning profile '"+provisioning_profile+"'");
-            } else if (seed_ids.length > 1) {
-                Application.warn("Found "+seed_ids.length+" seed IDs in the provisioning profile. Set the `seed_id' project setting. Will use the last one: "+seed_ids[seed_ids.length - 1]);
+    private String getSeedId() {
+        if (seedId == null) {
+            String[] seedIds = getReadProvisionedProfileArray("ApplicationIdentifierPrefix");
+            if (seedIds.length == 0) {
+                Application.fail("Can't find an application seed ID in the provisioning profile '"+provisioningProfile+"'");
+            } else if (seedIds.length > 1) {
+                Application.warn("Found "+seedIds.length+" seed IDs in the provisioning profile. Set the `seed_id' project setting. Will use the last one: "+seedIds[seedIds.length - 1]);
             }
-            seed_id = seed_ids[seed_ids.length - 1];
+            seedId = seedIds[seedIds.length - 1];
         }
-        return seed_id;
+        return seedId;
     }
 
-    public String entitlements_data() {
+    public String getEntitlementsData() {
         Map<String, String> dict = entitlements;
-        if (!development()) {
+        if (!isDevelopment()) {
             if (!dict.containsKey("application-identifier")) {
-                dict.put("application-identifier", seed_id + '.' + identifier);
+                dict.put("application-identifier", seedId + '.' + identifier);
             }
         } else {
             // Required for gdb.
@@ -846,12 +842,12 @@ public class Configuration {
         return dict.toString();
     }
 
-    private List<File> fonts() {
+    private List<File> getFonts() {
         final List<File> fontList;
         if (fonts == null) {
-            if (resources_dir.exists()) {
+            if (resourcesDir.exists()) {
                 final Collection<File> files = FileUtils.listFiles(
-                        resources_dir,
+                        resourcesDir,
                         new WildcardFileFilter("*.{otf,ttf}"),
                         DirectoryFileFilter.DIRECTORY);
                 fontList = Lists.newArrayList(files);
@@ -864,8 +860,8 @@ public class Configuration {
         return fontList;
     }
 
-    private void gen_bridge_metadata(final List<String> headers, final File bs_file) {
-        final File sdk_path = sdk(Platform.IPHONE_SIMULATOR);
+    private void genBridgeMetadata(final List<String> headers, final File bsFile) {
+        final File sdk_path = getSdk(Platform.IPHONE_SIMULATOR);
         final Set<String> includes = Sets.newLinkedHashSet();
         for (String header : headers) {
             includes.add("-I" + new File(header).getParent());
@@ -875,5 +871,85 @@ public class Configuration {
         //      sdk_version_headers = ((Integer.valueOf(a[0]) * 10000) + (Integer.valueOf(a[1]) * 100)).toString();
         final String extra_flags = OSX_VERSION >= 10.7 ? "--no-64-bit" : "";
         //      sh "RUBYOPT='' /usr/bin/gen_bridge_metadata --format complete #{extra_flags} --cflags \"-isysroot #{sdk_path} -miphoneos-version-min=#{sdk_version} -D__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__=#{sdk_version_headers} -I. #{includes.join(' ')}\" #{headers.map { |x| "\"#{x}\"" }.join(' ')} -o \"#{bs_file}\""
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setBuildDir(final File buildDir) {
+        this.buildDir = buildDir;
+    }
+
+    public File getResourcesDir() {
+        return resourcesDir;
+    }
+
+    public void setResourcesDir(File resources_dir) {
+        this.resourcesDir = resources_dir;
+    }
+
+    public boolean isDetectDependencies() {
+        return detectDependencies;
+    }
+
+    public void setDetectDependencies(boolean detectDependencies) {
+        this.detectDependencies = detectDependencies;
+    }
+
+    public List<String> getLibs() {
+        return libs;
+    }
+
+    public List<String> getWeakFrameworks() {
+        return weakFrameworks;
+    }
+
+    public List<File> getFrameworkSearchPaths() {
+        return frameworkSearchPaths;
+    }
+
+    public File getSpecsDir() {
+        return specsDir;
+    }
+
+    public List<Vendor> getVendorProjects() {
+        return vendorProjects;
+    }
+
+    public File getMotionDir() {
+        return motionDir;
+    }
+
+    public boolean isSpecMode() {
+        return specMode;
+    }
+
+    public void setSpecMode(boolean specMode) {
+        this.specMode = specMode;
+    }
+
+    public BuildMode getBuildMode() {
+        return buildMode;
+    }
+
+    public void setBuildMode(BuildMode buildMode) {
+        this.buildMode = buildMode;
+    }
+
+    public boolean isDistributionMode() {
+        return distributionMode;
+    }
+
+    public void setDistributionMode(boolean distributionMode) {
+        this.distributionMode = distributionMode;
+    }
+
+    public Map<String, String> getDependencies() {
+        return dependencies;
     }
 }

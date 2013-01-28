@@ -37,7 +37,7 @@ public class Project {
      */
     public static void deviceBuild() {
         Application.build(Platform.IPHONE_OS);
-        Application.codesign(Platform.IPHONE_OS);
+        Application.codeSign(Platform.IPHONE_OS);
     }
 
     /**
@@ -45,48 +45,50 @@ public class Project {
      */
     public static void simulator() {
         simulatorBuild();
-        final File app = Application.config().app_bundle(Platform.IPHONE_SIMULATOR);
+        final File app = Application.getConfig().getAppBundle(Platform.IPHONE_SIMULATOR);
         final float target;
         if (System.getenv().containsKey("target")) {
             target = Float.valueOf(System.getenv("target"));
         } else {
-            target = Application.config().sdk_version();
+            target = Application.getConfig().getSdkVersion();
         }
 
         // Cleanup the simulator application sandbox, to avoid having old resource files there.
         if (System.getenv("clean") != null) {
-            final File sim_apps = new File("~/Library/Application Support/iPhone Simulator/"+target+"/Applications");
-            for (final File app_bundle : FileUtils.listFiles(sim_apps, new String[] {"app"}, true)) {
-                if (app_bundle.getName().equals(app.getName())) {
-                    FileUtils.deleteQuietly(app_bundle);
+            final File simApps = new File("~/Library/Application Support/iPhone Simulator/"+target+"/Applications");
+            for (final File appBundle : FileUtils.listFiles(simApps, new String[] {"app"}, true)) {
+                if (appBundle.getName().equals(app.getName())) {
+                    FileUtils.deleteQuietly(appBundle);
                     break;
                 }
             }
         }
 
         // Prepare the device family.
-        final int family_int;
+        final int familyInt;
         if (System.getenv().containsKey("device_family")) {
-            family_int = Application.config().device_family_int(Family.valueOf(System.getenv("device_family").toLowerCase()));
+            familyInt = Family.valueOf(System.getenv("device_family").toLowerCase()).getFamilyInt();
         } else {
-            family_int = Application.config().device_family_ints()[0];
+            familyInt = Application.getConfig().getDeviceFamilyInts()[0];
         }
-        final Family family = Family.values()[family_int];
+        final Family family = Family.values()[familyInt];
         final Retina retina = System.getenv().containsKey("retina") ? Retina.FALSE : Retina.FALSE;
 
         // Configure the SimulateDevice variable (the only way to specify if we want to run in retina mode or not).
-        final String simulate_device = Application.config().device_family_string(family, target, retina);
-        if (!sh("/usr/bin/defaults read com.apple.iphonesimulator \"SimulateDevice\"").trim().equals(simulate_device)) {
+        final String simulateDevice = Application.getConfig().getDeviceFamilyString(family, target, retina);
+        if (!sh("/usr/bin/defaults read com.apple.iphonesimulator \"SimulateDevice\"").trim().equals(simulateDevice)) {
             system("/usr/bin/killall \"iPhone Simulator\" >& /dev/null");
-            system("/usr/bin/defaults write com.apple.iphonesimulator \"SimulateDevice\" \""+simulate_device+"\"");
+            system("/usr/bin/defaults write com.apple.iphonesimulator \"SimulateDevice\" \""+simulateDevice+"\"");
         }
 
         // Launch the simulator.
-        final String xcode = Application.config().xcode_dir();
+        final String xcode = Application.getConfig().getXcodeDir();
         String env = xcode.matches("^/Applications/") ? "DYLD_FRAMEWORK_PATH=\""+xcode+"/../Frameworks\":\""+xcode+"/../OtherFrameworks\"" : "";
-        if (Application.config().spec_mode) env += " SIM_SPEC_MODE=1";
-        final File sim = new File(Application.config().bindir(), "sim");
-        final int debug = System.getenv().containsKey("debug") ? 1 : Application.config().spec_mode ? 0 : 2;
+        if (Application.getConfig().isSpecMode()) {
+            env += " SIM_SPEC_MODE=1";
+        }
+        final File sim = new File(Application.getConfig().getBinDir(), "sim");
+        final int debug = System.getenv().containsKey("debug") ? 1 : Application.getConfig().isSpecMode() ? 0 : 2;
         Application.info("Simulate", app);
         /*Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
 			public void run() {
@@ -96,7 +98,7 @@ public class Project {
 				}
 			}
 		}));*/
-        sh(String.format("%s %s %d %d %f \"%s\" \"%s\"", env, sim, debug, family_int, target, xcode, app));
+        sh(String.format("%s %s %d %d %f \"%s\" \"%s\"", env, sim, debug, familyInt, target, xcode, app));
     }
 
     /**
@@ -111,8 +113,8 @@ public class Project {
      * Create an .ipa archive for distribution (AppStore).
      */
     public static void distributionArchive() {
-        Application.config_without_setup().build_mode = BuildMode.RELEASE;
-        Application.config().distribution_mode = true;
+        Application.getConfigWithoutSetup().setBuildMode(BuildMode.RELEASE);
+        Application.getConfig().setDistributionMode(true);
         deviceBuild();
         Application.archive();
     }
@@ -121,7 +123,7 @@ public class Project {
      * Run the test suite on the simulator.
      */
     public static void simulatorTest() {
-        Application.config().spec_mode = true;
+        Application.getConfig().setSpecMode(true);
         simulator();
     }
 
@@ -129,39 +131,39 @@ public class Project {
      * Run the test suite on the device.
      */
     public static void deviceTest() {
-        Application.config().spec_mode = true;
+        Application.getConfig().setSpecMode(true);
         //System.getenv().put"debug", "1");
         device();
     }
 
     public static void device() {
         archive();
-        Application.info("Deploy", Application.config().archive());
-        final String device_id;
+        Application.info("Deploy", Application.getConfig().getArchive());
+        final String deviceId;
         if (System.getenv().containsKey("id")) {
-            device_id = System.getenv("id");
+            deviceId = System.getenv("id");
         } else {
-            device_id = Application.config().device_id();
+            deviceId = Application.getConfig().getDeviceId();
         }
-        if (!Application.config().provisioned_devices().contains(device_id)) {
-            Application.fail("Device ID '"+device_id+"' not provisioned in profile '"+Application.config().provisioning_profile()+"'");
+        if (!Application.getConfig().getProvisionedDevices().contains(deviceId)) {
+            Application.fail("Device ID '"+deviceId+"' not provisioned in profile '"+Application.getConfig().getProvisioningProfile()+"'");
         }
-        final String env = "XCODE_DIR=\""+Application.config().xcode_dir()+"\"";
-        final File deploy = new File(Application.config().bindir(), "deploy");
+        final String env = "XCODE_DIR=\""+Application.getConfig().getXcodeDir()+"\"";
+        final File deploy = new File(Application.getConfig().getBinDir(), "deploy");
         final String flags = "";//"-d";
-        sh(String.format("%s %s %s \"%s\" \"%s\"", env, deploy, flags, device_id, Application.config().archive()));
+        sh(String.format("%s %s %s \"%s\" \"%s\"", env, deploy, flags, deviceId, Application.getConfig().getArchive()));
     }
 
     /**
      * Clear build objects.
      */
     public static void clean() {
-        Application.info("Delete", Application.config().build_dir());
-        FileUtils.deleteQuietly(Application.config().build_dir());
-        for (final Vendor vendor : Application.config().vendor_projects) {
+        Application.info("Delete", Application.getConfig().getBuildDir());
+        FileUtils.deleteQuietly(Application.getConfig().getBuildDir());
+        for (final Vendor vendor : Application.getConfig().getVendorProjects()) {
             vendor.clean();
         }
-        for (final File p : FileUtils.listFiles(Application.config().resources_dir, new String[] {"nib", "storyboardc", "momd"}, true)) {
+        for (final File p : FileUtils.listFiles(Application.getConfig().getResourcesDir(), new String[] {"nib", "storyboardc", "momd"}, true)) {
             Application.info("Delete", p);
             FileUtils.deleteQuietly(p);
         }
@@ -171,7 +173,7 @@ public class Project {
      * Show project config.
      */
     public static void config() {
-        final Map<String, String> map = Application.config().variables();
+        final Map<String, String> map = Application.getConfig().variables();
         final List<String> keys = Lists.newArrayList(map.keySet());
         Collections.sort(keys);
         for (final String key : keys) {
@@ -184,9 +186,9 @@ public class Project {
      * Generate ctags.
      */
     public static void ctags() {
-        final File tags_file = new File("tags");
-        final Configuration config = Application.config();
-        if (!tags_file.exists() || config.project_file().lastModified() > tags_file.lastModified()) {
+        final File tagsFile = new File("tags");
+        final Configuration config = Application.getConfig();
+        if (!tagsFile.exists() || config.getProjectFile().lastModified() > tagsFile.lastModified()) {
             //bs_files = config.bridgesupport_files + config.vendor_projects.map { |p| Dir.glob(File.join(p.path, '*.bridgesupport')) }.flatten
             //final File ctags = new File(config.bindir(), "ctags");
             //final File cfg = new File(new File(config.motiondir, "data"), "bridgesupport-ctags.cfg");
@@ -205,8 +207,8 @@ public class Project {
                 return "\"" + Application.build(platform, opts) + "\"";
             }
         }), " ");
-        final File fat_lib = new File(Application.config().build_dir(), Application.config().name + "-universal.a");
-        Application.info("Create", fat_lib);
-        sh("/usr/bin/lipo -create "+libs+" -output \""+fat_lib+"\"");
+        final File fatLib = new File(Application.getConfig().getBuildDir(), Application.getConfig().getName() + "-universal.a");
+        Application.info("Create", fatLib);
+        sh("/usr/bin/lipo -create "+libs+" -output \""+fatLib+"\"");
     }
 }

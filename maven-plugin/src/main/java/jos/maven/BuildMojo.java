@@ -54,7 +54,7 @@ public class BuildMojo extends AbstractMojo {
         config.setResourcesDir(resourcesDirectory);
         config.setName(name);
 
-        new Builder().build(config, Platform.IPHONE_SIMULATOR,
+        Builder.build(config, Platform.IPHONE_SIMULATOR,
                 Maps.<String, String> newHashMap());
     }
 

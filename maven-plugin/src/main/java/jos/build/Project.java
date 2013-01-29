@@ -173,13 +173,13 @@ public class Project {
      * Show project config.
      */
     public static void config() {
-        final Map<String, String> map = Application.getConfig().variables();
-        final List<String> keys = Lists.newArrayList(map.keySet());
-        Collections.sort(keys);
-        for (final String key : keys) {
-            System.out.printf("%22s : %s", key, map.get(key));
-            System.out.println();
-        }
+//        final Map<String, String> map = Application.getConfig().variables();
+//        final List<String> keys = Lists.newArrayList(map.keySet());
+//        Collections.sort(keys);
+//        for (final String key : keys) {
+//            System.out.printf("%22s : %s", key, map.get(key));
+//            System.out.println();
+//        }
     }
 
     /**

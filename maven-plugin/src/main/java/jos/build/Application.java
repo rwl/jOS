@@ -3,8 +3,10 @@
  */
 package jos.build;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -38,14 +40,16 @@ public class Application {
     }
 
     public static enum Architecture {
-        I386 ("x86"),
-        X86_64 ("x86-64"),
-        ARM ("arm");
+        I386 ("i386", "x86"),
+        X86_64 ("x86_64", "x86-64"),
+        ARM ("arm", "arm");
 
         private final String arch;
+        private final String llcArch;
 
-        private Architecture(final String arch) {
+        private Architecture(final String arch, final String llcArch) {
             this.arch = arch;
+            this.llcArch = llcArch;
         }
 
         public String getArch() {
@@ -129,8 +133,9 @@ public class Application {
     public static void info(String what, final String msg) {
         if (!VERBOSE) {
             if (!StringUtils.isEmpty(what)) {
-                what = " " + (char) 27 + "[1m" + String.format("%10s", what)
-                        + (char) 27 + "[0m"; // bold
+//                what = " " + (char) 27 + "[1m" + String.format("%10s", what)
+//                        + (char) 27 + "[0m"; // bold
+            	what = String.format("%10s: ", what);
             }
             logger.info(what + msg);
         }
@@ -140,16 +145,26 @@ public class Application {
         info(what, path.getPath());
     }
 
-    public static String sh(final String cmd) {
-        String result = "";
-        try {
-            final Process p = Runtime.getRuntime().exec(cmd);
-            result = IOUtils.toString(p.getInputStream());
-        } catch (final IOException e) {
-            fail("Failed to execute command: " + cmd);
-        }
-        return result;
-    }
+	public static String sh(final String cmd) {
+		String result = "";
+		try {
+			System.out.println(cmd);
+			
+			final Process p = Runtime.getRuntime().exec(cmd);
+			result = IOUtils.toString(p.getInputStream());
+
+			final BufferedReader stdError = new BufferedReader(new InputStreamReader(
+					p.getErrorStream()));
+
+			String s;
+			while ((s = stdError.readLine()) != null) {
+				System.out.println(s);
+			}
+		} catch (final IOException e) {
+			fail("Failed to execute command: " + cmd);
+		}
+		return result;
+	}
 
     protected static String sh(final String cmd, final File dir) {
         assert dir.isDirectory();

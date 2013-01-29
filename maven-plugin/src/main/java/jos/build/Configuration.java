@@ -3,7 +3,10 @@
  */
 package jos.build;
 
+import static jos.build.Application.sh;
+
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,6 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jos.build.Application.Architecture;
 import jos.build.Application.Platform;
@@ -27,69 +32,6 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
 public class Configuration {
-
-    List<String> VARS = Lists.newArrayList();
-
-    private static class Deps<K, V> extends HashMap<K, V> {
-
-        // def []=(key, val)
-        // key = relpath(key)
-        // val = [val] unless val.is_a?(Array)
-        // val = val.map { |x| relpath(x) }
-        // super
-        // end
-
-        private String relativePath(final String path) {
-            return path.matches("/^./") ? path : "File.join('.', path)";
-        }
-    }
-
-    private List<File> files;
-    private Map<String, String> infoPlist;
-    private boolean detectDependencies;
-    private List<String> frameworks;
-    private List<String> weakFrameworks, libs;
-    private List<File> frameworkSearchPaths;
-    private String name;
-    private String delegateClass;
-    private File buildDir;
-    private File resourcesDir;
-    private File specsDir;
-    private Family[] deviceFamily;
-    private String bundleSignature;
-    private List<Orientation> interfaceOrientations;
-    private String version, shortVersion;
-    private StatusBarStyle statusBarStyle;
-    private List<BackgroundMode> backgroundModes;
-    private List<String> icons;
-    private boolean prerenderedIcon;
-    private List<Vendor> vendorProjects;
-    private Map<String, String> entitlements;
-    private File motionDir;
-
-    private String xcodeDir, identifier, codeSignCertificate, seedId, fonts;
-    private File provisioningProfile;
-    private float sdkVersion, deploymentTarget;
-
-    private boolean specMode;
-    private BuildMode buildMode;
-    private boolean distributionMode;
-    private Map<String, String> dependencies;
-
-    private File projectDir;
-    private List<String> setupBlocks;
-    private boolean xcodeErrorPrinted;
-    private float[] xcodeVersion;
-    private float[] supportedVersions;
-    private List<String> frameworksDependencies;
-    private List<File> bridgeSupportFiles;
-    private Map<Platform, List<Architecture>> archs;
-    private String[] readProvisionedProfileArray;
-    private String deviceId;
-    private String[] provisionedDevices;
-
-    float OSX_VERSION = 0;// `/usr/bin/sw_vers
-    // -productVersion`.strip.sub("\.\d+$", '').to_f";
 
     public enum Orientation {
         PORTRAIT ("UIInterfaceOrientationPortrait"),
@@ -173,6 +115,69 @@ public class Configuration {
         }
     }
 
+    //List<String> VARS = Lists.newArrayList();
+
+    /*private static class Deps<K, V> extends HashMap<K, V> {
+
+        // def []=(key, val)
+        // key = relpath(key)
+        // val = [val] unless val.is_a?(Array)
+        // val = val.map { |x| relpath(x) }
+        // super
+        // end
+
+        private String relativePath(final String path) {
+            return path.matches("/^./") ? path : "File.join('.', path)";
+        }
+    }*/
+
+    private List<File> files;
+    private Map<String, String> infoPlist;
+    private boolean detectDependencies;
+    private List<String> frameworks;
+    private List<String> weakFrameworks, libs;
+    private List<File> frameworkSearchPaths;
+    private String name;
+    private String delegateClass;
+    private File buildDir;
+    private File resourcesDir;
+    private File specsDir;
+    private Family[] deviceFamily;
+    private String bundleSignature;
+    private List<Orientation> interfaceOrientations;
+    private String version, shortVersion;
+    private StatusBarStyle statusBarStyle;
+    private List<BackgroundMode> backgroundModes;
+    private List<String> icons;
+    private boolean prerenderedIcon;
+    private List<Vendor> vendorProjects;
+    private Map<String, String> entitlements;
+    private File motionDir;
+
+    private String xcodeDir, identifier, codeSignCertificate, seedId, fonts;
+    private File provisioningProfile;
+    private Float deploymentTarget;
+    private Float sdkVersion;
+
+    private boolean specMode;
+    private BuildMode buildMode;
+    private boolean distributionMode;
+    private Map<String, String> dependencies;
+
+    private File projectDir;
+    private List<String> setupBlocks;
+    private boolean xcodeErrorPrinted;
+    private float[] xcodeVersion;
+    private float[] supportedVersions;
+    private List<String> frameworksDependencies;
+    private List<File> bridgeSupportFiles;
+    private Map<Platform, List<Architecture>> archs;
+    private String[] readProvisionedProfileArray;
+    private String deviceId;
+    private String[] provisionedDevices;
+
+    private final float OSX_VERSION = Float.valueOf(sh("/usr/bin/sw_vers -productVersion").trim().replaceAll(".[0-9]+$", ""));
+
     public Configuration(final File projectDir, final BuildMode buildMode) {
         this.projectDir = projectDir;
         final Collection<File> files = FileUtils.listFiles(projectDir,
@@ -207,13 +212,13 @@ public class Configuration {
         this.buildMode = buildMode;
     }
 
-    public Map<String, String> variables() {
+    /*public Map<String, String> variables() {
         final Map<String, String> map = Maps.newHashMap();
         for (String sym : VARS) {
             map.put(sym, sym);
         }
         return map;
-    }
+    }*/
 
     private List<String> getSetupBlocks() {
         if (setupBlocks == null) {
@@ -238,7 +243,7 @@ public class Configuration {
             // First, honor /usr/bin/xcode-select
             final String xcodeselect = "/usr/bin/xcode-select";
             if (new File(xcodeselect).exists()) {
-                final String path = (xcodeselect + " -print-path").trim();
+                final String path = sh(xcodeselect + " -print-path").trim();
                 if (path.matches("^/Developer/")
                         && new File(xcodeDotAppPath).exists()) {
                     xcodeErrorPrinted |= false;
@@ -256,14 +261,16 @@ public class Configuration {
                     }
                 }
                 if (new File(path).exists()) {
-                    return path;
+                	xcodeDir = path;
+                    return xcodeDir;
                 }
             }
 
             // Since xcode-select is borked, we assume the user installed Xcode
             // as an app (new in Xcode 4.3).
             if (new File(xcodeDotAppPath).exists()) {
-                return xcodeDotAppPath;
+            	xcodeDir = xcodeDotAppPath;
+                return xcodeDir;
             }
 
             Application.fail("Can't locate any version of Xcode on the system.");
@@ -385,7 +392,7 @@ public class Configuration {
     }
 
     public File getVersionedBuildDir(final Platform platform) {
-        return new File(buildDir, platform.getPlatform() + '-' + deploymentTarget + '-'
+        return new File(buildDir, platform.getPlatform() + '-' + getDeploymentTarget() + '-'
                 + getBuildModeName());
     }
 
@@ -532,32 +539,44 @@ public class Configuration {
     }
 
     public float getSdkVersion() {
-        if (sdkVersion == 0) {
-            final Collection<File> files = FileUtils.listFiles(getPlatformsDir(),
-                    new WildcardFileFilter(
-                            "iPhoneOS.platform/Developer/SDKs/iPhoneOS*.sdk"),
-                            DirectoryFileFilter.DIRECTORY);
+        if (sdkVersion == null) {
+            final File[] files = new File(getPlatformsDir(),
+            		"iPhoneOS.platform/Developer/SDKs/").listFiles(
+            				(FileFilter) DirectoryFileFilter.INSTANCE);
             final List<Float> versions = Lists.newArrayList();
+            final Pattern pattern = Pattern.compile("iPhoneOS(.*).sdk");
             for (final File file : files) {
-                // versions.add(file.getName().scan("iPhoneOS(.*)\.sdk")[0][0]);
+            	final Matcher matcher = pattern.matcher(file.getName());
+            	if (matcher.matches()) {
+            		final String group = matcher.group(1);
+	            	if (group != null) {
+	                    versions.add(Float.valueOf(group));
+	            	}
+                }
             }
             if (versions.size() == 0) {
-                Application.fail("Can't find an iOS SDK in `#{platforms_dir}'");
+                Application.fail("Can't find an iOS SDK in " + getPlatformsDir());
             }
-            float supported_vers = 0;// = versions.reverse.find { |vers|
-            // File.exist?(datadir(vers)) }
-            if (supported_vers == 0) {
+            Collections.reverse(versions);
+            /*Float supported_vers = null;
+            for (Float vers : versions) {
+				if (getDataDir(vers).exists()) {
+					supported_vers = vers;
+					break;
+				}
+            }
+            if (supported_vers == null) {
                 Application
                 .fail("jOS doesn't support any of these SDK versions: "
                         + StringUtils.join(versions, ", "));
-            }
-            sdkVersion = supported_vers;
+            }*/
+            sdkVersion = versions.get(0);
         }
         return sdkVersion;
     }
 
     private float getDeploymentTarget() {
-        if (deploymentTarget == 0) {
+        if (deploymentTarget == null) {
             deploymentTarget = getSdkVersion();
         }
         return deploymentTarget;
@@ -565,7 +584,7 @@ public class Configuration {
 
     public File getSdk(final Platform platform) {
         return new File(new File(getPlatformDir(platform), "Developer/SDKs"),
-                platform.getPlatform() + sdkVersion + ".sdk");
+                platform.getPlatform() + getSdkVersion() + ".sdk");
     }
 
     public File locateCompiler(final Platform platform, String... execs) {

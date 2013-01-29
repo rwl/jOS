@@ -19,6 +19,7 @@ import jos.build.Application.Architecture;
 import jos.build.Application.Platform;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -42,8 +43,8 @@ public class Builder {
 
         final boolean isStaticLibrary = opts.remove("static") != null;
 
-        final File ruby = new File(config.getBinDir(), "ruby");
-        final File llc = new File(config.getBinDir(), "llc");
+//        final File ruby = new File(config.getBinDir(), "ruby");
+//        final File llc = new File(config.getBinDir(), "llc");
 
         if (config.isSpecMode() && config.getSpecFiles().isEmpty()) {
             Application.fail("No spec files in '"+config.getSpecsDir()+"'");
@@ -53,20 +54,21 @@ public class Builder {
         final File sdk = config.getSdk(platform);
         final File cc = config.locateCompiler(platform, "gcc");
         final File cxx = config.locateCompiler(platform, "clang++");
+        final File clang = config.locateCompiler(platform, "clang");
 
         final File buildDir = config.getVersionedBuildDir(platform);
         Application.info("Build", buildDir);
 
         // Prepare the list of BridgeSupport files needed.
-        final List<File> bsFiles = config.getBridgeSupportFiles();
+//        final List<File> bsFiles = config.getBridgeSupportFiles();
 
         // Build vendor libraries.
-        final List<File> vendorLibs = Lists.newArrayList();
+        /*final List<File> vendorLibs = Lists.newArrayList();
         for (final Vendor vendorProject : config.getVendorProjects()) {
             vendorProject.build(platform);
             vendorLibs.addAll(vendorProject.libs);
             bsFiles.addAll(vendorProject.bsFiles);
-        }
+        }*/
 
         // Build object files.
         final File objsBuildDir = new File(buildDir, "objs");
@@ -77,10 +79,10 @@ public class Builder {
 
             @Override
             public File build(final File path) {
-                final File obj = new File(objsBuildDir, path.getAbsolutePath() + ".o");
+                final File obj = new File(objsBuildDir, FilenameUtils.removeExtension(path.getName()) + ".o");
                 final boolean shouldRebuild = (!obj.exists()
                         || path.lastModified() > obj.lastModified()
-                        || ruby.lastModified() > obj.lastModified());
+                        /*|| ruby.lastModified() > obj.lastModified()*/);
 
                 // Generate or retrieve init function.
                 final String initFunc;
@@ -96,41 +98,50 @@ public class Builder {
                     final List<File> archObjs = Lists.newArrayList();
                     for (final Architecture arch : archs) {
                         // Locate arch kernel.
-                        final File kernel = new File(new File(dataDir, platform.getPlatform()), "kernel-"+arch+".bc");
+                        /*final File kernel = new File(new File(dataDir, platform.getPlatform()), "kernel-"+arch+".bc");
                         if (!kernel.exists()) {
                             throw new IllegalStateException("Can't locate kernel file");
-                        }
+                        }*/
 
                         // LLVM bitcode.
-                        final File bc = new File(objsBuildDir, path + arch.getArch() + ".bc");
+                        /*final File bc = new File(objsBuildDir, path + arch.getArch() + ".bc");
                         final List<String> bsFlagsList = Lists.newArrayList();
                         for (final File x : bsFiles) {
                             bsFlagsList.add("--uses-bs \"" + x + "\" ");
                         }
                         final String bsFlags = StringUtils.join(bsFlagsList, " ");
-                        sh("/usr/bin/env VM_KERNEL_PATH=\""+kernel+"\" VM_OPT_LEVEL=\""+config.getOptLevel()+"\" "+ruby+" "+bsFlags+" --emit-llvm \""+bc+"\" " + initFunc + "\" "+path+"\"");
+                        sh("/usr/bin/env VM_KERNEL_PATH=\""+kernel+"\" VM_OPT_LEVEL=\""+config.getOptLevel()+"\" "+ruby+" "+bsFlags+" --emit-llvm \""+bc+"\" " + initFunc + "\" "+path+"\"");*/
 
                         // Assembly.
-                        final File asm = new File(objsBuildDir, path + arch.getArch() + ".s");
+                        /*final File asm = new File(objsBuildDir, path + arch.getArch() + ".s");
                         final String llcArch = arch.getArch();
-                        sh(llc + "\""+bc+"\" -o=\""+asm+"\" -march="+llcArch+" -relocation-model=pic -disable-fp-elim -jit-enable-eh -disable-cfi");
+                        sh(llc + "\""+bc+"\" -o=\""+asm+"\" -march="+llcArch+" -relocation-model=pic -disable-fp-elim -jit-enable-eh -disable-cfi");*/
 
                         // Object.
-                        final File archObj = new File(objsBuildDir, path + arch.getArch() + ".o");
-                        sh(cc + " -fexceptions -c -arch "+arch+" \""+asm+"\" -o \""+archObj+"\"");
+                        final File archObj = new File(objsBuildDir, FilenameUtils.removeExtension(path.getName()) + '-' + arch.getArch() + ".o");
+                        //sh(cc + " -fexceptions -c -arch " + arch.getArch() + " \"" + path + "\" -o \"" + archObj + "\"");
+                        
+                        sh(clang + " -fexceptions -x objective-c -std=gnu99 -O0"
+                        		+ (config.isDevelopment() ? " -DDEBUG=1 -g" : "")
+                        		+ " -fobjc-abi-version=2"
+                        		+ " -mios-simulator-version-min=" + config.getSdkVersion()
+                        		+ " -isysroot " + sdk 
+                        		+ " -arch " + arch.getArch()
+                        		+ " -c " + path
+                        		+ " -o " + archObj);
 
-                        bc.delete();
-                        asm.delete();
+                        /*bc.delete();
+                        asm.delete();*/
                         archObjs.add(archObj);
                     }
 
                     // Assemble fat binary.
                     final String archObjsList = StringUtils.join(Lists.transform(archObjs, new Function<File, String>() {
                         public String apply(File x) {
-                            return "\"" + x+ "\"";
+                            return '"' + x.getAbsolutePath() + '"';
                         }
                     }), " ");
-                    sh("/usr/bin/lipo -create "+archObjsList+" -output \""+obj+"\"");
+                    sh("/usr/bin/lipo -create " + archObjsList + " -output \"" + obj + "\"");
                 }
 
 //                anyObjFileBuilt = true;
@@ -174,10 +185,10 @@ public class Builder {
         }
 
         // Resolve file dependencies
-        if (config.isDetectDependencies()) {
-            //        deps = new Dependency(config.files).run();
-            //        config.dependencies = deps.putAll(config.dependencies);
-        }
+        /*if (config.isDetectDependencies()) {
+            deps = new Dependency(config.files).run();
+            config.dependencies = deps.putAll(config.dependencies);
+        }*/
 
         // Feed builders with work.
         int builder_i = 0;
@@ -425,12 +436,12 @@ public class Builder {
                 break;
             }
         }
-        for (final File lib  : vendorLibs) {
+        /*for (final File lib  : vendorLibs) {
             if (lib.lastModified() > mainExec.lastModified()) {
                 modified = true;
                 break;
             }
-        }
+        }*/
         if (!mainExec.exists()
                 || config.getProjectFile().lastModified() > mainExec.lastModified()
                 || modified
@@ -462,11 +473,11 @@ public class Builder {
                     return "-weak_framework " + x;
                 }
             }), " ");
-            final String forceLoads = StringUtils.join(Lists.transform(vendorLibs, new Function<File, String>() {
+            final String forceLoads = "";/*StringUtils.join(Lists.transform(vendorLibs, new Function<File, String>() {
                 public String apply(final File x) {
                     return "-force_load \"" + x + "\"";
                 }
-            }), " ");
+            }), " ");*/
 
             sh(cxx+" -o \""+mainExec+"\" "+objsList+" "+config.getLdFlags(platform)+" -L"+new File(dataDir, platform.getPlatform())+" -lmacruby-static -lobjc -licucore "+frameworkSearchPaths+" "+frameworks+" "+weakFrameworks+" "+StringUtils.join(config.getLibs(), " ") + " "+ forceLoads);
             mainExecCreated = true;

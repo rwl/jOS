@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,7 @@ import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 
+import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -623,22 +623,35 @@ public class Configuration {
         return archs;
     }
 
-    private String getArchFlags(final Platform platform) {
-        return "-arch " + StringUtils.join(getArchs().get(platform), " ");
-    }
+	public String getArchFlags(final Platform platform) {
+		return StringUtils.join(Lists.transform(getArchs().get(platform),
+				new Function<Architecture, String>() {
+					@Override
+					public String apply(final Architecture arch) {
+						return "-arch " + arch.getArch();
+					}
+				}), " ");
+	}
 
     private String getCommonFlags(final Platform platform) {
-        return getArchFlags(platform) + " -isysroot \"" + getSdk(platform)
-                + "\" -miphoneos-version-min=" + getDeploymentTarget() + " -F"
-                + getSdk(platform) + "/System/Library/Frameworks";
+        return " -isysroot " + getSdk(platform)
+                + " -miphoneos-version-min=" + getDeploymentTarget()
+                //+ " -F" + getSdk(platform) + "/System/Library/Frameworks"
+                ;
     }
 
-    public String getCFlags(final Platform platform, final boolean cplusplus) {
-        return getCommonFlags(platform) + " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2" + (cplusplus ? "" : " -std=c99");
+    public String getCFlags(final Platform platform, final boolean cplusplus,
+    		final boolean objc) {
+        return getCommonFlags(platform)
+        		+ (isDevelopment() ? " -DDEBUG=1 -g" : "")
+        		+ " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2"
+        		+ (cplusplus ? "" : " -std=c99") //gnu99
+        		+ " -x " + (cplusplus ? "c++" : objc ? "objective-c" : "c")
+        		+ " -O0";
     }
 
     public String getLdFlags(final Platform platform) {
-        String ldflags = getCommonFlags(platform);
+        String ldflags = getArchFlags(platform) + getCommonFlags(platform);
         if (deploymentTarget < 5.0) {
             ldflags += " -fobjc-arc";
         }

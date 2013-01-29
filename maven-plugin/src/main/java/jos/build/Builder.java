@@ -121,11 +121,7 @@ public class Builder {
                         final File archObj = new File(objsBuildDir, FilenameUtils.removeExtension(path.getName()) + '-' + arch.getArch() + ".o");
                         //sh(cc + " -fexceptions -c -arch " + arch.getArch() + " \"" + path + "\" -o \"" + archObj + "\"");
                         
-                        sh(clang + " -fexceptions -x objective-c -std=gnu99 -O0"
-                        		+ (config.isDevelopment() ? " -DDEBUG=1 -g" : "")
-                        		+ " -fobjc-abi-version=2"
-                        		+ " -mios-simulator-version-min=" + config.getSdkVersion()
-                        		+ " -isysroot " + sdk 
+                        sh(clang + config.getCFlags(platform, false, true)
                         		+ " -arch " + arch.getArch()
                         		+ " -c " + path
                         		+ " -o " + archObj);
@@ -136,12 +132,13 @@ public class Builder {
                     }
 
                     // Assemble fat binary.
-                    final String archObjsList = StringUtils.join(Lists.transform(archObjs, new Function<File, String>() {
+                    /*final String archObjsList = StringUtils.join(Lists.transform(archObjs, new Function<File, String>() {
                         public String apply(File x) {
                             return '"' + x.getAbsolutePath() + '"';
                         }
-                    }), " ");
-                    sh("/usr/bin/lipo -create " + archObjsList + " -output \"" + obj + "\"");
+                    }), " ");*/
+                    final String archObjsList = StringUtils.join(archObjs, " ");
+                    sh("/usr/bin/lipo -create " + archObjsList + " -output " + obj + "");
                 }
 
 //                anyObjFileBuilt = true;
@@ -291,7 +288,10 @@ public class Builder {
         final File init_o = new File(objsBuildDir, "init.o");
         if (!(init.exists() && init_o.exists() && read(init).equals(initTxt))) {
             write(init, initTxt);
-            sh(cxx + " \"" + init + "\" "+config.getCFlags(platform, true)+" -c -o \""+init_o+"\"");
+            sh(cxx + " \"" + init
+            		+ "\" " + config.getArchFlags(platform)
+            		+ " " + config.getCFlags(platform, true, false)
+            		+ " -c -o \"" + init_o + "\"");
         }
 
         if (isStaticLibrary) {
@@ -416,7 +416,8 @@ public class Builder {
         final File main_o = new File(objsBuildDir, "main.o");
         if (!(main.exists() && main_o.exists() && read(main).equals(mainTxt))) {
             write(main, mainTxt);
-            sh(cxx+" \""+main+"\" "+config.getCFlags(platform, true)+" -c -o \""+main_o+"\"");
+            sh(cxx + " \"" + main + "\" " + config.getArchFlags(platform)
+            		+ config.getCFlags(platform, true, false) +" -c -o \"" + main_o + "\"");
         }
 
         // Prepare bundle.
@@ -479,7 +480,16 @@ public class Builder {
                 }
             }), " ");*/
 
-            sh(cxx+" -o \""+mainExec+"\" "+objsList+" "+config.getLdFlags(platform)+" -L"+new File(dataDir, platform.getPlatform())+" -lmacruby-static -lobjc -licucore "+frameworkSearchPaths+" "+frameworks+" "+weakFrameworks+" "+StringUtils.join(config.getLibs(), " ") + " "+ forceLoads);
+            sh(cxx + " -o \"" + mainExec
+            		+ "\" " + objsList
+            		+ " " + config.getLdFlags(platform)
+            		+ " -L" + new File(dataDir, platform.getPlatform())
+            		+ " -lmacruby-static -lobjc -licucore"
+            		+ " " + frameworkSearchPaths
+            		+ " " + frameworks
+            		+ " " + weakFrameworks
+            		+ " " + StringUtils.join(config.getLibs(), " ")
+            		+ " " + forceLoads);
             mainExecCreated = true;
         }
 

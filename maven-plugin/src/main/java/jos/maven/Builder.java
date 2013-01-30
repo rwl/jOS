@@ -45,7 +45,7 @@ public class Builder {
                         || path.lastModified() > obj.lastModified());
 
                 if (shouldRebuild) {
-                    logger.info("Compiling: " + path);
+                    logger.info("Compiling " + path);
                     obj.getParentFile().mkdirs();
                     final List<File> archObjs = Lists.newArrayList();
                     for (final Architecture arch : archs) {
@@ -133,7 +133,7 @@ public class Builder {
         // Prepare bundle.
         final File bundlePath = config.getAppBundle(platform);
         if (!bundlePath.exists()) {
-            logger.info("Creating: " + bundlePath);
+            logger.info("Creating " + bundlePath);
             bundlePath.mkdirs();
         }
 
@@ -150,7 +150,7 @@ public class Builder {
         if (!mainExec.exists()
                 || config.getProjectFile().lastModified() > mainExec.lastModified()
                 || modified) {
-        	logger.info("Linking: " + mainExec);
+        	logger.info("Linking " + mainExec);
             final String objsList = StringUtils.join(objs, " ");
             final String frameworks = StringUtils.join(Lists.transform(config.getFrameworksDependencies(), new Function<String, String>() {
                 public String apply(final String x) {
@@ -167,15 +167,15 @@ public class Builder {
         // Create bundle/Info.plist.
         final File bundleInfoPlist = new File(bundlePath, "Info.plist");
         if (!bundleInfoPlist.exists() || config.getProjectFile().lastModified() > bundleInfoPlist.lastModified()) {
-            logger.info("Creating: " + bundleInfoPlist);
+            logger.info("Creating " + bundleInfoPlist);
             write(bundleInfoPlist, config.getInfoPlistData());
-            sh("/usr/bin/plutil -convert binary1 \"" + bundleInfoPlist + "\"");
+            sh("/usr/bin/plutil -convert binary1 " + bundleInfoPlist);
         }
 
         // Create bundle/PkgInfo.
         final File bundlePkgInfo = new File(bundlePath, "PkgInfo");
         if (!bundlePkgInfo.exists() || config.getProjectFile().lastModified() > bundlePkgInfo.lastModified()) {
-            logger.info("Creating: " + bundlePkgInfo);
+            logger.info("Creating " + bundlePkgInfo);
             write(bundlePkgInfo, config.getPkgInfoData());
         }
 
@@ -198,7 +198,7 @@ public class Builder {
                 final File destPath = new File(bundlePath, resPath.getPath());
                 if (!destPath.exists() || resPath.lastModified() > destPath.lastModified()) {
                     destPath.getParentFile().mkdirs();
-                    logger.info("Copying: " + resPath);
+                    logger.info("Copying " + resPath);
                     try {
                         FileUtils.copyFileToDirectory(resPath, destPath.getParentFile());
                     } catch (final IOException e) {
@@ -206,39 +206,39 @@ public class Builder {
                     }
                 }
             }
-        }
 
-        // Delete old resource files.
-        final Collection<File> bundleResources = FileUtils.listFiles(
-                config.getResourcesDir(),
-                new WildcardFileFilter("**/*"),
-                DirectoryFileFilter.DIRECTORY);
-        for (final File bundleRes : bundleResources) {
-            if (bundleRes.isDirectory()) {
-            	continue;
-            }
-            if (reservedAppBundleFiles.contains(bundleRes)) {
-            	continue;
-            }
-            if (resourcesFiles.contains(bundleRes)) {
-            	continue;
-            }
-            logger.warning("File '" + bundleRes
-            		+ "' found in app bundle but not in '"
-            		+ config.getResourcesDir() + "', removing");
-            FileUtils.deleteQuietly(bundleRes);
+	        // Delete old resource files.
+	        final Collection<File> bundleResources = FileUtils.listFiles(
+	                config.getResourcesDir(),
+	                new WildcardFileFilter("**/*"),
+	                DirectoryFileFilter.DIRECTORY);
+	        for (final File bundleRes : bundleResources) {
+	            if (bundleRes.isDirectory()) {
+	            	continue;
+	            }
+	            if (reservedAppBundleFiles.contains(bundleRes)) {
+	            	continue;
+	            }
+	            if (resourcesFiles.contains(bundleRes)) {
+	            	continue;
+	            }
+	            logger.warning("File '" + bundleRes
+	            		+ "' found in app bundle but not in '"
+	            		+ config.getResourcesDir() + "', removing");
+	            FileUtils.deleteQuietly(bundleRes);
+	        }
         }
 
         // Generate dSYM.
         final File dSymPath = config.getAppBundle_dSym(platform);
         if (!dSymPath.exists() || mainExec.lastModified() > dSymPath.lastModified()) {
-            logger.info("Creating: " + dSymPath);
+            logger.info("Creating " + dSymPath);
             sh("/usr/bin/dsymutil " + mainExec + " -o " + dSymPath);
         }
 
         // Strip all symbols. Only in distribution mode.
         if (mainExecCreated && config.isDistribution()) {
-            logger.info("Striping: " + mainExec);
+            logger.info("Striping " + mainExec);
             sh(config.locateBinary("strip") + " " + mainExec);
         }
     }
@@ -250,6 +250,7 @@ public class Builder {
 			result = IOUtils.toString(p.getInputStream());
 
 			if (p.waitFor() != 0) {
+				logger.severe(result);
 				logger.severe(IOUtils.toString(p.getErrorStream()));
 				throw new BuildError("Problem executing command: " + cmd);
 			}

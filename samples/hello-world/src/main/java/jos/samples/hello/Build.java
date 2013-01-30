@@ -2,12 +2,10 @@ package jos.samples.hello;
 
 import java.io.File;
 
-import jos.build.Builder;
-import jos.build.Configuration;
-import jos.build.Application.Platform;
-import jos.build.Configuration.BuildMode;
-
-import com.google.common.collect.Maps;
+import jos.maven.Builder;
+import jos.maven.Configuration;
+import jos.maven.types.Platform;
+import jos.maven.types.BuildMode;
 
 public class Build {
 
@@ -18,10 +16,9 @@ public class Build {
         final Configuration config = new Configuration(base, BuildMode.DEVELOPMENT);
         config.setBuildDir(new File(base, "target"));
         config.setResourcesDir(new File(base, "src/main/resources"));
-        config.setName("hello");
+        config.setName("Hello");
 
-        Builder.build(config, Platform.IPHONE_SIMULATOR,
-                Maps.<String, String> newHashMap());
+        Builder.build(config, Platform.IPHONE_SIMULATOR);
     }
 
 }

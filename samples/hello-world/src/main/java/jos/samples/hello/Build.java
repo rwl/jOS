@@ -4,6 +4,7 @@ import java.io.File;
 
 import jos.maven.Builder;
 import jos.maven.Configuration;
+import jos.maven.Simulator;
 import jos.maven.types.Platform;
 import jos.maven.types.BuildMode;
 
@@ -19,6 +20,9 @@ public class Build {
         config.setName("Hello");
 
         Builder.build(config, Platform.IPHONE_SIMULATOR);
+        
+        final Simulator sim = new Simulator(config);
+        sim.launch();
     }
 
 }

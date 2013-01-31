@@ -2,9 +2,4 @@ target/
 .project
 .settings
 .classpath
-
-samples/hello-world/src/xcode/.DS_Store
-
-samples/hello-world/src/.DS_Store
-
-samples/hello-world/.DS_Store
+.DS_Store

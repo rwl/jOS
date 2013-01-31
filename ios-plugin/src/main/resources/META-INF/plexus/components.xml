@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<component-set>
+	<components>
+		<component>
+			<role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
+			<role-hint>app</role-hint>
+			<implementation>
+				org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping
+			</implementation>
+			<configuration>
+				<phases>
+					<!-- <generate-resources>
+						jos:j2objc-maven-plugin:${project.version}:translate
+					</generate-resources> -->
+					<process-resources>
+						org.apache.maven.plugins:maven-resources-plugin:resources
+					</process-resources>
+					<compile>
+						jos:ios-maven-plugin:compile
+					</compile>
+					<package>
+						jos:ios-maven-plugin:bundle
+					</package>
+					<install>
+						org.apache.maven.plugins:maven-install-plugin:install
+					</install>
+					<deploy>
+						org.apache.maven.plugins:maven-deploy-plugin:deploy
+					</deploy>
+				</phases>
+			</configuration>
+		</component>
+		<component>
+			<role>org.apache.maven.artifact.handler.ArtifactHandler</role>
+			<role-hint>app</role-hint>
+			<implementation>
+				org.apache.maven.artifact.handler.DefaultArtifactHandler
+			</implementation>
+			<configuration>
+				<!--the extension used by Maven in the repository -->
+				<extension>app</extension>
+				<!--the type used when specifying dependencies etc. -->
+				<type>app</type>
+				<!--the packaging used when declaring an implementation of the packaging -->
+				<packaging>app</packaging>
+				<language>objc</language>
+				<addedToClasspath>false</addedToClasspath>
+			</configuration>
+		</component>
+	</components>
+</component-set>

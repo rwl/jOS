@@ -71,8 +71,8 @@ public class PropertyList {
                             + "' (must be either a Map, List, String, Integer, or boolean true/false value)");
         }
     }
-    
+
     private PropertyList() {
     }
-    
+
 }

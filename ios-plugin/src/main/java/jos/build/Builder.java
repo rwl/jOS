@@ -1,6 +1,7 @@
 package jos.build;
 
 import static jos.build.Util.sh;
+import static jos.build.Util.system;
 import static jos.build.Util.write;
 
 import java.io.File;
@@ -30,6 +31,10 @@ public class Builder {
 
     private static final Logger logger = Logger.getLogger(Builder.class.getName());
 
+    private interface Buildlet {
+        File build(final File path);
+    }
+
     private final Configuration config;
 
     private final Platform platform;
@@ -40,7 +45,6 @@ public class Builder {
 	}
 
     public void compile() {
-
         final Set<Architecture> archs = config.getArchs().get(platform);
         final File clang = config.locateCompiler(platform, "clang");
         final File buildDir = config.getVersionedBuildDir(platform);
@@ -150,15 +154,55 @@ public class Builder {
         }*/
     }
 
-    public void bundle() {
+    private List<File> getObjs() {
         final File buildDir = config.getVersionedBuildDir(platform);
         final File objsBuildDir = new File(buildDir, "objs");
-        final List<File> objs = Lists.newArrayList(FileUtils.listFiles(objsBuildDir,
+        final Collection<File> objs = FileUtils.listFiles(objsBuildDir,
                 FileFilterUtils.suffixFileFilter(".o"),
-                DirectoryFileFilter.DIRECTORY));
+                DirectoryFileFilter.DIRECTORY);
+    	return Lists.newArrayList(objs);
+    }
 
+    /**
+     * Creates a static archive with all object files + dependencies.
+     */
+    public void archive() {
+        final File lib = new File(config.getVersionedBuildDir(platform), config.getName() + ".a");
+        logger.info("Creating " + lib);
+        sh(ImmutableList.<String>builder()
+        		.add("/usr/bin/libtool")
+        		.add("-static")
+        		.addAll(Lists.transform(getObjs(), Util.absolutePathFunction))
+        		.add("-o")
+        		.add(lib.getAbsolutePath()).build());
+    }
+
+    public void bundle() {
+        final File clang = config.locateCompiler(platform, "clang");
+
+    	List<File> objs = getObjs();
         if (objs.isEmpty()) {
         	compile();
+        	objs = getObjs();
+        }
+
+        // Compile main file.
+        if (config.getMainFile() == null) {
+	        final File objsBuildDir = new File(config.getVersionedBuildDir(platform), "objs");
+	        final File main = new File(objsBuildDir, "main.m");
+	        final File main_o = new File(objsBuildDir, "main.o");
+	        if (!main.exists() && !main_o.exists()) {
+	            write(main, getMainTxt());
+	            sh(ImmutableList.<String>builder()
+	            		.add(clang.getAbsolutePath())
+	            		.add("-c")
+	            		.add(main.getAbsolutePath())
+	            		.addAll(config.getArchFlags(platform))
+	            		.addAll(config.getCFlags(platform))
+	            		.add("-o")
+	            		.add(main_o.getAbsolutePath()).build());
+	        	objs = getObjs();
+	        }
         }
 
         // Prepare bundle.
@@ -169,7 +213,6 @@ public class Builder {
         }
 
         // Link executable.
-        final File clang = config.locateCompiler(platform, "clang");
         final File mainExec = config.getAppBundleExecutable(platform);
         boolean mainExecCreated = false;
         boolean modified = false;
@@ -216,6 +259,44 @@ public class Builder {
             write(bundlePkgInfo, config.getPkgInfoData());
         }
 
+        // Compile IB resources.
+        if (config.getResourcesDir().exists()) {
+            final List<File> ibResourcesSrc = Lists.newArrayList();
+            final List<File> ibResourcesDest = Lists.newArrayList();
+            for (final File path : FileUtils.listFiles(config.getResourcesDir(), new String[] {"xib", "storyboard"}, true)) {
+                ibResourcesSrc.add(path);
+                ibResourcesDest.add(new File(path.getPath().replaceFirst(".xib", ".nib").replaceFirst(".storyboard", ".storyboardc")));
+            }
+            assert ibResourcesSrc.size() == ibResourcesDest.size();
+            for (int i = 0; i < ibResourcesSrc.size(); i++) {
+                final File src = ibResourcesSrc.get(i);
+                final File dest = ibResourcesDest.get(i);
+                if (!dest.exists() || src.lastModified() > dest.lastModified()) {
+                    logger.info("Compiling " + src);
+                    sh(ImmutableList.<String>builder()
+                    		.add("/usr/bin/ibtool")
+                    		.add("--compile")
+                    		.add(dest.getAbsolutePath())
+                    		.add(src.getAbsolutePath()).build());
+                }
+            }
+        }
+
+        // Compile CoreData Model resources.
+        if (config.getResourcesDir().exists()) {
+            final Collection<File> models = FileUtils.listFiles(config.getResourcesDir(), new String[] {"xcdatamodeld"}, true);
+            for (final File model : models) {
+                final File momd = new File(model.getPath().replaceFirst(".xcdatamodeld", ".momd"));
+                if (!momd.exists() || model.lastModified() > momd.lastModified()) {
+                    logger.info("Compiling " + model);
+                    sh(ImmutableList.<String>builder()
+                    		.add(config.getXcodeDir() + "/usr/bin/momc")
+                    		.add(model.getAbsolutePath())
+                    		.add(momd.getAbsolutePath()).build());
+                }
+            }
+        }
+
         // Copy resources, handle subdirectories.
         final Set<String> reservedAppBundleFiles = Sets.newHashSet(
                 "_CodeSignature/CodeResources", "CodeResources", "embedded.mobileprovision",
@@ -242,8 +323,10 @@ public class Builder {
                     }
                 }
             }
+        }
 
-	        // Delete old resource files.
+        // Delete old resource files.
+        if (config.getResourcesDir().exists()) {
 	        final Collection<File> bundleResources = FileUtils.listFiles(
 	                config.getResourcesDir(),
 	                new WildcardFileFilter("**/*"),
@@ -285,7 +368,111 @@ public class Builder {
         }
     }
 
-    private interface Buildlet {
-        File build(final File path);
+    private String getMainTxt() {
+    	return String.format("#import <UIKit/UIKit.h>\n"
+    			+ "int main(int argc, char *argv[])\n"
+    			+ "{\n"
+    			+ "\t@autoreleasepool {\n"
+    			+ "\t\treturn UIApplicationMain(argc, argv, nil, @\"%s\");\n"
+    			+ "\t}\n"
+    			+ "}\n", config.getDelegateClassName());
+    }
+
+    public void codeSign() {
+        final File bundlePath = config.getAppBundle(platform);
+        if (!bundlePath.exists()) {
+            throw new BuildError("App bundle not found");
+        }
+
+        // Create bundle/ResourceRules.plist.
+        final File resourceRulesPlist = new File(bundlePath, "ResourceRules.plist");
+        if (!resourceRulesPlist.exists()) {
+            logger.info("Creating " + resourceRulesPlist);
+            write(resourceRulesPlist,
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n" +
+                "<plist version=\"1.0\">\n" +
+                "<dict>\n" +
+                "        <key>rules</key>\n" +
+                "        <dict>\n" +
+                "                <key>.*</key>\n" +
+                "                <true/>\n" +
+                "                <key>Info.plist</key>\n" +
+                "                <dict>\n" +
+                "                        <key>omit</key>\n" +
+                "                        <true/>\n" +
+                "                        <key>weight</key>\n" +
+                "                        <real>10</real>\n" +
+                "                </dict>\n" +
+                "                <key>ResourceRules.plist</key>\n" +
+                "                <dict>\n" +
+                "                        <key>omit</key>\n" +
+                "                        <true/>\n" +
+                "                        <key>weight</key>\n" +
+                "                        <real>100</real>\n" +
+                "                </dict>\n" +
+                "        </dict>\n" +
+                "</dict>\n" +
+                "</plist>");
+        }
+
+        // Copy the provisioning profile.
+        final File bundleProvision = new File(bundlePath, "embedded.mobileprovision");
+        if (!bundleProvision.exists() || config.getProvisioningProfile().lastModified() > bundleProvision.lastModified()) {
+            logger.info("Creating " + bundleProvision);
+            try {
+                FileUtils.copyFile(config.getProvisioningProfile(), bundleProvision);
+            } catch (final IOException e) {
+                throw new BuildError("Error copying provisioning profile", e);
+            }
+        }
+
+        // Codesign.
+        final File allocate = new File(config.getPlatformDir(platform), "Developer/usr/bin/codesign_allocate");
+        final List<String> codeSignCmd = ImmutableList.<String>builder()
+        		.add("CODESIGN_ALLOCATE=\"" + allocate.getAbsolutePath() + "\"")
+        		.add("/usr/bin/codesign").build();
+        if (config.getProjectFile().lastModified() > bundlePath.lastModified()
+                || !system(ImmutableList.<String>builder()
+                		.add("codeSignCmd")
+                		.add("--verify").add(bundlePath.getAbsolutePath())
+                		.add(">&").add("/dev/null").build())) {
+            logger.info("Codesigning " + bundlePath);
+            final File entitlements = new File(config.getVersionedBuildDir(platform), "Entitlements.plist");
+            write(entitlements, config.getEntitlementsData());
+            sh(ImmutableList.<String>builder()
+            		.addAll(codeSignCmd)
+            		.add("-f")
+            		.add("-s")
+            		.add(config.getCodeSignCertificate())
+            		.add("--resource-rules=\"" + resourceRulesPlist.getAbsolutePath())
+            		.add("--entitlements")
+            		.add(entitlements.getAbsolutePath())
+            		.add(bundlePath.getAbsolutePath()).build());
+        }
+    }
+
+    /**
+     * Creates an iOS App Store Package (.ipa) archive.
+     */
+    public void ipa() {
+        final File appBundle = config.getAppBundle(Platform.IPHONE_OS);
+        final File archive = config.getArchive();
+        if (!archive.exists() || appBundle.lastModified() > archive.lastModified()) {
+            logger.info("Creating " + archive);
+            final File tmp = new File("/tmp/ipa_root");
+            sh("/bin/rm -rf " + tmp.getAbsolutePath());
+            sh("/bin/mkdir -p " + tmp.getAbsolutePath() + "/Payload");
+            sh(ImmutableList.<String>builder()
+            		.add("/bin/cp")
+            		.add("-r").add(appBundle.getAbsolutePath())
+            		.add(tmp.getAbsolutePath() + "/Payload").build());
+            sh("/bin/chmod -R 755 Payload", tmp);
+            sh("/usr/bin/zip -q -r archive.zip Payload", tmp);
+            sh(ImmutableList.<String>builder()
+            		.add("/bin/cp")
+            		.add(tmp.getAbsolutePath() + "/archive.zip")
+            		.add(archive.getAbsolutePath()).build());
+        }
     }
 }

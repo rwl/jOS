@@ -16,21 +16,21 @@ import com.google.common.collect.ImmutableList;
 public class Simulator {
 
     private static final Logger logger = Logger.getLogger(Simulator.class.getName());
-    
+
     private final Configuration config;
-    
+
     private float target;
     private Family family;
     private Retina retina;
-    
+
     public Simulator(final Configuration config) {
     	this.config = config;
-    	
+
     	target = config.getSdkVersion();
     	family = Family.IPHONE;
     	retina = Retina.FALSE;
     }
-    
+
     public void clean() {
         final File app = config.getAppBundle(Platform.IPHONE_SIMULATOR);
     	final File simApps = new File(System.getProperty("user.home"), "Library/Application Support/iPhone Simulator/" + target + "/Applications");
@@ -41,7 +41,7 @@ public class Simulator {
             }
         }
     }
-    
+
     public void launch() {
         // Configure the SimulateDevice variable (the only way to specify if we want to run in retina mode or not).
         final String simulateDevice = getDeviceFamilyString(family, target, retina);
@@ -55,13 +55,13 @@ public class Simulator {
 
         final File app = config.getAppBundle(Platform.IPHONE_SIMULATOR);
         logger.info("Simulating " + app);
-        
+
         sh(ImmutableList.<String>builder()
         		.add(xcode + "/Platforms/iPhoneSimulator.platform/Developer/Applications/iPhone Simulator.app/Contents/MacOS/iPhone Simulator")
         		.add("-SimulateApplication")
         		.add(config.getAppBundleExecutable(Platform.IPHONE_SIMULATOR).getAbsolutePath()).build());
     }
-    
+
     public void setTarget(float target) {
 		this.target = target;
 	}

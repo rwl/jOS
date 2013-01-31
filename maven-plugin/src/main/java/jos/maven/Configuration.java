@@ -1,6 +1,6 @@
 package jos.maven;
 
-import static jos.maven.Builder.sh;
+import static jos.maven.Util.sh;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -25,12 +25,10 @@ import jos.maven.types.StatusBarStyle;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,7 +39,7 @@ public class Configuration {
 
 	private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 	
-	private final Map<Platform, List<Architecture>> archs = Maps.newHashMap();
+	private final Map<Platform, Set<Architecture>> archs = Maps.newHashMap();
 	
     public static String PROJECT_FILE = "pom.xml";
 	public static String BUILD_FILE_EXTENTION = ".m";
@@ -96,8 +94,8 @@ public class Configuration {
         backgroundModes = Lists.newArrayList();
         statusBarStyle = StatusBarStyle.DEFAULT;
         
-		archs.put(Platform.IPHONE_OS, Lists.newArrayList(Architecture.ARM6));
-		archs.put(Platform.IPHONE_SIMULATOR, Lists.newArrayList(Architecture.I386));
+		archs.put(Platform.IPHONE_OS, Sets.newHashSet(Architecture.ARM6));
+		archs.put(Platform.IPHONE_SIMULATOR, Sets.newHashSet(Architecture.I386));
 
         frameworks = Lists.newArrayList("UIKit", "Foundation", "CoreGraphics");
 	}
@@ -116,7 +114,7 @@ public class Configuration {
             // First, honor /usr/bin/xcode-select
             final String xcodeselect = "/usr/bin/xcode-select";
             if (new File(xcodeselect).exists()) {
-                final String path = sh(xcodeselect + " -print-path").trim();
+                final String path = sh(xcodeselect, "-print-path").trim();
                 if (path.matches("^/Developer/")
                         && new File(xcodeDotAppPath).exists()) {
                     xcodeErrorPrinted |= false;
@@ -256,7 +254,10 @@ public class Configuration {
                 final File frameworkPath = new File(new File(slf, framework
                         + ".framework"), framework);
                 if (frameworkPath.exists()) {
-                	final String libsUsed = sh(locateBinary("otool") + " -L " + frameworkPath);
+                	final String libsUsed = sh(ImmutableList.<String>builder()
+                    		.add(locateBinary("otool").getAbsolutePath())
+                    		.add("-L")
+                    		.add(frameworkPath.getAbsolutePath()).build());
                 	final Matcher m1 = p1.matcher(libsUsed);
                 	while (m1.find()) {
                 		final String dep = m1.group(1);
@@ -286,39 +287,50 @@ public class Configuration {
         return files;
     }
 
-    private String getCommonFlags(final Platform platform) {
-        return " -isysroot " + getSdk(platform)
-                + " -miphoneos-version-min=" + getSdkVersion()
-                + " -F" + getSdk(platform) + "/System/Library/Frameworks";
+    private List<String> getCommonFlags(final Platform platform) {
+    	final List<String> common = Lists.newArrayList();
+    	common.add("-isysroot");
+    	common.add(getSdk(platform).getAbsolutePath());
+    	common.add("-miphoneos-version-min=" + getSdkVersion());
+    	common.add("-F" + getSdk(platform) + "/System/Library/Frameworks");
+    	return common;
     }
 
-    public String getCFlags(final Platform platform, final boolean cplusplus,
-    		final boolean objc) {
-        return getCommonFlags(platform)
-        		+ (isDevelopment() ? " -DDEBUG=1 -g" : "")
-        		+ " -fexceptions -fblocks -fobjc-legacy-dispatch -fobjc-abi-version=2"
-        		+ (cplusplus ? "" : " -std=c99") //gnu99
-        		+ " -x " + (cplusplus ? "c++" : objc ? "objective-c" : "c")
-        		+ " -O0";
-    }
-
-    public String getLdFlags(final Platform platform) {
-        String ldflags = getArchFlags(platform) + getCommonFlags(platform);
-        if (getSdkVersion() < 5.0) {
-            ldflags += " -fobjc-arc";
+    public List<String> getCFlags(final Platform platform) {
+        final List<String> flags = getCommonFlags(platform);
+        if (isDevelopment()) {
+        	flags.add("-DDEBUG=1");
+        	flags.add("-g");
         }
-        return ldflags;
+        flags.add("-fexceptions");
+        flags.add("-fblocks");
+        flags.add("-fobjc-legacy-dispatch");
+        flags.add("-fobjc-abi-version=2");
+        flags.add("-std=c99");  // gnu99
+        flags.add("-x");
+        flags.add("objective-c");
+        flags.add("-O0");
+        return flags;
     }
 
-	private String getArchFlags(final Platform platform) {
-		return StringUtils.join(Lists.transform(getArchs().get(platform),
-				new Function<Architecture, String>() {
-					@Override
-					public String apply(final Architecture arch) {
-						return "-arch " + arch.getArch();
-					}
-				}), " ");
+	private List<String> getArchFlags(final Platform platform) {
+		final List<String> flags = Lists.newArrayList();
+		for (Architecture arch : getArchs().get(platform)) {
+			flags.add("-arch");
+			flags.add(arch.getArch());
+		}
+		return flags;
 	}
+
+    public List<String> getLdFlags(final Platform platform) {
+        final List<String> flags = Lists.newArrayList();
+        flags.addAll(getArchFlags(platform));
+        flags.addAll(getCommonFlags(platform));
+        if (getSdkVersion() < 5.0) {
+            flags.add("-fobjc-arc");
+        }
+        return flags;
+    }
 	
 	private String getIosVersionToBuild(float version) {
 		if (version == 4.3) {
@@ -438,7 +450,9 @@ public class Configuration {
         	final Pattern p1 = Pattern.compile("Xcode\\s(.+)");
         	final Pattern p2 = Pattern.compile("Build version\\s(.+)");
         	
-            final String txt = sh(locateBinary("xcodebuild") + " -version");
+            final String txt = sh(ImmutableList.<String>builder()
+            		.add(locateBinary("xcodebuild").getAbsolutePath())
+            		.add("-version").build());
             
             final Matcher m1 = p1.matcher(txt);
             m1.find();
@@ -462,7 +476,7 @@ public class Configuration {
         }
     }
 
-    public Map<Platform, List<Architecture>> getArchs() {
+    public Map<Platform, Set<Architecture>> getArchs() {
     	return archs;
     }
 

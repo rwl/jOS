@@ -1,5 +1,8 @@
 package jos.maven;
 
+import static jos.maven.Util.sh;
+import static jos.maven.Util.write;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -13,14 +16,12 @@ import jos.maven.types.Platform;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.commons.lang.StringUtils;
 
-import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -30,7 +31,7 @@ public class Builder {
 
     public static void build(final Configuration config, final Platform platform) {
 
-        final List<Architecture> archs = config.getArchs().get(platform);
+        final Set<Architecture> archs = config.getArchs().get(platform);
         final File clang = config.locateCompiler(platform, "clang");
         final File buildDir = config.getVersionedBuildDir(platform);
         final File objsBuildDir = new File(buildDir, "objs");
@@ -40,7 +41,8 @@ public class Builder {
 
             @Override
             public File build(final File path) {
-                final File obj = new File(objsBuildDir, FilenameUtils.removeExtension(path.getName()) + ".o");
+            	final String name = FilenameUtils.removeExtension(path.getName());
+                final File obj = new File(objsBuildDir, name + ".o");
                 final boolean shouldRebuild = (!obj.exists()
                         || path.lastModified() > obj.lastModified());
 
@@ -50,18 +52,24 @@ public class Builder {
                     final List<File> archObjs = Lists.newArrayList();
                     for (final Architecture arch : archs) {
                         // Object.
-                        final File archObj = new File(objsBuildDir, FilenameUtils.removeExtension(path.getName()) + '-' + arch.getArch() + ".o");                       
-                        sh(clang + config.getCFlags(platform, false, true)
-                        		+ " -arch " + arch.getArch()
-                        		+ " -c " + path
-                        		+ " -o " + archObj);
+                        final File archObj = new File(objsBuildDir, name + '-' + arch.getArch() + ".o");
+                        sh(ImmutableList.<String>builder()
+                            .add(clang.getAbsolutePath())
+                            .addAll(config.getCFlags(platform))
+                            .add("-arch").add(arch.getArch())
+                            .add("-c").add(path.getAbsolutePath())
+                            .add("-o").add(archObj.getAbsolutePath()).build());
 
                         archObjs.add(archObj);
                     }
 
                     // Assemble fat binary.
-                    final String archObjsList = StringUtils.join(archObjs, " ");
-                    sh("/usr/bin/lipo -create " + archObjsList + " -output " + obj + "");
+                    sh(ImmutableList.<String>builder()
+                            .add("/usr/bin/lipo")
+                            .add("-create")
+                            .addAll(Lists.transform(archObjs, Util.absolutePathFunction))
+                            .add("-output")
+                            .add(obj.getAbsolutePath()).build());
                 }
 
                 return obj;
@@ -151,16 +159,17 @@ public class Builder {
                 || config.getProjectFile().lastModified() > mainExec.lastModified()
                 || modified) {
         	logger.info("Linking " + mainExec);
-            final String objsList = StringUtils.join(objs, " ");
-            final String frameworks = StringUtils.join(Lists.transform(config.getFrameworksDependencies(), new Function<String, String>() {
-                public String apply(final String x) {
-                    return "-framework " + x;
-                }
-            }), " ");
-            sh(clang + " -o " + mainExec
-            		+ " " + objsList
-            		+ " " + config.getLdFlags(platform)
-            		+ " " + frameworks);
+            final List<String> frameworks = Lists.newArrayList();
+            for (String fw : config.getFrameworksDependencies()) {
+				frameworks.add("-framework");
+				frameworks.add(fw);
+			}
+            sh(ImmutableList.<String>builder()
+            		.add(clang.getAbsolutePath())
+            		.add("-o").add(mainExec.getAbsolutePath())
+            		.addAll(Lists.transform(objs, Util.absolutePathFunction))
+            		.addAll(config.getLdFlags(platform))
+            		.addAll(frameworks).build());
             mainExecCreated = true;
         }
 
@@ -169,7 +178,11 @@ public class Builder {
         if (!bundleInfoPlist.exists() || config.getProjectFile().lastModified() > bundleInfoPlist.lastModified()) {
             logger.info("Creating " + bundleInfoPlist);
             write(bundleInfoPlist, config.getInfoPlistData());
-            sh("/usr/bin/plutil -convert binary1 " + bundleInfoPlist);
+            sh(ImmutableList.<String>builder()
+            		.add("/usr/bin/plutil")
+            		.add("-convert")
+            		.add("binary1")
+            		.add(bundleInfoPlist.getAbsolutePath()).build());
         }
 
         // Create bundle/PkgInfo.
@@ -183,8 +196,7 @@ public class Builder {
         final Set<String> reservedAppBundleFiles = Sets.newHashSet(
                 "_CodeSignature/CodeResources", "CodeResources", "embedded.mobileprovision",
                 "Info.plist", "PkgInfo", "ResourceRules.plist",
-                config.getName()
-                );
+                config.getName());
         Collection<File> resourcesFiles = Lists.newArrayList();
         if (config.getResourcesDir().exists()) {
             resourcesFiles = FileUtils.listFilesAndDirs(config.getResourcesDir(),
@@ -233,40 +245,19 @@ public class Builder {
         final File dSymPath = config.getAppBundle_dSym(platform);
         if (!dSymPath.exists() || mainExec.lastModified() > dSymPath.lastModified()) {
             logger.info("Creating " + dSymPath);
-            sh("/usr/bin/dsymutil " + mainExec + " -o " + dSymPath);
+            sh(ImmutableList.<String>builder()
+            		.add("/usr/bin/dsymutil")
+            		.add(mainExec.getAbsolutePath())
+            		.add("-o")
+            		.add(dSymPath.getAbsolutePath()).build());
         }
 
         // Strip all symbols. Only in distribution mode.
         if (mainExecCreated && config.isDistribution()) {
             logger.info("Striping " + mainExec);
-            sh(config.locateBinary("strip") + " " + mainExec);
-        }
-    }
-
-	protected static String sh(final String cmd) {
-		String result = "";
-		try {			
-			final Process p = Runtime.getRuntime().exec(cmd);
-			result = IOUtils.toString(p.getInputStream());
-
-			if (p.waitFor() != 0) {
-				logger.severe(result);
-				logger.severe(IOUtils.toString(p.getErrorStream()));
-				throw new BuildError("Problem executing command: " + cmd);
-			}
-		} catch (final IOException e) {
-			throw new BuildError("Failed to execute command: " + cmd);
-		} catch (final InterruptedException e) {
-			throw new BuildError("Command interrupted: " + cmd);
-		}
-		return result;
-	}
-
-    private static void write(final File file, final String data) {
-        try {
-            FileUtils.writeStringToFile(file, data);
-        } catch (final IOException e) {
-        	throw new BuildError("Problem writing to file: " + file.getPath());
+            sh(ImmutableList.<String>builder()
+            		.add(config.locateBinary("strip").getAbsolutePath())
+            		.add(mainExec.getAbsolutePath()).build());
         }
     }
 

@@ -28,8 +28,8 @@
 				<version>${project.version}</version>
 				<configuration>
 					<prefix>jos.samples.hello=HW</prefix>
-					<!-- <verbose>true</verbose> -->
-					<useARC>true</useARC>
+					<!-- <verbose>true</verbose>
+					<useARC>true</useARC> -->
 					<noPackageDirectories>true</noPackageDirectories>
 					<outputDirectory>${basedir}/src/xcode</outputDirectory>
 				</configuration>
@@ -40,6 +40,14 @@
 				<version>${project.version}</version>
 				<configuration>
 					<name>Hello</name>
+					<sourceDirectory>${basedir}/src/xcode</sourceDirectory>
+					<libraries>
+						<library>${basedir}/lib/libjre_emul.a</library>
+					</libraries>
+					<includes>
+						<include>${basedir}/include</include>
+					</includes>
+					<delegateClassName>HWAppDelegate</delegateClassName>
 				</configuration>
 				<!--declare that this plugin contributes the component extensions
 				<extensions>true</extensions> -->

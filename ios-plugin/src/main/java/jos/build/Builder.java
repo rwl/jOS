@@ -69,6 +69,7 @@ public class Builder {
                         final File archObj = new File(objsBuildDir, name + '-' + arch.getArch() + ".o.tmp");
                         sh(ImmutableList.<String>builder()
                             .add(clang.getAbsolutePath())
+                            .addAll(config.getIncludeFlags())
                             .addAll(config.getCFlags(platform))
                             .add("-arch").add(arch.getArch())
                             .add("-c").add(path.getAbsolutePath())
@@ -193,6 +194,7 @@ public class Builder {
 	        final File main_o = new File(objsBuildDir, "main.o");
 	        if (!main.exists() && !main_o.exists()) {
 	            write(main, getMainTxt());
+                logger.info("Compiling " + main);
 	            sh(ImmutableList.<String>builder()
 	            		.add(clang.getAbsolutePath())
 	            		.add("-c")
@@ -233,9 +235,10 @@ public class Builder {
 			}
             sh(ImmutableList.<String>builder()
             		.add(clang.getAbsolutePath())
+            		.addAll(config.getLibraryFlags())
+            		.addAll(config.getLdFlags(platform))
             		.add("-o").add(mainExec.getAbsolutePath())
             		.addAll(Lists.transform(objs, Util.absolutePathFunction))
-            		.addAll(config.getLdFlags(platform))
             		.addAll(frameworks).build());
             mainExecCreated = true;
         }

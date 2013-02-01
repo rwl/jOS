@@ -23,6 +23,7 @@ import jos.build.types.Platform;
 import jos.build.types.StatusBarStyle;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
@@ -49,13 +50,16 @@ public class Configuration {
     private BuildMode buildMode;
 
     private String name;
-    private List<File> files;
+    private File sourceDir;
     private String xcodeDir;
     private File buildDir;
 	private File resourcesDir;
     private Float sdkVersion;
 	private String bundleSignature;
 	private String delegateClassName;
+
+	private List<File> libs;
+	private List<File> headers;
 
 	private String version, shortVersion;
     private String[] xcodeVersion;
@@ -86,11 +90,14 @@ public class Configuration {
         this.buildMode = buildMode;
 
         name = "Untitled";
+        sourceDir = new File(projectDir, "src");
         buildDir = new File(projectDir, "build");
         resourcesDir = new File(projectDir, "resources");
-        files = getFiles();
         bundleSignature = "????";
         delegateClassName = "AppDelegate";
+
+        libs = Lists.newArrayList();
+        headers = Lists.newArrayList();
 
         version = "1.0";
         shortVersion = "1";
@@ -110,13 +117,6 @@ public class Configuration {
         frameworks = Lists.newArrayList("UIKit", "Foundation", "CoreGraphics");
 
         entitlements = Maps.newHashMap();
-	}
-
-	protected List<File> getFiles() {
-        final Collection<File> buildFiles = FileUtils.listFiles(projectDir,
-                FileFilterUtils.suffixFileFilter(BUILD_FILE_EXTENTION),
-                DirectoryFileFilter.DIRECTORY);
-        return Lists.newArrayList(buildFiles);
 	}
 
     public String getXcodeDir() {
@@ -195,7 +195,7 @@ public class Configuration {
     }
 
 	public File getMainFile() {
-        final Collection<File> mainFiles = FileUtils.listFiles(projectDir,
+        final Collection<File> mainFiles = FileUtils.listFiles(sourceDir,
                 FileFilterUtils.nameFileFilter("main.m"),
                 DirectoryFileFilter.DIRECTORY);
         if (mainFiles.size() > 1) {
@@ -306,8 +306,39 @@ public class Configuration {
     }
 
     public List<File> getOrderedBuildFiles() {
-        return files;
+        final Collection<File> buildFiles = FileUtils.listFiles(sourceDir,
+                FileFilterUtils.suffixFileFilter(BUILD_FILE_EXTENTION),
+                DirectoryFileFilter.DIRECTORY);
+        return Lists.newArrayList(buildFiles);
     }
+
+    public List<String> getLibraryFlags() {
+    	final Set<String> dirPaths = Sets.newHashSet();
+    	for (final File lib : libs) {
+    		dirPaths.add(lib.getParentFile().getAbsolutePath());
+    	}
+    	final List<String> flags = Lists.newArrayList();
+    	for (final String dir : dirPaths) {
+			flags.add("-L");
+			flags.add(dir);
+		}
+    	for (final File lib : libs) {
+			flags.add("-l");
+			final String name = FilenameUtils.removeExtension(lib.getName());
+			flags.add(name.startsWith("lib") ? name.substring(3) : name);
+		}
+    	return flags;
+    }
+
+    public List<String> getIncludeFlags() {
+    	final List<String> flags = Lists.newArrayList();
+    	for (final File header : headers) {
+			flags.add("-I");
+			flags.add(header.getAbsolutePath());
+		}
+    	return flags;
+    }
+
 
     private List<String> getCommonFlags(final Platform platform) {
     	final List<String> common = Lists.newArrayList();
@@ -622,7 +653,11 @@ public class Configuration {
 		return delegateClassName;
 	}
 
-    public File getResourcesDir() {
+    public void setDelegateClassName(String delegateClassName) {
+		this.delegateClassName = delegateClassName;
+	}
+
+	public File getResourcesDir() {
         return resourcesDir;
     }
 
@@ -632,6 +667,18 @@ public class Configuration {
 
 	public void setBuildDir(final File buildDir) {
 		this.buildDir = buildDir;
+	}
+
+	public void setSourceDir(File sourceDir) {
+		this.sourceDir = sourceDir;
+	}
+
+	public void setLibs(List<File> libs) {
+		this.libs = libs;
+	}
+
+	public void setHeaders(List<File> headers) {
+		this.headers = headers;
 	}
 
 }

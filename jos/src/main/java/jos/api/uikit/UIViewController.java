@@ -12,9 +12,39 @@ public class UIViewController extends UIResponder {
 
     public String title;
 
+    @Export(selector = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    @Export(selector = "setTitle:")
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public UIView view;
 
+    @Export(selector = "view")
+    public UIView getView() {
+        return view;
+    }
+
+    @Export(selector = "setView:")
+    public void setView(UIView view) {
+        this.view = view;
+    }
+
     public UINavigationController navigationController;
+
+    @Export(selector = "navigationController")
+    public UINavigationController getNavigationController() {
+        return navigationController;
+    }
+
+    @Export(selector = "setNavigationController:")
+    public void setNavigationController(UINavigationController navigationController) {
+        this.navigationController = navigationController;
+    }
 
     @Export(selector = "init")
     public UIViewController() {

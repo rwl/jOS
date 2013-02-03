@@ -1,5 +1,8 @@
 package jos.api.foundation;
 
-public class NSBundle {
+import com.google.j2objc.annotations.Register;
+
+@Register(isWrapper = true)
+public class NSBundle extends NSObject {
 
 }

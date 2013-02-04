@@ -9,7 +9,7 @@ import jos.api.uikit.UIResponder;
 import jos.api.uikit.UIScreen;
 import jos.api.uikit.UIWindow;
 
-@BaseType(UIResponder.class)
+//@BaseType(UIResponder.class)
 public class AppDelegate extends UIApplicationDelegate {
 
     private HelloViewController viewController;

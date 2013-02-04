@@ -11,7 +11,8 @@ public class Translate {
         J2ObjC.main(new String[] {
                 "--prefix", "jos.samples.hello=J",
                 "-v",
-                "-use-arc",
+                //"-use-arc",
+                "--no-package-directories",
                 "-sourcepath", System.getProperty("user.dir") + "/src/main/java",
                 "-classpath", System.getProperty("java.class.path"),
                 "src/main/java/jos/samples/hello/AppDelegate.java",
@@ -19,4 +20,5 @@ public class Translate {
                 "src/main/java/jos/samples/hello/HelloView.java"
         });
     }
+
 }

@@ -4,11 +4,8 @@ import jos.api.foundation.NSBundle;
 import jos.api.uikit.UIScreen;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Export;
-
 public class HelloViewController extends UIViewController {
 
-    @Export(selector = "initWithNibName:bundle:")
     public HelloViewController(final String nibName, final NSBundle bundle) {
         super(nibName, null);
     }

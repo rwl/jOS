@@ -11,12 +11,12 @@ import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.TapZoomScrollView;
 
-public class TapToZoomController extends UIViewController {
+public class TapToZoom extends UIViewController {
 
     TapZoomScrollView scrollView;
     UIImageView imageView;
 
-    public TapToZoomController() {
+    public TapToZoom() {
         super();
     }
 

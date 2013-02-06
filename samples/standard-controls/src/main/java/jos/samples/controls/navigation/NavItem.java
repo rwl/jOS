@@ -1,4 +1,4 @@
-package jos.samples.controls.code;
+package jos.samples.controls.navigation;
 
 import jos.api.uikit.UIViewController;
 

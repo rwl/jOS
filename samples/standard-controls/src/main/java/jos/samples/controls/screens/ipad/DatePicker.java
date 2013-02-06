@@ -19,7 +19,7 @@ import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
-public class ActionSheetDatePickerController extends UIViewController {
+public class DatePicker extends UIViewController {
 
     @Outlet UIButton btnChooseDate;
     @Outlet UILabel lblDate;
@@ -27,18 +27,18 @@ public class ActionSheetDatePickerController extends UIViewController {
     ActionSheetDatePicker actionSheetDatePicker;
     ActionSheetDatePicker actionSheetTimerPicker;
 
-    public ActionSheetDatePickerController(IntPtr handle) {
+    public DatePicker(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public ActionSheetDatePickerController(NSCoder coder) {
+    public DatePicker(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public ActionSheetDatePickerController() {
+    public DatePicker() {
         super("ActionSheetDatePicker_iPad", null);
         initialize();
     }

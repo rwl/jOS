@@ -4,11 +4,11 @@ import jos.api.uikit.UIColor;
 import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIViewController;
 
-public class ScrollViewController extends UIViewController {
+public class ScrollView extends UIViewController {
 
     UIScrollView scrollView;
 
-    public ScrollViewController() {
+    public ScrollView() {
         super();
     }
 

@@ -9,12 +9,12 @@ import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
-public class ScrollViewController extends UIViewController {
+public class ScrollView extends UIViewController {
 
     UIScrollView scrollView;
     UIImageView imageView;
 
-    public ScrollViewController() {
+    public ScrollView() {
         super();
     }
 

@@ -5,9 +5,9 @@ import java.util.List;
 
 import jos.api.uikit.UITableViewController;
 import jos.api.uikit.UITableViewStyle;
-import jos.samples.controls.code.NavItem;
-import jos.samples.controls.code.NavItemGroup;
-import jos.samples.controls.code.NavItemTableSource;
+import jos.samples.controls.navigation.NavItem;
+import jos.samples.controls.navigation.NavItemGroup;
+import jos.samples.controls.navigation.NavItemTableSource;
 
 public class HomeNavController extends UITableViewController {
 
@@ -49,8 +49,8 @@ public class HomeNavController extends UITableViewController {
 
         navGroup = new NavItemGroup ("Content Controls");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Scroll View", "", jos.samples.controls.screens.iphone.ScrollViewController.class));
-        navGroup.items.add(new NavItem("Tap to Zoom Scroll View", "", jos.samples.controls.screens.iphone.TapToZoomController.class));
+        navGroup.items.add(new NavItem("Scroll View", "", jos.samples.controls.screens.iphone.ScrollView.class));
+        navGroup.items.add(new NavItem("Tap to Zoom Scroll View", "", jos.samples.controls.screens.iphone.TapToZoom.class));
         navGroup.items.add(new NavItem("Pager Control", "", PagerControl.class));
         navGroup.items.add(new NavItem("Image Control", "", Images.class));
         navGroup.items.add(new NavItem("More Image Controls", "", Images2.class));
@@ -75,7 +75,7 @@ public class HomeNavController extends UITableViewController {
         navGroup = new NavItemGroup ("Toolbars");
         navItems.add(navGroup);
         navGroup.items.add(new NavItem("Toolbar 1", "", Toolbar1.class));
-        navGroup.items.add(new NavItem("Programmatic Toolbar", "", ProgrammaticToolbarController.class));
+        navGroup.items.add(new NavItem("Programmatic Toolbar", "", ProgrammaticToolbar.class));
         navGroup.items.add(new NavItem("Toolbar Items", "", ToolbarItems.class));
 
         // create a table source from our nav items

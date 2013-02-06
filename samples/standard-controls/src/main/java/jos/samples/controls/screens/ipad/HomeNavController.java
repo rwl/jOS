@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jos.api.uikit.UITableViewController;
-import jos.samples.controls.code.NavItem;
-import jos.samples.controls.code.NavItemGroup;
-import jos.samples.controls.code.NavItemTableSource;
+import jos.samples.controls.navigation.NavItem;
+import jos.samples.controls.navigation.NavItemGroup;
+import jos.samples.controls.navigation.NavItemTableSource;
 
 public class HomeNavController extends UITableViewController {
 

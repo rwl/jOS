@@ -13,6 +13,7 @@ public class Translate {
                 "-v",
                 //"-use-arc",
                 "--no-package-directories",
+                "-d", System.getProperty("user.dir") + "/src/xcode",
                 "-sourcepath", System.getProperty("user.dir") + "/src/main/java",
                 "-classpath", System.getProperty("java.class.path"),
                 "src/main/java/jos/samples/hello/AppDelegate.java",

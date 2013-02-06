@@ -307,7 +307,7 @@ public class Builder {
                 config.getName());
         Collection<File> resourcesFiles = Lists.newArrayList();
         if (config.getResourcesDir().exists()) {
-            resourcesFiles = FileUtils.listFilesAndDirs(config.getResourcesDir(),
+            resourcesFiles = FileUtils.listFiles(config.getResourcesDir(),
                     new NotFileFilter(new SuffixFileFilter(new String[] {"xib", "storyboard", "xcdatamodeld", "lproj"})),
                     DirectoryFileFilter.DIRECTORY);
             for (final File resPath : resourcesFiles) {
@@ -315,7 +315,7 @@ public class Builder {
                     logger.severe("Cannot use '" + resPath + "' as a resource file because it's a reserved application bundle file");
                     throw new BuildError();
                 }
-                final File destPath = new File(bundlePath, resPath.getPath());
+                final File destPath = new File(bundlePath, resPath.getName());
                 if (!destPath.exists() || resPath.lastModified() > destPath.lastModified()) {
                     destPath.getParentFile().mkdirs();
                     logger.info("Copying " + resPath);
@@ -329,26 +329,24 @@ public class Builder {
         }
 
         // Delete old resource files.
-        if (config.getResourcesDir().exists()) {
-	        final Collection<File> bundleResources = FileUtils.listFiles(
-	                config.getResourcesDir(),
-	                new WildcardFileFilter("**/*"),
-	                DirectoryFileFilter.DIRECTORY);
-	        for (final File bundleRes : bundleResources) {
-	            if (bundleRes.isDirectory()) {
-	            	continue;
-	            }
-	            if (reservedAppBundleFiles.contains(bundleRes)) {
-	            	continue;
-	            }
-	            if (resourcesFiles.contains(bundleRes)) {
-	            	continue;
-	            }
-	            logger.warning("File '" + bundleRes
-	            		+ "' found in app bundle but not in '"
-	            		+ config.getResourcesDir() + "', removing");
-	            FileUtils.deleteQuietly(bundleRes);
-	        }
+        final Collection<File> bundleResources = FileUtils.listFiles(
+                bundlePath,
+                new WildcardFileFilter("**/*"),
+                DirectoryFileFilter.DIRECTORY);
+        for (final File bundleRes : bundleResources) {
+            if (bundleRes.isDirectory()) {
+            	continue;
+            }
+            if (reservedAppBundleFiles.contains(bundleRes)) {
+            	continue;
+            }
+            if (resourcesFiles.contains(bundleRes)) {
+            	continue;
+            }
+            logger.warning("File '" + bundleRes
+            		+ "' found in app bundle but not in '"
+            		+ config.getResourcesDir() + "', removing");
+            FileUtils.deleteQuietly(bundleRes);
         }
 
         // Generate dSYM.

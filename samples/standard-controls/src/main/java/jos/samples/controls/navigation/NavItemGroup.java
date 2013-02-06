@@ -1,5 +1,6 @@
 package jos.samples.controls.navigation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -7,16 +8,28 @@ import java.util.List;
  */
 public class NavItemGroup {
 
-    public String name;
+    private final String name;
 
-    public String footer;
+    private final String footer;
 
-    public List<NavItem> items;
-
-    public NavItemGroup() {
-    }
+    private final List<NavItem> items;
 
     public NavItemGroup(String name) {
         this.name = name;
+        this.footer = "";
+        this.items = new ArrayList<NavItem>();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getFooter() {
+        return footer;
+    }
+
+    public List<NavItem> getItems() {
+        return items;
+    }
+
 }

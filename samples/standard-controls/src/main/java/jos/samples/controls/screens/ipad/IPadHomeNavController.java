@@ -8,12 +8,13 @@ import jos.samples.controls.navigation.NavItem;
 import jos.samples.controls.navigation.NavItemGroup;
 import jos.samples.controls.navigation.NavItemTableSource;
 
-public class HomeNavController extends UITableViewController {
+public class IPadHomeNavController extends UITableViewController {
 
-    List<NavItemGroup> navItems = new ArrayList<NavItemGroup>();
-    NavItemTableSource tableSource;
+    private final List<NavItemGroup> navItems = new ArrayList<NavItemGroup>();
 
-    public HomeNavController() {
+    private NavItemTableSource tableSource;
+
+    public IPadHomeNavController() {
         super();
     }
 
@@ -42,13 +43,13 @@ public class HomeNavController extends UITableViewController {
         navItems.add(navGroup);
         // navGroup.items.add(new NavItem("Alert Views", "",
         // AlertViewsScreen_iPhone.class));
-        navGroup.items.add(new NavItem("Action Sheets", "", ActionSheets.class));
+        navGroup.getItems().add(new NavItem("Action Sheets", ActionSheets.class));
 
         navGroup = new NavItemGroup("Pickers");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Simple Date Picker", "", DatePickerSimple.class));
-        // navGroup.items.add(new NavItem("Action Sheet Date Picker", "",
-        // ActionSheetDatePicker_iPad.class));
+        navGroup.getItems().add(new NavItem("Simple Date Picker", DatePickerSimple.class));
+        // navGroup.getItems().add(new NavItem("Action Sheet Date Picker", "",
+        // DatePicker.class));
 
         // create a table source from our nav items
         tableSource = new NavItemTableSource(navigationController, navItems);
@@ -56,4 +57,5 @@ public class HomeNavController extends UITableViewController {
         // set the source on the table to our data source
         super.tableView.source = tableSource;
     }
+
 }

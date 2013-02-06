@@ -1,6 +1,7 @@
 package jos.samples.controls.controls;
 
-import jos.api.graphicsimaging.CGGeometry;
+import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
+
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIActionSheet;
@@ -21,8 +22,8 @@ import com.google.j2objc.annotations.Register;
 
 /**
  * A class to show a date picker on an action sheet. To use, create a new
- * ActionSheetDatePicker, set the Title, modify any settings on the DatePicker
- * property, and call Show(). It will automatically dismiss when the user clicks
+ * ActionSheetDatePicker, set the title, modify any settings on the DatePicker
+ * property, and call show(). It will automatically dismiss when the user clicks
  * "Done," or you can call Hide() to dismiss it manually.
  */
 @Register(name = "SlideOnDatePicker")
@@ -36,7 +37,7 @@ public class ActionSheetDatePicker {
     /**
      * Set any datepicker properties here
      */
-    public UIDatePicker datePicker = new UIDatePicker(CGGeometry.CGRectMake(0, 0, 0, 0));
+    public UIDatePicker datePicker = new UIDatePicker(CGRectMake(0, 0, 0, 0));
 
     /**
      * The title that shows up for the date picker
@@ -49,8 +50,7 @@ public class ActionSheetDatePicker {
         titleLabel.text = value;
     }
 
-    public ActionSheetDatePicker (UIView owner)
-    {
+    public ActionSheetDatePicker(UIView owner) {
         // save our uiview owner
         this.owner = owner;
 
@@ -70,7 +70,7 @@ public class ActionSheetDatePicker {
         }, UIControlEvent.TouchUpInside);
 
         // create + configure the action sheet
-        actionSheet = new UIActionSheet ();
+        actionSheet = new UIActionSheet();
         actionSheet.style = UIActionSheetStyle.BlackTranslucent;
         actionSheet.delegate = new UIActionSheetDelegate() {
             @Override
@@ -80,9 +80,9 @@ public class ActionSheetDatePicker {
         };
 
         // add our controls to the action sheet
-        actionSheet.addSubview (datePicker);
-        actionSheet.addSubview (titleLabel);
-        actionSheet.addSubview (doneButton);
+        actionSheet.addSubview(datePicker);
+        actionSheet.addSubview(titleLabel);
+        actionSheet.addSubview(doneButton);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ActionSheetDatePicker {
         CGSize doneButtonSize = new CGSize(71, 30);
         CGSize actionSheetSize = new CGSize(owner.frame.size.width,
                 datePicker.frame.size.height + titleBarHeight);
-        CGRect actionSheetFrame = CGGeometry.CGRectMake(0, owner.frame.size.height
+        CGRect actionSheetFrame = CGRectMake(0, owner.frame.size.height
                 - actionSheetSize.height, actionSheetSize.width,
                 actionSheetSize.height);
 
@@ -106,16 +106,14 @@ public class ActionSheetDatePicker {
 
         // move our picker to be at the bottom of the actionsheet (view coords
         // are relative to the action sheet)
-        datePicker.frame = CGGeometry
-                .CGRectMake(datePicker.frame.point.x, titleBarHeight,
-                        datePicker.frame.size.width, datePicker.frame.size.height);
+        datePicker.frame = CGRectMake(datePicker.frame.point.x, titleBarHeight,
+                datePicker.frame.size.width, datePicker.frame.size.height);
 
         // move our label to the top of the action sheet
-        titleLabel.frame = CGGeometry.CGRectMake(10, 4,
-                owner.frame.size.width - 100, 35);
+        titleLabel.frame = CGRectMake(10, 4, owner.frame.size.width - 100, 35);
 
         // move our button
-        doneButton.frame = CGGeometry.CGRectMake(actionSheetSize.width
+        doneButton.frame = CGRectMake(actionSheetSize.width
                 - doneButtonSize.width - 10, 7, doneButtonSize.width,
                 doneButtonSize.height);
     }
@@ -126,4 +124,5 @@ public class ActionSheetDatePicker {
     public void hide(boolean animated) {
         actionSheet.dismissWithClickedButtonIndex(0, animated);
     }
+
 }

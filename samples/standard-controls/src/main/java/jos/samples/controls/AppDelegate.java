@@ -8,13 +8,14 @@ import jos.api.uikit.UINavigationController;
 import jos.api.uikit.UIScreen;
 import jos.api.uikit.UIUserInterfaceIdiom;
 import jos.api.uikit.UIWindow;
+import jos.samples.controls.screens.ipad.IPadHomeNavController;
+import jos.samples.controls.screens.iphone.IPhoneHomeNavController;
 
 public class AppDelegate extends UIApplicationDelegate {
 
-    private UIWindow window;
     private UINavigationController mainNavController;
-    private jos.samples.controls.screens.iphone.HomeNavController iPhoneHome;
-    private jos.samples.controls.screens.ipad.HomeNavController iPadHome;
+    private IPhoneHomeNavController iPhoneHome;
+    private IPadHomeNavController iPadHome;
 
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
@@ -24,10 +25,10 @@ public class AppDelegate extends UIApplicationDelegate {
         mainNavController = new UINavigationController();
 
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiom.Phone) {
-            iPhoneHome = new jos.samples.controls.screens.iphone.HomeNavController();
+            iPhoneHome = new IPhoneHomeNavController();
             mainNavController.pushViewController(iPhoneHome, false);
         } else {
-            iPadHome = new jos.samples.controls.screens.ipad.HomeNavController();
+            iPadHome = new IPadHomeNavController();
             mainNavController.pushViewController(iPadHome, false);
         }
 

@@ -16,8 +16,7 @@ public class Translate {
                 "-sourcepath", System.getProperty("user.dir") + "/src/main/java",
                 "-classpath", System.getProperty("java.class.path"),
                 "src/main/java/jos/samples/hello/AppDelegate.java",
-                "src/main/java/jos/samples/hello/HelloViewController.java",
-                "src/main/java/jos/samples/hello/HelloView.java"
+                "src/main/java/jos/samples/hello/IPhoneViewController.java"
         });
     }
 

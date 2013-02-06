@@ -5,14 +5,26 @@ import jos.api.foundation.NSObject;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIAlertViewDelegate;
+import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActivityIndicatorAlertView;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class AlertViewsScreen_iPhone extends AbstractAlertViewsScreen_iPhone {
+public class AlertViewsScreen_iPhone extends UIViewController {
+
+    @Outlet
+    UIButton btnCustomButtons;
+    @Outlet
+    UIButton btnSimpleAlert;
+    @Outlet
+    UIButton btnCustomButtonsWithDelegate;
+    @Outlet
+    UIButton btnCustomAlert;
 
     /**
      * This is here to keep a reference to an alert after the method that
@@ -48,20 +60,17 @@ public class AlertViewsScreen_iPhone extends AbstractAlertViewsScreen_iPhone {
 
         title = "Alert Views";
 
-        btnSimpleAlert().addTarget(this,
-                new Selector("handleBtnSimpleAlertTouchUpInside"),
+        btnSimpleAlert.addTarget(this, new Selector(
+                "handleBtnSimpleAlertTouchUpInside"),
                 UIControlEvent.TouchUpInside);
-        btnCustomButtons().addTarget(this,
-                new Selector("handleBtnCustomButtonsTouchUpInside"),
+        btnCustomButtons.addTarget(this, new Selector(
+                "handleBtnCustomButtonsTouchUpInside"),
                 UIControlEvent.TouchUpInside);
-        btnCustomButtonsWithDelegate()
-                .addTarget(
-                        this,
-                        new Selector(
-                                "handleBtnCustomButtonsWithDelegateTouchUpInside"),
-                        UIControlEvent.TouchUpInside);
-        btnCustomAlert().addTarget(this,
-                new Selector("handleBtnCustomAlertTouchUpInside"),
+        btnCustomButtonsWithDelegate.addTarget(this, new Selector(
+                "handleBtnCustomButtonsWithDelegateTouchUpInside"),
+                UIControlEvent.TouchUpInside);
+        btnCustomAlert.addTarget(this, new Selector(
+                "handleBtnCustomAlertTouchUpInside"),
                 UIControlEvent.TouchUpInside);
     }
 

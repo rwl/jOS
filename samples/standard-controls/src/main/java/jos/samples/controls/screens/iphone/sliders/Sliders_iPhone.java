@@ -1,13 +1,18 @@
 package jos.samples.controls.screens.iphone.sliders;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIControlState;
 import jos.api.uikit.UIImage;
+import jos.api.uikit.UISlider;
+import jos.api.uikit.UIViewController;
 
-public class Sliders_iPhone extends AbstractSliders_iPhone {
+public class Sliders_iPhone extends UIViewController {
+
+    @Outlet UISlider sldrWithImages;
 
     public Sliders_iPhone(IntPtr handle) {
         super(handle);
@@ -34,8 +39,9 @@ public class Sliders_iPhone extends AbstractSliders_iPhone {
 
         this.title = "Sliders";
 
-        this.sldrWithImages().setThumbImage(
+        this.sldrWithImages.setThumbImage(
                 UIImage.fromFile("images/icons/29_icon.png"),
                 UIControlState.Normal);
     }
+
 }

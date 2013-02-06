@@ -7,12 +7,18 @@ import java.util.Map;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UIPickerView;
 import jos.api.uikit.UIPickerViewModel;
+import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 
-public class PickerWithMultipleComponents_iPhone extends AbstractPickerWithMultipleComponents_iPhone {
+public class PickerWithMultipleComponents_iPhone extends UIViewController {
+
+    @Outlet UILabel lblSelectedItem;
+    @Outlet UIPickerView pkrMain;
 
     PickerDataModel pickerDataModel;
 
@@ -59,7 +65,7 @@ public class PickerWithMultipleComponents_iPhone extends AbstractPickerWithMulti
         pickerDataModel.items.put (1, items);
 
         // set it on our picker class
-        this.pkrMain().model = pickerDataModel;
+        this.pkrMain.model = pickerDataModel;
 
 
         // wire up the item selected method
@@ -130,6 +136,7 @@ public class PickerWithMultipleComponents_iPhone extends AbstractPickerWithMulti
     protected interface PickerDataModelDelegate {
 
         void onValueChanged(PickerDataModel model);
+
     }
 
 }

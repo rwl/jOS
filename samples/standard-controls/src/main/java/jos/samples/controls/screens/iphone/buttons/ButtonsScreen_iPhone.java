@@ -9,12 +9,19 @@ import jos.api.uikit.UIButtonType;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIControlState;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class ButtonsScreen_iPhone extends AbstractButtonsScreen_iPhone {
+public class ButtonsScreen_iPhone extends UIViewController {
+
+    @Outlet
+    UIButton btnOne;
+    @Outlet
+    UIButton btnTwo;
 
     public ButtonsScreen_iPhone(IntPtr handle) {
         super(handle);
@@ -40,10 +47,9 @@ public class ButtonsScreen_iPhone extends AbstractButtonsScreen_iPhone {
         super.viewDidLoad();
         this.title = "Buttons";
 
-        this.btnOne().addTarget(this,
-                new Selector("handleBtnOneTouchUpInside"),
+        this.btnOne.addTarget(this, new Selector("handleBtnOneTouchUpInside"),
                 UIControlEvent.TouchUpInside);
-        this.btnTwo().addTarget(new EventListener() {
+        this.btnTwo.addTarget(new EventListener() {
 
             @Override
             public void onEvent(Object object, int event) {
@@ -60,4 +66,5 @@ public class ButtonsScreen_iPhone extends AbstractButtonsScreen_iPhone {
         new UIAlertView("button one click!", "TouchUpInside Handled", null,
                 "OK", null).show();
     }
+
 }

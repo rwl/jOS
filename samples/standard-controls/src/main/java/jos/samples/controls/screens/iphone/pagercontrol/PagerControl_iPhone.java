@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 import jos.api.foundation.NSCoder;
@@ -19,7 +20,10 @@ import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIViewController;
 
-public class PagerControl_iPhone extends AbstractPagerControl_iPhone {
+public class PagerControl_iPhone extends UIViewController {
+
+    @Outlet UIPageControl pgrMain;
+    @Outlet UIScrollView scrlMain;
 
     /**
      * A list of all our controllers that hold the views for our pages
@@ -47,9 +51,9 @@ public class PagerControl_iPhone extends AbstractPagerControl_iPhone {
         title = "Pager Control";
 
         // wire up our pager and scroll view event handlers
-        pgrMain().addTarget(this, new Selector("handlePgrMainValueChanged"),
+        pgrMain.addTarget(this, new Selector("handlePgrMainValueChanged"),
                 UIControlEvent.ValueChanged);
-        scrlMain().delegate = new UIScrollViewDelegate() {
+        scrlMain.delegate = new UIScrollViewDelegate() {
 
             @Override
             public void scrolled(UIScrollView view) {
@@ -68,13 +72,13 @@ public class PagerControl_iPhone extends AbstractPagerControl_iPhone {
     protected void handleScrlMainScrolled() {
         // calculate the page number
         int pageNumber = (int) (Math
-                .floor((scrlMain().contentOffset.x - scrlMain().frame.size.width / 2)
-                        / scrlMain().frame.size.width) + 1);
+                .floor((scrlMain.contentOffset.x - scrlMain.frame.size.width / 2)
+                        / scrlMain.frame.size.width) + 1);
 
         // if it's a valid page
         if (pageNumber >= 0 && pageNumber < controllers.size()) {
             // Set the current page on the pager control
-            pgrMain().currentPage = pageNumber;
+            pgrMain.currentPage = pageNumber;
         }
     }
 
@@ -84,10 +88,9 @@ public class PagerControl_iPhone extends AbstractPagerControl_iPhone {
      */
     protected void handlePgrMainValueChanged(NSObject sender, UIEvent e) {
         // it moves page by page. we scroll right to the next controller
-        scrlMain()
-                .scrollRectToVisible(
-                        controllers.get(((UIPageControl) sender).currentPage).view.frame,
-                        true);
+        scrlMain.scrollRectToVisible(
+                controllers.get(((UIPageControl) sender).currentPage).view.frame,
+                true);
     }
 
     /**
@@ -104,18 +107,19 @@ public class PagerControl_iPhone extends AbstractPagerControl_iPhone {
         for (int i = 0; i < controllers.size(); i++) {
             // set their location and size, each one is moved to the
             // right by the width of the previous
-            CGRect viewFrame = CGGeometry.CGRectMake(
-                    scrlMain().frame.size.width * i, scrlMain().frame.point.y,
-                    scrlMain().frame.size.width, scrlMain().frame.size.height);
+            CGRect viewFrame = CGGeometry.CGRectMake(scrlMain.frame.size.width
+                    * i, scrlMain.frame.point.y, scrlMain.frame.size.width,
+                    scrlMain.frame.size.height);
             controllers.get(i).view.frame = viewFrame;
 
             // add the view to the scrollview
-            scrlMain().addSubview(controllers.get(i).view);
+            scrlMain.addSubview(controllers.get(i).view);
         }
 
         // set our scroll view content size (width = number of pages * scroll
         // view width)
-        scrlMain().contentSize = new CGSize(scrlMain().frame.size.width
-                * controllers.size(), scrlMain().frame.size.height);
+        scrlMain.contentSize = new CGSize(scrlMain.frame.size.width
+                * controllers.size(), scrlMain.frame.size.height);
     }
+
 }

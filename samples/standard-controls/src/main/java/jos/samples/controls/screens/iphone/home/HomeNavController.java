@@ -105,4 +105,5 @@ public class HomeNavController extends UITableViewController {
         // set the source on the table to our data source
         super.tableView.source = tableSource;
     }
+
 }

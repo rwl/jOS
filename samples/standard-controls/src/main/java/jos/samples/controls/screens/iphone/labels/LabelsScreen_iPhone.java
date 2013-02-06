@@ -7,10 +7,11 @@ import jos.api.uikit.UIColor;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UILineBreakMode;
+import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
 
-public class LabelsScreen_iPhone extends AbstractLabelsScreen_iPhone {
+public class LabelsScreen_iPhone extends UIViewController {
 
     UILabel customLabel;
 
@@ -50,4 +51,5 @@ public class LabelsScreen_iPhone extends AbstractLabelsScreen_iPhone {
 
         view.addSubview(customLabel);
     }
+
 }

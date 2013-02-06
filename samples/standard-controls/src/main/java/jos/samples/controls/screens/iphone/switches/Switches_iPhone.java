@@ -2,13 +2,19 @@ package jos.samples.controls.screens.iphone.switches;
 
 import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIControlEvent;
+import jos.api.uikit.UISwitch;
+import jos.api.uikit.UIViewController;
 
-public class Switches_iPhone extends AbstractSwitches_iPhone {
+public class Switches_iPhone extends UIViewController {
+
+    @Outlet UISwitch swchOne;
+    @Outlet UISwitch swchTwo;
 
     public Switches_iPhone(IntPtr handle) {
         super(handle);
@@ -36,21 +42,21 @@ public class Switches_iPhone extends AbstractSwitches_iPhone {
 
         this.title = "Switches";
 
-
-        this.swchOne().addTarget(new EventListener() {
+        this.swchOne.addTarget(new EventListener() {
 
             @Override
             public void onEvent(Object object, int event) {
-                new UIAlertView("Switch one change!", "is on: " + swchOne().on, null, "OK", null).show();
+                new UIAlertView("Switch one change!", "is on: " + swchOne.on, null, "OK", null).show();
             }
         }, UIControlEvent.ValueChanged);
 
-        this.swchTwo().addTarget(new EventListener() {
+        this.swchTwo.addTarget(new EventListener() {
 
             @Override
             public void onEvent(Object object, int event) {
-                new UIAlertView("Switch two change!", "is on: " + swchTwo().on, null, "OK", null).show();
+                new UIAlertView("Switch two change!", "is on: " + swchTwo.on, null, "OK", null).show();
             }
         }, UIControlEvent.ValueChanged);
     }
+
 }

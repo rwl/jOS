@@ -1,14 +1,22 @@
 package jos.samples.controls.screens.iphone.toolbar;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIAlertView;
+import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIInterfaceOrientation;
+import jos.api.uikit.UIViewController;
 
-public class Toolbar1_iPhone extends AbstractToolbar1_iPhone {
+public class Toolbar1_iPhone extends UIViewController {
+
+    @Outlet UIBarButtonItem btnOne;
+    @Outlet UIBarButtonItem btnTwo;
+    @Outlet UIBarButtonItem btnThree;
+    @Outlet UIBarButtonItem btnFour;
 
     public Toolbar1_iPhone(IntPtr handle) {
         super(handle);
@@ -36,8 +44,8 @@ public class Toolbar1_iPhone extends AbstractToolbar1_iPhone {
 
         this.title = "Toolbar";
 
-        this.btnOne().target = this;
-        this.btnOne().action = new Selector("handleButtonClick");
+        this.btnOne.target = this;
+        this.btnOne.action = new Selector("handleButtonClick");
     }
 
     protected void handleButtonClick() {
@@ -49,4 +57,5 @@ public class Toolbar1_iPhone extends AbstractToolbar1_iPhone {
             UIInterfaceOrientation toInterfaceOrientation) {
         return true;
     }
+
 }

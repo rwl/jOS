@@ -5,13 +5,19 @@ import java.util.List;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UIPickerView;
 import jos.api.uikit.UIPickerViewModel;
+import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 
 
-public class PickerView1_iPhone extends AbstractPickerView1_iPhone {
+public class PickerView1_iPhone extends UIViewController {
+
+    @Outlet UILabel lblSelectedItem;
+    @Outlet UIPickerView pkrMain;
 
     PickerDataModel pickerDataModel;
 
@@ -49,19 +55,19 @@ public class PickerView1_iPhone extends AbstractPickerView1_iPhone {
         pickerDataModel.items.add ("fourth item!");
 
         // set it on our picker class
-        this.pkrMain().source = pickerDataModel;
+        this.pkrMain.source = pickerDataModel;
 
         // wire up the value change method
         pickerDataModel.delegate = new PickerDataModelDelegate() {
 
             @Override
             public void onValueChanged(PickerDataModel model) {
-                lblSelectedItem().text = pickerDataModel.selectedItem();
+                lblSelectedItem.text = pickerDataModel.selectedItem();
             }
         };
 
         // set our initial selection on the label
-        this.lblSelectedItem().text = pickerDataModel.selectedItem();
+        this.lblSelectedItem.text = pickerDataModel.selectedItem();
     }
 
     /**
@@ -130,5 +136,7 @@ public class PickerView1_iPhone extends AbstractPickerView1_iPhone {
     protected interface PickerDataModelDelegate {
 
         void onValueChanged(PickerDataModel model);
+
     }
+
 }

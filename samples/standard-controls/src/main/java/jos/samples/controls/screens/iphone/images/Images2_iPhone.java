@@ -7,8 +7,9 @@ import jos.api.graphicsimaging.CGGeometry;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
+import jos.api.uikit.UIViewController;
 
-public class Images2_iPhone extends AbstractImages2_iPhone {
+public class Images2_iPhone extends UIViewController {
 
     UIImageView imageView1;
     UIImageView imgSpinningCircle;
@@ -59,4 +60,5 @@ public class Images2_iPhone extends AbstractImages2_iPhone {
         view.addSubview(imgSpinningCircle);
         imgSpinningCircle.startAnimating();
     }
+
 }

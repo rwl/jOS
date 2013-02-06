@@ -4,18 +4,25 @@ import java.util.GregorianCalendar;
 
 import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 import jos.api.foundation.NSCoder;
 import jos.api.foundation.NSObject;
 import jos.api.system.IntPtr;
+import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UILabel;
+import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
-public class ActionSheetDatePicker_iPad extends AbstractActionSheetDatePicker_iPad {
+public class ActionSheetDatePicker_iPad extends UIViewController {
+
+    @Outlet UIButton btnChooseDate;
+    @Outlet UILabel lblDate;
 
     ActionSheetDatePicker actionSheetDatePicker;
     ActionSheetDatePicker actionSheetTimerPicker;
@@ -57,7 +64,7 @@ public class ActionSheetDatePicker_iPad extends AbstractActionSheetDatePicker_iP
         actionSheetDatePicker.datePicker.minimumDate = calendar.getTime();
         calendar.add(GregorianCalendar.DAY_OF_MONTH, 14);
         actionSheetDatePicker.datePicker.maximumDate = calendar.getTime();
-        this.btnChooseDate().addTarget(new EventListener() {
+        this.btnChooseDate.addTarget(new EventListener() {
 
             @Override
             public void onEvent(Object object, int event) {
@@ -73,6 +80,7 @@ public class ActionSheetDatePicker_iPad extends AbstractActionSheetDatePicker_iP
 
     protected void handle_actionSheetDatePickerDatePickerValueChanged(
             NSObject sender, UIEvent e) {
-        this.lblDate().text = ((UIDatePicker) sender).date.toString();
+        this.lblDate.text = ((UIDatePicker) sender).date.toString();
     }
+
 }

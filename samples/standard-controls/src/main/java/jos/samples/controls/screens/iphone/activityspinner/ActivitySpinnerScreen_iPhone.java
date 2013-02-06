@@ -1,11 +1,12 @@
 package jos.samples.controls.screens.iphone.activityspinner;
 
-import com.google.j2objc.annotations.Export;
-
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
+import jos.api.uikit.UIViewController;
 
-public class ActivitySpinnerScreen_iPhone extends AbstractActivitySpinnerScreen_iPhone {
+import com.google.j2objc.annotations.Export;
+
+public class ActivitySpinnerScreen_iPhone extends UIViewController {
 
     public ActivitySpinnerScreen_iPhone(IntPtr handle) {
         super(handle);
@@ -32,4 +33,5 @@ public class ActivitySpinnerScreen_iPhone extends AbstractActivitySpinnerScreen_
 
         title = "Activity Spinners";
     }
+
 }

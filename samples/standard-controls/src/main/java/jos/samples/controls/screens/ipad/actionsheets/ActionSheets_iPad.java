@@ -4,12 +4,18 @@ import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIActionSheet;
 import jos.api.uikit.UIActionSheetDelegate;
+import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
+import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class ActionSheets_iPad extends AbstractActionSheets_iPad {
+public class ActionSheets_iPad extends UIViewController {
+
+    @Outlet UIButton btnActionSheetWithOtherButtons;
+    @Outlet UIButton btnSimpleActionSheet;
 
     UIActionSheet actionSheet;
 
@@ -37,10 +43,10 @@ public class ActionSheets_iPad extends AbstractActionSheets_iPad {
         super.viewDidLoad();
 
         title = "Action Sheets";
-        btnSimpleActionSheet().addTarget(this,
+        btnSimpleActionSheet.addTarget(this,
                 new Selector("handleBtnSimpleActionSheetTouchUpInside"),
                 UIControlEvent.TouchUpInside);
-        btnActionSheetWithOtherButtons().addTarget(
+        btnActionSheetWithOtherButtons.addTarget(
                 this,
                 new Selector(
                         "handleBtnActionSheetWithOtherButtonsTouchUpInside"),

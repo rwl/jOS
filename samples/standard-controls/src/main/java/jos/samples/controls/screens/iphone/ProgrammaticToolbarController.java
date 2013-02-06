@@ -13,11 +13,11 @@ import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIViewAutoresizing;
 import jos.api.uikit.UIViewController;
 
-public class ProgrammaticToolbar_Controller extends UIViewController {
+public class ProgrammaticToolbarController extends UIViewController {
 
     UIToolbar toolbar;
 
-    public ProgrammaticToolbar_Controller() {
+    public ProgrammaticToolbarController() {
         super();
     }
 

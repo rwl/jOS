@@ -1,8 +1,4 @@
-package jos.samples.controls.screens.ipad;
-
-import com.google.j2objc.annotations.EventListener;
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
+package jos.samples.controls.screens.iphone;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
@@ -11,24 +7,28 @@ import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 
-public class DatePickerSimple_iPad extends UIViewController {
+import com.google.j2objc.annotations.EventListener;
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
+
+public class DatePickerSimple extends UIViewController {
 
     @Outlet UILabel lblDate;
     @Outlet UIDatePicker pkrDate;
 
-    public DatePickerSimple_iPad(IntPtr handle) {
+    public DatePickerSimple(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public DatePickerSimple_iPad(NSCoder coder) {
+    public DatePickerSimple(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public DatePickerSimple_iPad() {
-        super("DatePickerSimple_iPad", null);
+    public DatePickerSimple() {
+        super("DatePickerSimple_iPhone", null);
         initialize();
     }
 
@@ -42,6 +42,7 @@ public class DatePickerSimple_iPad extends UIViewController {
         title = "Simple Date Picker";
 
         pkrDate.addTarget(new EventListener() {
+
             @Override
             public void onEvent(Object object, int event) {
                 lblDate.text = ((UIDatePicker) object).date.toString();

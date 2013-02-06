@@ -9,22 +9,22 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 
 
-public class ProgressBars_iPhone extends UIViewController {
+public class ProgressBars extends UIViewController {
 
     @Outlet UIProgressView btnProgress1;
 
-    public ProgressBars_iPhone (IntPtr handle) {
+    public ProgressBars (IntPtr handle) {
         super(handle);
         initialize ();
     }
 
     @Export(selector="initWithCoder:")
-    public ProgressBars_iPhone (NSCoder coder) {
+    public ProgressBars (NSCoder coder) {
         super(coder);
         initialize ();
     }
 
-    public ProgressBars_iPhone () {
+    public ProgressBars () {
         super("ProgressBars_iPhone", null);
         initialize ();
     }

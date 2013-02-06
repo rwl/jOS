@@ -11,22 +11,22 @@ import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
 
-public class LabelsScreen_iPhone extends UIViewController {
+public class LabelsScreen extends UIViewController {
 
     UILabel customLabel;
 
-    public LabelsScreen_iPhone(IntPtr handle) {
+    public LabelsScreen(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public LabelsScreen_iPhone(NSCoder coder) {
+    public LabelsScreen(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public LabelsScreen_iPhone() {
+    public LabelsScreen() {
         super("LabelsScreen_iPhone", null);
         initialize();
     }

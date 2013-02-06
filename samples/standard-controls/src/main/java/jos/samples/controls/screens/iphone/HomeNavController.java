@@ -39,43 +39,43 @@ public class HomeNavController extends UITableViewController {
         // create the navigation items
         NavItemGroup navGroup = new NavItemGroup("Form Controls");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Labels", "", LabelsScreen_iPhone.class));
-        navGroup.items.add(new NavItem("Text Fields", "", TextFields_iPhone.class));
-        navGroup.items.add(new NavItem("Sliders", "", Sliders_iPhone.class));
-        navGroup.items.add(new NavItem("Buttons", "", ButtonsScreen_iPhone.class));
-        navGroup.items.add(new NavItem("Switches", "", Switches_iPhone.class));
-        navGroup.items.add(new NavItem("Segmented Buttons", "", SegmentedControls_iPhone.class));
-        navGroup.items.add(new NavItem("Segmented Buttons 2", "", SegmentedControls2_iPhone.class));
+        navGroup.items.add(new NavItem("Labels", "", LabelsScreen.class));
+        navGroup.items.add(new NavItem("Text Fields", "", TextFields.class));
+        navGroup.items.add(new NavItem("Sliders", "", Sliders.class));
+        navGroup.items.add(new NavItem("Buttons", "", ButtonsScreen.class));
+        navGroup.items.add(new NavItem("Switches", "", Switches.class));
+        navGroup.items.add(new NavItem("Segmented Buttons", "", SegmentedControls.class));
+        navGroup.items.add(new NavItem("Segmented Buttons 2", "", SegmentedControls2.class));
 
         navGroup = new NavItemGroup ("Content Controls");
         navItems.add(navGroup);
         navGroup.items.add(new NavItem("Scroll View", "", jos.samples.controls.screens.iphone.ScrollViewController.class));
         navGroup.items.add(new NavItem("Tap to Zoom Scroll View", "", jos.samples.controls.screens.iphone.TapToZoomController.class));
-        navGroup.items.add(new NavItem("Pager Control", "", PagerControl_iPhone.class));
-        navGroup.items.add(new NavItem("Image Control", "", Images_iPhone.class));
-        navGroup.items.add(new NavItem("More Image Controls", "", Images2_iPhone.class));
+        navGroup.items.add(new NavItem("Pager Control", "", PagerControl.class));
+        navGroup.items.add(new NavItem("Image Control", "", Images.class));
+        navGroup.items.add(new NavItem("More Image Controls", "", Images2.class));
 
         navGroup = new NavItemGroup ("Process Controls");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Activity Spinners", "", ActivitySpinnerScreen_iPhone.class));
-        navGroup.items.add(new NavItem("Progress Bars", "", ProgressBars_iPhone.class));
+        navGroup.items.add(new NavItem("Activity Spinners", "", ActivitySpinnerScreen.class));
+        navGroup.items.add(new NavItem("Progress Bars", "", ProgressBars.class));
 
         navGroup = new NavItemGroup ("Popups");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Alert Views", "", AlertViewsScreen_iPhone.class));
-        navGroup.items.add(new NavItem("Action Sheets", "", ActionSheets_iPhone.class));
+        navGroup.items.add(new NavItem("Alert Views", "", AlertViewsScreen.class));
+        navGroup.items.add(new NavItem("Action Sheets", "", ActionSheets.class));
 
         navGroup = new NavItemGroup ("Pickers");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Simple Date Picker", "", DatePickerSimple_iPhone.class));
-        navGroup.items.add(new NavItem("Date Picker", "", DatePicker_iPhone.class));
-        navGroup.items.add(new NavItem("Simple Custom Picker", "", PickerView1_iPhone.class));
-        navGroup.items.add(new NavItem("Custom Picker with Multiple Components", "", PickerWithMultipleComponents_iPhone.class));
+        navGroup.items.add(new NavItem("Simple Date Picker", "", DatePickerSimple.class));
+        navGroup.items.add(new NavItem("Date Picker", "", DatePicker.class));
+        navGroup.items.add(new NavItem("Simple Custom Picker", "", PickerView1.class));
+        navGroup.items.add(new NavItem("Custom Picker with Multiple Components", "", PickerWithMultipleComponents.class));
 
         navGroup = new NavItemGroup ("Toolbars");
         navItems.add(navGroup);
-        navGroup.items.add(new NavItem("Toolbar 1", "", Toolbar1_iPhone.class));
-        navGroup.items.add(new NavItem("Programmatic Toolbar", "", ProgrammaticToolbar_Controller.class));
+        navGroup.items.add(new NavItem("Toolbar 1", "", Toolbar1.class));
+        navGroup.items.add(new NavItem("Programmatic Toolbar", "", ProgrammaticToolbarController.class));
         navGroup.items.add(new NavItem("Toolbar Items", "", ToolbarItems.class));
 
         // create a table source from our nav items

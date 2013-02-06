@@ -9,23 +9,23 @@ import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIViewController;
 
-public class Images2_iPhone extends UIViewController {
+public class Images2 extends UIViewController {
 
     UIImageView imageView1;
     UIImageView imgSpinningCircle;
 
-    public Images2_iPhone(IntPtr handle) {
+    public Images2(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public Images2_iPhone(NSCoder coder) {
+    public Images2(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public Images2_iPhone() {
+    public Images2() {
         super("Images2_iPhone", null);
         initialize();
     }

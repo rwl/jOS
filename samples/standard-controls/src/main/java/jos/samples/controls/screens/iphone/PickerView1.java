@@ -1,9 +1,7 @@
 package jos.samples.controls.screens.iphone;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
@@ -15,26 +13,27 @@ import jos.api.uikit.UIViewController;
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 
-public class PickerWithMultipleComponents_iPhone extends UIViewController {
+
+public class PickerView1 extends UIViewController {
 
     @Outlet UILabel lblSelectedItem;
     @Outlet UIPickerView pkrMain;
 
     PickerDataModel pickerDataModel;
 
-    public PickerWithMultipleComponents_iPhone(IntPtr handle) {
+    public PickerView1(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public PickerWithMultipleComponents_iPhone(NSCoder coder) {
+    public PickerView1(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public PickerWithMultipleComponents_iPhone() {
-        super("PickerWithMultipleComponents_iPhone", null);
+    public PickerView1() {
+        super("PickerView1_iPhone", null);
         initialize();
     }
 
@@ -48,41 +47,32 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
 
         this.title = "Picker View";
 
-        // create our simple picker modle
+        // create our simple picker model
         pickerDataModel = new PickerDataModel ();
-
-        List<String> items = new ArrayList<String> ();
-        items.add ("1");
-        items.add ("2");
-        items.add ("3");
-        pickerDataModel.items.put (0, items);
-
-        items = new ArrayList<String> ();
-        items.add ("Red");
-        items.add ("Green");
-        items.add ("Blue");
-        items.add ("Alpha");
-        pickerDataModel.items.put (1, items);
+        pickerDataModel.items.add ("item the first!");
+        pickerDataModel.items.add ("item the second!");
+        pickerDataModel.items.add ("item the third!");
+        pickerDataModel.items.add ("fourth item!");
 
         // set it on our picker class
-        this.pkrMain.model = pickerDataModel;
+        this.pkrMain.source = pickerDataModel;
 
-
-        // wire up the item selected method
+        // wire up the value change method
         pickerDataModel.delegate = new PickerDataModelDelegate() {
 
             @Override
             public void onValueChanged(PickerDataModel model) {
-                //lblSelectedItem().text = pickerDataModel.selectedItem;
+                lblSelectedItem.text = pickerDataModel.selectedItem();
             }
         };
 
         // set our initial selection on the label
-        //this.lblSelectedItem().text = pickerDataModel.selectedItem;
+        this.lblSelectedItem.text = pickerDataModel.selectedItem();
     }
 
     /**
-     * This is our simple picker model. it uses a list of strings as it's dats
+     * This is our simple picker model. it uses a list of strings as it's data
+     * and exposes a valueChanged event when the picker changes.
      */
     protected class PickerDataModel extends UIPickerViewModel {
 
@@ -91,7 +81,16 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
         /**
          * The items to show up in the picker
          */
-        public Map<Integer, List<String>> items = new HashMap<Integer, List<String>>();
+        public List<String> items = new ArrayList<String>();
+
+        /**
+         * The current selected item
+         */
+        public String selectedItem() {
+            return items.get(selectedIndex);
+        }
+
+        protected int selectedIndex = 0;
 
         public PickerDataModel() {
         }
@@ -102,16 +101,16 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
          */
         @Override
         public int getRowsInComponent(UIPickerView picker, int component) {
-            return items.get(component).size();
+            return items.size();
         }
 
         /**
          * Called by the picker to get the text for a particular row in a
-         * particular spinner item.
+         * particular spinner item
          */
         @Override
         public String getTitle(UIPickerView picker, int row, int component) {
-            return items.get(component).get(row);
+            return items.get(row);
         }
 
         /**
@@ -119,7 +118,7 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
          */
         @Override
         public int getComponentCount(UIPickerView picker) {
-            return items.size();
+            return 1;
         }
 
         /**
@@ -127,6 +126,7 @@ public class PickerWithMultipleComponents_iPhone extends UIViewController {
          */
         @Override
         public void selected(UIPickerView picker, int row, int component) {
+            selectedIndex = row;
             if (this.delegate != null) {
                 this.delegate.onValueChanged(this);
             }

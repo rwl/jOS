@@ -15,7 +15,7 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class AlertViewsScreen_iPhone extends UIViewController {
+public class AlertViewsScreen extends UIViewController {
 
     @Outlet
     UIButton btnCustomButtons;
@@ -35,18 +35,18 @@ public class AlertViewsScreen_iPhone extends UIViewController {
      */
     UIAlertView alert;
 
-    public AlertViewsScreen_iPhone(IntPtr handle) {
+    public AlertViewsScreen(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public AlertViewsScreen_iPhone(NSCoder coder) {
+    public AlertViewsScreen(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public AlertViewsScreen_iPhone() {
+    public AlertViewsScreen() {
         super("AlertViewsScreen_iPhone", null);
         initialize();
     }

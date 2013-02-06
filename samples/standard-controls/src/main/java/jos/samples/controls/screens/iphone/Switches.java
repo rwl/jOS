@@ -11,23 +11,23 @@ import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UISwitch;
 import jos.api.uikit.UIViewController;
 
-public class Switches_iPhone extends UIViewController {
+public class Switches extends UIViewController {
 
     @Outlet UISwitch swchOne;
     @Outlet UISwitch swchTwo;
 
-    public Switches_iPhone(IntPtr handle) {
+    public Switches(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public Switches_iPhone(NSCoder coder) {
+    public Switches(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public Switches_iPhone() {
+    public Switches() {
         super("Switches_iPhone", null);
         initialize();
     }

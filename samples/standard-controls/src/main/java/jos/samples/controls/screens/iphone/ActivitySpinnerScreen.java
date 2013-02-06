@@ -1,30 +1,26 @@
 package jos.samples.controls.screens.iphone;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
-
 import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
-import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIViewController;
 
-public class Images_iPhone extends UIViewController {
+import com.google.j2objc.annotations.Export;
 
-    @Outlet UIImageView imgMain;
+public class ActivitySpinnerScreen extends UIViewController {
 
-    public Images_iPhone(IntPtr handle) {
+    public ActivitySpinnerScreen(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public Images_iPhone(NSCoder coder) {
+    public ActivitySpinnerScreen(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public Images_iPhone() {
-        super("Images_iPhone", null);
+    public ActivitySpinnerScreen() {
+        super("ActivitySpinnerScreen_iPhone", null);
         initialize();
     }
 
@@ -35,7 +31,7 @@ public class Images_iPhone extends UIViewController {
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        this.title = "Images";
+        title = "Activity Spinners";
     }
 
 }

@@ -11,25 +11,25 @@ import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIViewController;
 
-public class Toolbar1_iPhone extends UIViewController {
+public class Toolbar1 extends UIViewController {
 
     @Outlet UIBarButtonItem btnOne;
     @Outlet UIBarButtonItem btnTwo;
     @Outlet UIBarButtonItem btnThree;
     @Outlet UIBarButtonItem btnFour;
 
-    public Toolbar1_iPhone(IntPtr handle) {
+    public Toolbar1(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public Toolbar1_iPhone(NSCoder coder) {
+    public Toolbar1(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public Toolbar1_iPhone() {
+    public Toolbar1() {
         super("Toolbar1_iPhone", null);
         initialize();
     }

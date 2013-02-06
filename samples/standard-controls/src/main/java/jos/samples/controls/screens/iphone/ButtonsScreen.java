@@ -16,25 +16,25 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class ButtonsScreen_iPhone extends UIViewController {
+public class ButtonsScreen extends UIViewController {
 
     @Outlet
     UIButton btnOne;
     @Outlet
     UIButton btnTwo;
 
-    public ButtonsScreen_iPhone(IntPtr handle) {
+    public ButtonsScreen(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public ButtonsScreen_iPhone(NSCoder coder) {
+    public ButtonsScreen(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public ButtonsScreen_iPhone() {
+    public ButtonsScreen() {
         super("ButtonsScreen_iPhone", null);
         initialize();
     }

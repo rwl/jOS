@@ -10,22 +10,22 @@ import jos.api.uikit.UIImage;
 import jos.api.uikit.UISlider;
 import jos.api.uikit.UIViewController;
 
-public class Sliders_iPhone extends UIViewController {
+public class Sliders extends UIViewController {
 
     @Outlet UISlider sldrWithImages;
 
-    public Sliders_iPhone(IntPtr handle) {
+    public Sliders(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public Sliders_iPhone(NSCoder coder) {
+    public Sliders(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public Sliders_iPhone() {
+    public Sliders() {
         super("Sliders_iPhone", null);
         initialize();
     }

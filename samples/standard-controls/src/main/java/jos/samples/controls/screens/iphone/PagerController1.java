@@ -5,11 +5,11 @@ import jos.api.uikit.UIColor;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 
-public class PagerController_2 extends UIViewController {
+public class PagerController1 extends UIViewController {
 
     UILabel lblMain;
 
-    public PagerController_2() {
+    public PagerController1() {
         super();
     }
 
@@ -18,11 +18,12 @@ public class PagerController_2 extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        this.view.backgroundColor = UIColor.lightGray;
+        this.view.backgroundColor = UIColor.white;
 
         lblMain = new UILabel(CGGeometry.CGRectMake(20, 200, 280, 33));
-        lblMain.text = "Controller 2";
+        lblMain.text = "Controller 1";
         lblMain.backgroundColor = UIColor.clear;
         this.view.addSubview(lblMain);
     }
+
 }

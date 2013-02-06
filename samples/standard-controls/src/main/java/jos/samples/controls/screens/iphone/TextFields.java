@@ -10,22 +10,22 @@ import jos.api.uikit.UITextBorderStyle;
 import jos.api.uikit.UITextField;
 import jos.api.uikit.UIViewController;
 
-public class TextFields_iPhone extends UIViewController {
+public class TextFields extends UIViewController {
 
     UITextField textField;
 
-    public TextFields_iPhone(IntPtr handle) {
+    public TextFields(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public TextFields_iPhone(NSCoder coder) {
+    public TextFields(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public TextFields_iPhone() {
+    public TextFields() {
         super("TextFields_iPhone", null);
         initialize();
     }

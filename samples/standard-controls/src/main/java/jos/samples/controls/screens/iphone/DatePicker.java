@@ -18,7 +18,7 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class DatePicker_iPhone extends UIViewController {
+public class DatePicker extends UIViewController {
 
     @Outlet UIButton btnChooseDate;
     @Outlet UILabel lblDate;
@@ -26,18 +26,18 @@ public class DatePicker_iPhone extends UIViewController {
     ActionSheetDatePicker actionSheetDatePicker;
     ActionSheetDatePicker actionSheetTimerPicker;
 
-    public DatePicker_iPhone(IntPtr handle) {
+    public DatePicker(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public DatePicker_iPhone(NSCoder coder) {
+    public DatePicker(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public DatePicker_iPhone() {
+    public DatePicker() {
         super("DatePicker_iPhone", null);
         initialize();
     }

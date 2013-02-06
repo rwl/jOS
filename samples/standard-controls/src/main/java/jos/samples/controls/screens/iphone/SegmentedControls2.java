@@ -11,22 +11,22 @@ import jos.api.uikit.UISegmentedControl;
 import jos.api.uikit.UISegmentedControlStyle;
 import jos.api.uikit.UIViewController;
 
-public class SegmentedControls2_iPhone extends UIViewController {
+public class SegmentedControls2 extends UIViewController {
 
     UISegmentedControl segControl1;
 
-    public SegmentedControls2_iPhone(IntPtr handle) {
+    public SegmentedControls2(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public SegmentedControls2_iPhone(NSCoder coder) {
+    public SegmentedControls2(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public SegmentedControls2_iPhone() {
+    public SegmentedControls2() {
         super("SegmentedControls2_iPhone", null);
         initialize();
     }

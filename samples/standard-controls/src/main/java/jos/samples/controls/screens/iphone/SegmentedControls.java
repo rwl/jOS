@@ -6,20 +6,20 @@ import jos.api.foundation.NSCoder;
 import jos.api.system.IntPtr;
 import jos.api.uikit.UIViewController;
 
-public class SegmentedControls_iPhone extends UIViewController {
+public class SegmentedControls extends UIViewController {
 
-    public SegmentedControls_iPhone(IntPtr handle) {
+    public SegmentedControls(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public SegmentedControls_iPhone(NSCoder coder) {
+    public SegmentedControls(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public SegmentedControls_iPhone() {
+    public SegmentedControls() {
         super("SegmentedControls_iPhone", null);
         initialize();
     }

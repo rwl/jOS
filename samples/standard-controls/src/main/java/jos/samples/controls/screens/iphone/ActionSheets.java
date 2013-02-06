@@ -1,37 +1,39 @@
-package jos.samples.controls.screens.ipad;
-
-import jos.api.foundation.NSCoder;
-import jos.api.system.IntPtr;
-import jos.api.uikit.UIActionSheet;
-import jos.api.uikit.UIActionSheetDelegate;
-import jos.api.uikit.UIButton;
-import jos.api.uikit.UIControlEvent;
-import jos.api.uikit.UIViewController;
+package jos.samples.controls.screens.iphone;
 
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class ActionSheets_iPad extends UIViewController {
+import jos.api.foundation.NSCoder;
+import jos.api.foundation.NSObject;
+import jos.api.system.IntPtr;
+import jos.api.uikit.UIActionSheet;
+import jos.api.uikit.UIActionSheetDelegate;
+import jos.api.uikit.UIButton;
+import jos.api.uikit.UIControlEvent;
+import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIViewController;
 
-    @Outlet UIButton btnActionSheetWithOtherButtons;
+public class ActionSheets extends UIViewController {
+
     @Outlet UIButton btnSimpleActionSheet;
+    @Outlet UIButton btnActionSheetWithOtherButtons;
 
     UIActionSheet actionSheet;
 
-    public ActionSheets_iPad(IntPtr handle) {
+    public ActionSheets(IntPtr handle) {
         super(handle);
         initialize();
     }
 
     @Export(selector = "initWithCoder:")
-    public ActionSheets_iPad(NSCoder coder) {
+    public ActionSheets(NSCoder coder) {
         super(coder);
         initialize();
     }
 
-    public ActionSheets_iPad() {
-        super("ActionSheets_iPad", null);
+    public ActionSheets() {
+        super("ActionSheets_iPhone", null);
         initialize();
     }
 
@@ -43,6 +45,7 @@ public class ActionSheets_iPad extends UIViewController {
         super.viewDidLoad();
 
         title = "Action Sheets";
+
         btnSimpleActionSheet.addTarget(this,
                 new Selector("handleBtnSimpleActionSheetTouchUpInside"),
                 UIControlEvent.TouchUpInside);
@@ -53,12 +56,12 @@ public class ActionSheets_iPad extends UIViewController {
                 UIControlEvent.TouchUpInside);
     }
 
-    protected void handleBtnSimpleActionSheetTouchUpInside() {
+    protected void handleBtnSimpleActionSheetTouchUpInside(NSObject sender,
+            UIEvent e) {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
                 "delete", null);
         actionSheet.delegate = new UIActionSheetDelegate() {
-
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
                 System.out.println("Button " + buttonIndex + " clicked");
@@ -67,19 +70,23 @@ public class ActionSheets_iPad extends UIViewController {
         actionSheet.showInView(view);
     }
 
-    protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
+    protected void handleBtnActionSheetWithOtherButtonsTouchUpInside(
+            NSObject sender, UIEvent e) {
         actionSheet = new UIActionSheet("action sheet with other buttons");
         actionSheet.addButton("delete");
+        actionSheet.addButton("cancel");
         actionSheet.addButton("a different option!");
         actionSheet.addButton("another option");
         actionSheet.destructiveButtonIndex = 0;
+        actionSheet.cancelButtonIndex = 1;
+        // actionSheet.firstOtherButtonIndex = 2;
         actionSheet.delegate = new UIActionSheetDelegate() {
-
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
                 System.out.println("Button " + buttonIndex + " clicked");
-            };
+            }
         };
         actionSheet.showInView(view);
     }
+
 }

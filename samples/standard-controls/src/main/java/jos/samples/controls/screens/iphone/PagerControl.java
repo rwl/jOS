@@ -20,7 +20,7 @@ import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIViewController;
 
-public class PagerControl_iPhone extends UIViewController {
+public class PagerControl extends UIViewController {
 
     @Outlet UIPageControl pgrMain;
     @Outlet UIScrollView scrlMain;
@@ -30,16 +30,16 @@ public class PagerControl_iPhone extends UIViewController {
      */
     List<UIViewController> controllers = new ArrayList<UIViewController>();
 
-    public PagerControl_iPhone(IntPtr handle) {
+    public PagerControl(IntPtr handle) {
         super(handle);
     }
 
     @Export(selector = "initWithCoder:")
-    public PagerControl_iPhone(NSCoder coder) {
+    public PagerControl(NSCoder coder) {
         super(coder);
     }
 
-    public PagerControl_iPhone() {
+    public PagerControl() {
         super("PagerControl_iPhone", null);
     }
 
@@ -99,9 +99,9 @@ public class PagerControl_iPhone extends UIViewController {
      */
     protected void loadControllers() {
         // instantiate and add the controllers to our list
-        controllers.add(new PagerController_1());
-        controllers.add(new PagerController_2());
-        controllers.add(new PagerController_3());
+        controllers.add(new PagerController1());
+        controllers.add(new PagerController2());
+        controllers.add(new PagerController3());
 
         // loop through each one
         for (int i = 0; i < controllers.size(); i++) {

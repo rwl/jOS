@@ -13,8 +13,8 @@ public class AppDelegate extends UIApplicationDelegate {
 
     private UIWindow window;
     private UINavigationController mainNavController;
-    private jos.samples.controls.screens.iphone.home.HomeNavController iPhoneHome;
-    private jos.samples.controls.screens.ipad.home.HomeNavController iPadHome;
+    private jos.samples.controls.screens.iphone.HomeNavController iPhoneHome;
+    private jos.samples.controls.screens.ipad.HomeNavController iPadHome;
 
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
@@ -24,10 +24,10 @@ public class AppDelegate extends UIApplicationDelegate {
         mainNavController = new UINavigationController();
 
         if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiom.Phone) {
-            iPhoneHome = new jos.samples.controls.screens.iphone.home.HomeNavController();
+            iPhoneHome = new jos.samples.controls.screens.iphone.HomeNavController();
             mainNavController.pushViewController(iPhoneHome, false);
         } else {
-            iPadHome = new jos.samples.controls.screens.ipad.home.HomeNavController();
+            iPadHome = new jos.samples.controls.screens.ipad.HomeNavController();
             mainNavController.pushViewController(iPadHome, false);
         }
 

@@ -17,7 +17,7 @@ public class Images extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public Images(NSCoder coder) {
         super(coder);
         initialize();

@@ -40,7 +40,7 @@ public class AlertViewsScreen extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public AlertViewsScreen(NSCoder coder) {
         super(coder);
         initialize();

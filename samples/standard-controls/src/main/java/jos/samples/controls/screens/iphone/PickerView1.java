@@ -26,7 +26,7 @@ public class PickerView1 extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public PickerView1(NSCoder coder) {
         super(coder);
         initialize();

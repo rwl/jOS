@@ -35,7 +35,7 @@ public class ProgrammaticToolbar extends UIViewController {
         toolbar = new UIToolbar(CGGeometry.CGRectMake(0,
                 this.view.frame.size.height - this.navigationController.navigationBar.frame.size.height,
                 this.view.frame.size.width, toolbarHeight));
-        toolbar.autoresizingMask = /*UIViewAutoresizing.FlexibleTopMargin |*/ UIViewAutoresizing.FlexibleWidth;
+        toolbar.autoresizingMask = UIViewAutoresizing.FLEXIBLE_TOP_MARGIN.mask() | UIViewAutoresizing.FLEXIBLE_WIDTH.mask();
 
 
         // button one

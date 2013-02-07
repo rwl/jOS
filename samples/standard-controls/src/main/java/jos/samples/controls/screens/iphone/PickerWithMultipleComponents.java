@@ -27,7 +27,7 @@ public class PickerWithMultipleComponents extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public PickerWithMultipleComponents(NSCoder coder) {
         super(coder);
         initialize();

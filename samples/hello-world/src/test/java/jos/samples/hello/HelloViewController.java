@@ -12,7 +12,7 @@ public class HelloViewController extends UIViewController {
         super(nibName, null);
     }
 
-    @Export(selector = "init")
+    @Export("init")
     public HelloViewController() {
         super("HelloWorldViewController", null);
     }

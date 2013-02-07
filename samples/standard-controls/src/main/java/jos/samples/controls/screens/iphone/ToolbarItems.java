@@ -14,7 +14,7 @@ public class ToolbarItems extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public ToolbarItems(NSCoder coder) {
         super(coder);
         initialize();

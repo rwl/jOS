@@ -2,7 +2,7 @@ package jos.api.graphicsimaging;
 
 import com.google.j2objc.annotations.Register;
 
-@Register(isWrapper = true)
+@Register(isWrapper = true, isPrimitive = true)
 public class CGPoint {
     public float x;
     public float y;

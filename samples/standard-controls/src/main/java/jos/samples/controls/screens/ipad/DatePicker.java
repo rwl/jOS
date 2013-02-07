@@ -32,7 +32,7 @@ public class DatePicker extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public DatePicker(NSCoder coder) {
         super(coder);
         initialize();

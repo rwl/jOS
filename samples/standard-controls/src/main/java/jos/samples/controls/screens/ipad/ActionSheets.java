@@ -24,7 +24,7 @@ public class ActionSheets extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public ActionSheets(NSCoder coder) {
         super(coder);
         initialize();

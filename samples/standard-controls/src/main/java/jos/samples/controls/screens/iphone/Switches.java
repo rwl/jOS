@@ -21,7 +21,7 @@ public class Switches extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public Switches(NSCoder coder) {
         super(coder);
         initialize();

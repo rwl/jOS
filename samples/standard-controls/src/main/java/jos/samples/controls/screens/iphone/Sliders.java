@@ -19,7 +19,7 @@ public class Sliders extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public Sliders(NSCoder coder) {
         super(coder);
         initialize();

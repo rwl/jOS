@@ -19,7 +19,7 @@ public class TextFields extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public TextFields(NSCoder coder) {
         super(coder);
         initialize();

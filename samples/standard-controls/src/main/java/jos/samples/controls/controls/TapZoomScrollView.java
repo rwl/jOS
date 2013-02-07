@@ -16,7 +16,7 @@ public class TapZoomScrollView extends UIScrollView {
         super(handle);
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public TapZoomScrollView(NSCoder coder) {
         super(coder);
     }

@@ -13,22 +13,22 @@ public class UIApplicationDelegate extends NSObject {
 
     public UIWindow window;
 
-    @Export(selector = "window")
+    @Export("window")
     public UIWindow getWindow() {
         return window;
     }
 
-    @Export(selector = "setWindow:")
+    @Export("setWindow:")
     public void setWindow(UIWindow window) {
         this.window = window;
     }
 
-    @Export(selector = "init")
+    @Export("init")
     public UIApplicationDelegate() {
     }
 
-    @Export(selector = "application:didFinishLaunchingWithOptions:") // application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-    public boolean finishedLaunching(UIApplication app, NSDictionary options) {
+    @Export("application:didFinishLaunchingWithOptions:")
+    public boolean finishedLaunching(UIApplication application, NSDictionary launchOptions) {
         return false;
     }
 
@@ -41,7 +41,8 @@ public class UIApplicationDelegate extends NSObject {
      * Use this method to pause ongoing tasks, disable timers, and throttle down
      * OpenGL ES frame rates. Games should use this method to pause the game.
      */
-    public void applicationWillResignActive(UIApplication app) {
+    @Export("applicationWillResignActive:")
+    public void onResignActivation(UIApplication application) {
     }
 
     /**
@@ -52,7 +53,8 @@ public class UIApplicationDelegate extends NSObject {
      * If your application supports background execution, this method is called
      * instead of applicationWillTerminate when the user quits.
      */
-    public void applicationDidEnterBackground(UIApplication app) {
+    @Export("applicationDidEnterBackground:")
+    public void didEnterBackground(UIApplication application) {
     }
 
     /**
@@ -60,7 +62,8 @@ public class UIApplicationDelegate extends NSObject {
      * state; here you can undo many of the changes made on entering the
      * background.
      */
-    public void applicationWillEnterForeground(UIApplication app) {
+    @Export("applicationWillEnterForeground:")
+    public void willEnterForeground(UIApplication application) {
     }
 
     /**
@@ -69,6 +72,8 @@ public class UIApplicationDelegate extends NSObject {
      *
      * @see applicationDidEnterBackground
      */
-    public void applicationWillTerminate(UIApplication app) {
+    @Export("applicationWillTerminate:")
+    public void willTerminate(UIApplication application) {
     }
+
 }

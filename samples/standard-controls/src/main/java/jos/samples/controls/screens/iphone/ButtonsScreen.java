@@ -28,7 +28,7 @@ public class ButtonsScreen extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public ButtonsScreen(NSCoder coder) {
         super(coder);
         initialize();

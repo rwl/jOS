@@ -34,7 +34,7 @@ public class PagerControl extends UIViewController {
         super(handle);
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public PagerControl(NSCoder coder) {
         super(coder);
     }

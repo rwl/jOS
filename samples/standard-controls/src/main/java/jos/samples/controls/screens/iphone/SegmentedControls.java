@@ -13,7 +13,7 @@ public class SegmentedControls extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public SegmentedControls(NSCoder coder) {
         super(coder);
         initialize();

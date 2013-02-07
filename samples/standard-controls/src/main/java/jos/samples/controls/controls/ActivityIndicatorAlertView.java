@@ -35,7 +35,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
         super(handle);
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public ActivityIndicatorAlertView(NSCoder coder) {
         super(coder);
     }

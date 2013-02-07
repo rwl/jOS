@@ -18,7 +18,7 @@ public class ProgressBars extends UIViewController {
         initialize ();
     }
 
-    @Export(selector="initWithCoder:")
+    @Export("initWithCoder:")
     public ProgressBars (NSCoder coder) {
         super(coder);
         initialize ();

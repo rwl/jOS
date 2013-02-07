@@ -8,11 +8,11 @@ import jos.api.foundation.NSObject;
 @Register(isWrapper = true)
 public abstract class UIScrollViewDelegate extends NSObject {
 
-    @Export(selector = "scrollViewDidScroll:")
+    @Export("scrollViewDidScroll:")
     public void scrolled(UIScrollView view) {
     }
 
-    @Export(selector = "viewForZoomingInScrollView:scrollView")
+    @Export("viewForZoomingInScrollView:scrollView")
     public UIView viewForZoomingInScrollView(UIScrollView view) {
         return null;
     }

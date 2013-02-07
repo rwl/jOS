@@ -6,17 +6,11 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class NSObject {
 
-    @Export(selector = "init")
+    @Export("init")
     public NSObject() {
-    }
-
-    public NSObject getNativeField(String string) {
-        return null;
-    }
-
-    public void setNativeField(String name, NSObject object) {
     }
 
     public void invokeOnMainThread(NSAction delegate) {
     }
+
 }

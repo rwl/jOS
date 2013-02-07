@@ -18,7 +18,7 @@ public class PagerController3 extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        this.view.backgroundColor = UIColor.fromRGB(.5f, .5f, 1);
+        this.view.backgroundColor = new UIColor(.5f, .5f, 1, 1);
 
         lblMain = new UILabel(CGGeometry.CGRectMake(20, 200, 280, 33));
         lblMain.text = "Controller 3";

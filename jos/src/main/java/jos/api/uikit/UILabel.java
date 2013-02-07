@@ -17,7 +17,7 @@ public class UILabel extends UIView {
     public UILineBreakMode lineBreakMode;
     public int lines;
 
-    @Export(selector = "initWithFrame:")
+    @Export("initWithFrame:")
     public UILabel(CGRect frame) {
         super(frame);
     }

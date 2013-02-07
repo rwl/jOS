@@ -9,10 +9,12 @@ import jos.api.foundation.NSSet;
 @Register(isWrapper = true)
 public class UIResponder extends NSObject {
 
-    @Export(selector = "init")
+    @Export("init")
     public UIResponder() {
     }
 
+    @Export("touchesBegan:withEvent:")
     public void touchesBegan(NSSet touches, UIEvent evt) {
     }
+
 }

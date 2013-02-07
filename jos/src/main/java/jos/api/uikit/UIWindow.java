@@ -12,22 +12,23 @@ public class UIWindow extends UIView {
     @Export(semantic = StorageSemantic.RETAIN)
     public UIViewController rootViewController;
 
-    @Export(selector = "initWithFrame:")
+    @Export("initWithFrame:")
     public UIWindow(final CGRect frame) {
         super(frame);
     }
 
-    //    @Export
+    @Export("makeKeyAndVisible")
     public void makeKeyAndVisible() {
     }
 
-    @Export(selector = "rootViewController")
+    @Export("rootViewController")
     public UIViewController getRootViewController() {
         return rootViewController;
     }
 
-    @Export(selector = "setRootViewController:")
+    @Export("setRootViewController:")
     public void setRootViewController(UIViewController rootViewController) {
         this.rootViewController = rootViewController;
     }
+
 }

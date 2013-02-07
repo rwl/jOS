@@ -21,7 +21,7 @@ public class DatePickerSimple extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public DatePickerSimple(NSCoder coder) {
         super(coder);
         initialize();

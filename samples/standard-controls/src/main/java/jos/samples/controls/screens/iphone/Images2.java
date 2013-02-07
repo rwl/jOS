@@ -19,7 +19,7 @@ public class Images2 extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public Images2(NSCoder coder) {
         super(coder);
         initialize();

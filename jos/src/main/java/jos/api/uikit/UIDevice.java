@@ -8,14 +8,19 @@ public class UIDevice extends NSObject {
 
     public static UIDevice currentDevice;
 
+    @Export("currentDevice")
+    public static UIDevice getCurrentDevice() {
+        return currentDevice;
+    }
+
     public UIUserInterfaceIdiom userInterfaceIdiom;
 
-    @Export(selector = "userInterfaceIdiom")
+    @Export("userInterfaceIdiom")
     public UIUserInterfaceIdiom getUserInterfaceIdiom() {
         return userInterfaceIdiom;
     }
 
-    @Export(selector = "setUserInterfaceIdiom:")
+    @Export("setUserInterfaceIdiom:")
     public void setUserInterfaceIdiom(UIUserInterfaceIdiom userInterfaceIdiom) {
         this.userInterfaceIdiom = userInterfaceIdiom;
     }

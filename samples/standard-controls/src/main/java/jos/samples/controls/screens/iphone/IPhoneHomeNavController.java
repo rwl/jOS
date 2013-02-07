@@ -16,7 +16,7 @@ public class IPhoneHomeNavController extends UITableViewController {
     private NavItemTableSource tableSource;
 
     public IPhoneHomeNavController() {
-        super(UITableViewStyle.Grouped);
+        super(UITableViewStyle.GROUPED);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class IPhoneHomeNavController extends UITableViewController {
         navGroup.getItems().add(new NavItem("Segmented Buttons", SegmentedControls.class));
         navGroup.getItems().add(new NavItem("Segmented Buttons 2", SegmentedControls2.class));
 
-        navGroup = new NavItemGroup ("Content Controls");
+        navGroup = new NavItemGroup("Content Controls");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Scroll View", ScrollView.class));
         navGroup.getItems().add(new NavItem("Tap to Zoom Scroll View", TapToZoom.class));
@@ -56,24 +56,24 @@ public class IPhoneHomeNavController extends UITableViewController {
         navGroup.getItems().add(new NavItem("Image Control", Images.class));
         navGroup.getItems().add(new NavItem("More Image Controls", Images2.class));
 
-        navGroup = new NavItemGroup ("Process Controls");
+        navGroup = new NavItemGroup("Process Controls");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Activity Spinners", ActivitySpinnerScreen.class));
         navGroup.getItems().add(new NavItem("Progress Bars", ProgressBars.class));
 
-        navGroup = new NavItemGroup ("Popups");
+        navGroup = new NavItemGroup("Popups");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Alert Views", AlertViewsScreen.class));
         navGroup.getItems().add(new NavItem("Action Sheets", ActionSheets.class));
 
-        navGroup = new NavItemGroup ("Pickers");
+        navGroup = new NavItemGroup("Pickers");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Simple Date Picker", DatePickerSimple.class));
         navGroup.getItems().add(new NavItem("Date Picker", DatePicker.class));
         navGroup.getItems().add(new NavItem("Simple Custom Picker", PickerView1.class));
         navGroup.getItems().add(new NavItem("Custom Picker with Multiple Components", PickerWithMultipleComponents.class));
 
-        navGroup = new NavItemGroup ("Toolbars");
+        navGroup = new NavItemGroup("Toolbars");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Toolbar 1", Toolbar1.class));
         navGroup.getItems().add(new NavItem("Programmatic Toolbar", ProgrammaticToolbar.class));
@@ -83,7 +83,7 @@ public class IPhoneHomeNavController extends UITableViewController {
         tableSource = new NavItemTableSource(this.navigationController, navItems);
 
         // set the source on the table to our data source
-        super.tableView.source = tableSource;
+        super.getTableView().setSource(tableSource);
     }
 
 }

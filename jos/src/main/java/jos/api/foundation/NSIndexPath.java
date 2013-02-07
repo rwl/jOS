@@ -6,65 +6,65 @@ import com.google.j2objc.annotations.Export;
 
 @BaseType(NSObject.class)
 public class NSIndexPath {
-    @Export(selector = "indexPathWithIndex:")
+    @Export("indexPathWithIndex:")
     public static NSObject indexPathWithIndex(int index) {
         return null;
     }
 
-    @Export(selector = "indexPathWithIndexes:length:")
+    @Export("indexPathWithIndexes:length:")
     public static NSObject indexPathWithIndexeslength(@Bind("NSUInteger") int[] indexes, int length) {
         return null;
     }
 
-    @Export(selector = "initWithIndex:")
+    @Export("initWithIndex:")
     public NSObject initWithIndex(int index) {
         return null;
     }
 
-    @Export(selector = "initWithIndexes:length:")
+    @Export("initWithIndexes:length:")
     public NSObject initWithIndexeslength(@Bind("NSUInteger") int[] indexes, int length) {
         return null;
     }
 
-    @Export(selector = "indexPathByAddingIndex:")
+    @Export("indexPathByAddingIndex:")
     public NSIndexPath indexPathByAddingIndex(int index) {
         return null;
     }
 
-    @Export(selector = "indexPathByRemovingLastIndex")
+    @Export("indexPathByRemovingLastIndex")
     public NSIndexPath indexPathByRemovingLastIndex() {
         return null;
     }
 
-    @Export(selector = "indexAtPosition:")
+    @Export("indexAtPosition:")
     public int indexAtPosition(int position) {
         return 0;
     }
 
-    @Export(selector = "length")
+    @Export("length")
     public int length() {
         return 0;
     }
 
-    @Export(selector = "getIndexes:")
+    @Export("getIndexes:")
     public void getIndexes(int indexes) {
     }
 
-    @Export(selector = "compare:")
+    @Export("compare:")
     public NSComparisonResult compare(NSIndexPath otherObject) {
         return null;
     }
 
     /* UITableView */
 
-    @Export(selector = "section")
+    @Export("section")
     public int section;
 
     public int getSection() {
         return this.section;
     }
 
-    @Export(selector = "row")
+    @Export("row")
     public int row;
 
     public int getRow() {

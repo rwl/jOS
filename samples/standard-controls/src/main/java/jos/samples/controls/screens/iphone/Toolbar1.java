@@ -23,7 +23,7 @@ public class Toolbar1 extends UIViewController {
         initialize();
     }
 
-    @Export(selector = "initWithCoder:")
+    @Export("initWithCoder:")
     public Toolbar1(NSCoder coder) {
         super(coder);
         initialize();

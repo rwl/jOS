@@ -24,7 +24,7 @@ public class AppDelegate extends UIApplicationDelegate {
 
         mainNavController = new UINavigationController();
 
-        if (UIDevice.currentDevice.userInterfaceIdiom == UIUserInterfaceIdiom.Phone) {
+        if (UIDevice.getCurrentDevice().getUserInterfaceIdiom() == UIUserInterfaceIdiom.PHONE) {
             iPhoneHome = new IPhoneHomeNavController();
             mainNavController.pushViewController(iPhoneHome, false);
         } else {
@@ -32,7 +32,7 @@ public class AppDelegate extends UIApplicationDelegate {
             mainNavController.pushViewController(iPadHome, false);
         }
 
-        window.rootViewController = mainNavController;
+        window.setRootViewController(mainNavController);
         return true;
     }
 

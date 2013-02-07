@@ -1,8 +1,12 @@
 package jos.api.uikit;
 
-import com.google.j2objc.annotations.Export;
+import jos.api.foundation.NSObject;
 
-public abstract class UIAlertViewDelegate {
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
+
+@Register(isWrapper = true)
+public abstract class UIAlertViewDelegate extends NSObject {
 
     @Export("alertView:clickedButtonAtIndex:")
     public void clicked(UIAlertView view, int buttonIndex) {
@@ -19,4 +23,5 @@ public abstract class UIAlertViewDelegate {
     @Export("alertView:didDismissWithButtonIndex:")
     public void dismissed(UIAlertView alertView, int buttonIndex) {
     }
+
 }

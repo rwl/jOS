@@ -14,17 +14,18 @@ public class UIColor extends NSObject {
     }
 
     @Bind("lightGrayColor")
-    public static UIColor lightGray;
+    public static UIColor LIGHT_GRAY;
 
     @Bind("whiteColor")
-    public static UIColor white;
+    public static UIColor WHITE;
 
     @Bind("blueColor")
-    public static UIColor blue;
+    public static UIColor BLUE;
 
     @Bind("clearColor")
-    public static UIColor clear;
+    public static UIColor CLEAR;
 
-    public static UIColor lightTextColor;
+    @Bind("lightTextColor")
+    public static UIColor LIGHT_TEXT_COLOR;
 
 }

@@ -54,11 +54,11 @@ public class DatePicker extends UIViewController {
 
         // setup our custom action sheet date picker
         actionSheetDatePicker = new ActionSheetDatePicker(this.view);
-        actionSheetDatePicker.title("Choose Date:");
+        actionSheetDatePicker.setTitle("Choose Date:");
         actionSheetDatePicker.datePicker.addTarget(this, new Selector(
                 "handle_actionSheetDatePickerDatePickerValueChanged"),
-                UIControlEvent.ValueChanged);
-        actionSheetDatePicker.datePicker.mode = UIDatePickerMode.DateAndTime;
+                UIControlEvent.VALUE_CHANGED);
+        actionSheetDatePicker.datePicker.mode = UIDatePickerMode.DATE_AND_TIME;
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -7);
         actionSheetDatePicker.datePicker.minimumDate = calendar.getTime();
@@ -70,12 +70,12 @@ public class DatePicker extends UIViewController {
             public void onEvent(Object object, int event) {
                 actionSheetDatePicker.show();
             }
-        }, UIControlEvent.TouchUpInside);
+        }, UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
         actionSheetTimerPicker = new ActionSheetDatePicker(this.view);
-        actionSheetTimerPicker.title("Choose Time:");
-        actionSheetTimerPicker.datePicker.mode = UIDatePickerMode.CountDownTimer;
+        actionSheetTimerPicker.setTitle("Choose Time:");
+        actionSheetTimerPicker.datePicker.mode = UIDatePickerMode.COUNTDOWN_TIMER;
     }
 
     protected void handle_actionSheetDatePickerDatePickerValueChanged(

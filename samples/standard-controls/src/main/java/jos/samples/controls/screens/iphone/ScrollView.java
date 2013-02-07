@@ -1,6 +1,6 @@
 package jos.samples.controls.screens.iphone;
 
-import jos.api.graphicsimaging.CGGeometry;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
@@ -9,43 +9,48 @@ import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
+import com.google.j2objc.annotations.Outlet;
+
 public class ScrollView extends UIViewController {
 
+    @Outlet
+    UIView view;
+
     UIScrollView scrollView;
+
     UIImageView imageView;
 
-    public ScrollView() {
-        super();
-    }
-
     @Override
-    public void viewDidLoad ()
-    {
-        super.viewDidLoad ();
+    public void viewDidLoad() {
+        super.viewDidLoad();
 
         // set the background color of the view to white
-        this.view.backgroundColor = UIColor.white;
+        view.setBackgroundColor(UIColor.WHITE);
 
-        this.title = "Scroll View";
+        setTitle("Scroll View");
 
         // create our scroll view
-        scrollView = new UIScrollView (
-            CGGeometry.CGRectMake(0, 0, this.view.frame.size.width,
-                    this.view.frame.size.height - this.navigationController.navigationBar.frame.size.height));
-        this.view.addSubview (scrollView);
+        scrollView = new UIScrollView(
+                makeRect(0, 0, view.getFrame().size.width,
+                        view.getFrame().size.height
+                                - navigationController.getNavigationBar()
+                                        .getFrame().size.height));
+        view.addSubview(scrollView);
 
         // create our image view
-        imageView = new UIImageView (UIImage.fromFile ("Images/Icons/512_icon.png"));
-        scrollView.contentSize = imageView.image.size;
-        scrollView.maximumZoomScale = 3f;
-        scrollView.minimumZoomScale = .1f;
-        scrollView.addSubview (imageView);
+        imageView = new UIImageView(
+                UIImage.fromFile("images/icons/512_icon.png"));
+        scrollView.setContentSize(imageView.getImage().size);
+        scrollView.setMaximumZoomScale(3f);
+        scrollView.setMinimumZoomScale(.1f);
+        scrollView.addSubview(imageView);
 
-        scrollView.delegate = new UIScrollViewDelegate() {
+        scrollView.setDelegate(new UIScrollViewDelegate() {
             @Override
             public UIView viewForZoomingInScrollView(UIScrollView view) {
                 return imageView;
             }
-        };
+        });
     }
+
 }

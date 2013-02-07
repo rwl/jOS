@@ -1,6 +1,6 @@
 package jos.samples.hello.tmp;
 
-import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.foundation.NSDictionary;
 import jos.api.uikit.UIApplication;
 import jos.api.uikit.UIApplicationDelegate;
@@ -15,7 +15,7 @@ public class AppDelegate extends UIApplicationDelegate {
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
         this.window = new UIWindow(UIScreen.mainScreen.bounds);
 
-        UILabel label = new UILabel(CGRectMake(0.0f, 50.0f, 320.0f, 30.0f));
+        UILabel label = new UILabel(makeRect(0.0f, 50.0f, 320.0f, 30.0f));
         label.text = "Hello World";
         label.textAlignment = UITextAlignment.Center;
 

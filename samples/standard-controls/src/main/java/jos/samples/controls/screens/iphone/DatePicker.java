@@ -2,83 +2,71 @@ package jos.samples.controls.screens.iphone;
 
 import java.util.GregorianCalendar;
 
-import jos.api.foundation.NSCoder;
-import jos.api.system.IntPtr;
+import jos.api.foundation.NSObject;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UILabel;
+import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
 import com.google.j2objc.annotations.EventListener;
-import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 public class DatePicker extends UIViewController {
 
-    @Outlet UIButton btnChooseDate;
-    @Outlet UILabel lblDate;
+    @Outlet
+    UIView view;
 
-    ActionSheetDatePicker actionSheetDatePicker;
-    ActionSheetDatePicker actionSheetTimerPicker;
+    @Outlet
+    UIButton btnChooseDate;
 
-    public DatePicker(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
+    @Outlet
+    UILabel lblDate;
 
-    @Export("initWithCoder:")
-    public DatePicker(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
+    ActionSheetDatePicker datePicker, timerPicker;
 
     public DatePicker() {
         super("DatePicker_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        this.title = "Date Picker";
+        setTitle("Date Picker");
 
         // setup our custom action sheet date picker
-        actionSheetDatePicker = new ActionSheetDatePicker(this.view);
-        actionSheetDatePicker.title("Choose Date:");
-        actionSheetDatePicker.datePicker.addTarget(this, new Selector(
+        datePicker = new ActionSheetDatePicker(view);
+        datePicker.setTitle("Choose Date:");
+        datePicker.getDatePicker().addTarget(this, new Selector(
                 "handle_actionSheetDatePickerDatePickerValueChanged"),
-                UIControlEvent.ValueChanged);
-        actionSheetDatePicker.datePicker.mode = UIDatePickerMode.DateAndTime;
+                UIControlEvent.VALUE_CHANGED);
+        datePicker.getDatePicker().setMode(UIDatePickerMode.DATE_AND_TIME);
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -7);
-        actionSheetDatePicker.datePicker.minimumDate = calendar.getTime();
+        datePicker.getDatePicker().setMinimumDate(calendar.getTime());
         calendar.add(GregorianCalendar.DAY_OF_MONTH, 14);
-        actionSheetDatePicker.datePicker.maximumDate = calendar.getTime();
-        this.btnChooseDate.addTarget(new EventListener() {
-
+        datePicker.getDatePicker().setMaximumDate(calendar.getTime());
+        btnChooseDate.addTarget(new EventListener() {
             @Override
             public void onEvent(Object object, int event) {
-                actionSheetDatePicker.show();
+                datePicker.show();
             }
-        }, UIControlEvent.TouchUpInside);
+        }, UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
-        actionSheetTimerPicker = new ActionSheetDatePicker(this.view);
-        actionSheetTimerPicker.title("Choose Time:");
-        actionSheetTimerPicker.datePicker.mode = UIDatePickerMode.CountDownTimer;
+        timerPicker = new ActionSheetDatePicker(view);
+        timerPicker.setTitle("Choose Time:");
+        timerPicker.getDatePicker().setMode(UIDatePickerMode.COUNTDOWN_TIMER);
     }
 
-    protected void Handle_actionSheetDatePickerDatePickerValueChanged(
-            Object sender, UIEvent e) {
+    protected void handle_actionSheetDatePickerDatePickerValueChanged(
+            NSObject sender, UIEvent e) {
         this.lblDate.text = ((UIDatePicker) sender).date.toString();
     }
 

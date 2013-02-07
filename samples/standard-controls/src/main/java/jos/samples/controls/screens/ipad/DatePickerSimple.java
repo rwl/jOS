@@ -46,7 +46,7 @@ public class DatePickerSimple extends UIViewController {
             public void onEvent(Object object, int event) {
                 lblDate.text = ((UIDatePicker) object).date.toString();
             }
-        }, UIControlEvent.ValueChanged);
+        }, UIControlEvent.VALUE_CHANGED);
     }
 
 }

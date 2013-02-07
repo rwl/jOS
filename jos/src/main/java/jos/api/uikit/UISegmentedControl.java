@@ -1,14 +1,39 @@
 package jos.api.uikit;
 
+import com.google.j2objc.annotations.Export;
+
 public class UISegmentedControl extends UIControl {
 
     public UISegmentedControlStyle controlStyle;
+
     public int selectedSegment;
 
-    public void insertSegment(String string, int i, boolean b) {
+    @Export("insertSegmentWithTitle:atIndex:animated:")
+    public void insertSegment(String title, int pos, boolean animated) {
     }
 
-    public void setWidth(float f, int i) {
+    @Export("setWidth:forSegmentAtIndex:")
+    public void setWidth(float width, int segment) {
+    }
+
+    @Export("controlStyle")
+    public UISegmentedControlStyle getControlStyle() {
+        return controlStyle;
+    }
+
+    @Export("setControlStyle:")
+    public void setControlStyle(UISegmentedControlStyle controlStyle) {
+        this.controlStyle = controlStyle;
+    }
+
+    @Export("selectedSegment")
+    public int getSelectedSegment() {
+        return selectedSegment;
+    }
+
+    @Export("setSelectedSegment:")
+    public void setSelectedSegment(int selectedSegment) {
+        this.selectedSegment = selectedSegment;
     }
 
 }

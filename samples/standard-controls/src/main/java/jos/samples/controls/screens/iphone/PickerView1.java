@@ -3,71 +3,54 @@ package jos.samples.controls.screens.iphone;
 import java.util.ArrayList;
 import java.util.List;
 
-import jos.api.foundation.NSCoder;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIPickerView;
 import jos.api.uikit.UIPickerViewModel;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
-
 
 public class PickerView1 extends UIViewController {
 
-    @Outlet UILabel lblSelectedItem;
-    @Outlet UIPickerView pkrMain;
+    @Outlet
+    UILabel lblSelectedItem;
+
+    @Outlet
+    UIPickerView pkrMain;
 
     PickerDataModel pickerDataModel;
 
-    public PickerView1(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public PickerView1(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
-
     public PickerView1() {
         super("PickerView1_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
-    public void viewDidLoad ()
-    {
-        super.viewDidLoad ();
+    public void viewDidLoad() {
+        super.viewDidLoad();
 
-        this.title = "Picker View";
+        setTitle("Picker View");
 
         // create our simple picker model
-        pickerDataModel = new PickerDataModel ();
-        pickerDataModel.items.add ("item the first!");
-        pickerDataModel.items.add ("item the second!");
-        pickerDataModel.items.add ("item the third!");
-        pickerDataModel.items.add ("fourth item!");
+        pickerDataModel = new PickerDataModel();
+        pickerDataModel.items.add("item the first!");
+        pickerDataModel.items.add("item the second!");
+        pickerDataModel.items.add("item the third!");
+        pickerDataModel.items.add("fourth item!");
 
         // set it on our picker class
-        this.pkrMain.source = pickerDataModel;
+        pkrMain.setSource(pickerDataModel);
 
         // wire up the value change method
         pickerDataModel.delegate = new PickerDataModelDelegate() {
 
             @Override
             public void onValueChanged(PickerDataModel model) {
-                lblSelectedItem.text = pickerDataModel.selectedItem();
+                lblSelectedItem.setText(pickerDataModel.selectedItem());
             }
         };
 
         // set our initial selection on the label
-        this.lblSelectedItem.text = pickerDataModel.selectedItem();
+        lblSelectedItem.setText(pickerDataModel.selectedItem());
     }
 
     /**
@@ -76,12 +59,12 @@ public class PickerView1 extends UIViewController {
      */
     protected class PickerDataModel extends UIPickerViewModel {
 
-        public PickerDataModelDelegate delegate;
+        private PickerDataModelDelegate delegate;
 
         /**
          * The items to show up in the picker
          */
-        public List<String> items = new ArrayList<String>();
+        private List<String> items = new ArrayList<String>();
 
         /**
          * The current selected item
@@ -90,7 +73,7 @@ public class PickerView1 extends UIViewController {
             return items.get(selectedIndex);
         }
 
-        protected int selectedIndex = 0;
+        private int selectedIndex = 0;
 
         public PickerDataModel() {
         }

@@ -1,34 +1,47 @@
 package jos.api.uikit;
 
-import jos.api.foundation.NSCoder;
+import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
-import jos.api.system.IntPtr;
 
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
+
+@Register(isWrapper = true)
 public class UIAlertView extends UIView {
 
     public UIAlertViewDelegate delegate;
 
+    @Export("initWithFrame:")
     public UIAlertView(CGRect frame) {
         super(frame);
     }
 
-    public UIAlertView(String string, String string2, Object object,
-            String string3, Object object2) {
+    @Export("initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles:")
+    public UIAlertView(String title, String message, NSObject delegate,
+            String cancelButtonTitle, String... otherButtonTitles) {
         super(null);
     }
 
-    public UIAlertView(IntPtr handle) {
-    }
-
+    @Export("init")
     public UIAlertView() {
     }
 
-    public UIAlertView(NSCoder coder) {
-    }
-
+    @Export("show")
     public void show() {
     }
 
+    @Export("dismissWithClickedButtonIndex:animated:")
     public void dismissWithClickedButtonIndex(int i, boolean animated) {
     }
+
+    @Export("delegate")
+    public UIAlertViewDelegate getDelegate() {
+        return delegate;
+    }
+
+    @Export("setDelegate:")
+    public void setDelegate(UIAlertViewDelegate delegate) {
+        this.delegate = delegate;
+    }
+
 }

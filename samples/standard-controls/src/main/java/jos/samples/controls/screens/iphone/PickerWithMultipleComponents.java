@@ -5,80 +5,63 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jos.api.foundation.NSCoder;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIPickerView;
 import jos.api.uikit.UIPickerViewModel;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 
 public class PickerWithMultipleComponents extends UIViewController {
 
-    @Outlet UILabel lblSelectedItem;
-    @Outlet UIPickerView pkrMain;
+    @Outlet
+    UILabel lblSelectedItem;
+
+    @Outlet
+    UIPickerView pkrMain;
 
     PickerDataModel pickerDataModel;
 
-    public PickerWithMultipleComponents(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public PickerWithMultipleComponents(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
-
     public PickerWithMultipleComponents() {
         super("PickerWithMultipleComponents_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
-    public void viewDidLoad ()
-    {
-        super.viewDidLoad ();
+    public void viewDidLoad() {
+        super.viewDidLoad();
 
-        this.title = "Picker View";
+        setTitle("Picker View");
 
         // create our simple picker modle
-        pickerDataModel = new PickerDataModel ();
+        pickerDataModel = new PickerDataModel();
 
-        List<String> items = new ArrayList<String> ();
-        items.add ("1");
-        items.add ("2");
-        items.add ("3");
-        pickerDataModel.items.put (0, items);
+        List<String> items = new ArrayList<String>();
+        items.add("1");
+        items.add("2");
+        items.add("3");
+        pickerDataModel.items.put(0, items);
 
-        items = new ArrayList<String> ();
-        items.add ("Red");
-        items.add ("Green");
-        items.add ("Blue");
-        items.add ("Alpha");
-        pickerDataModel.items.put (1, items);
+        items = new ArrayList<String>();
+        items.add("Red");
+        items.add("Green");
+        items.add("Blue");
+        items.add("Alpha");
+        pickerDataModel.items.put(1, items);
 
         // set it on our picker class
-        this.pkrMain.model = pickerDataModel;
-
+        pkrMain.setModel(pickerDataModel);
 
         // wire up the item selected method
         pickerDataModel.delegate = new PickerDataModelDelegate() {
 
             @Override
             public void onValueChanged(PickerDataModel model) {
-                //lblSelectedItem().text = pickerDataModel.selectedItem;
+                // lblSelectedItem().setText(pickerDataModel.selectedItem);
             }
         };
 
         // set our initial selection on the label
-        //this.lblSelectedItem().text = pickerDataModel.selectedItem;
+        // lblSelectedItem().setText(pickerDataModel.selectedItem);
     }
 
     /**
@@ -86,12 +69,12 @@ public class PickerWithMultipleComponents extends UIViewController {
      */
     protected class PickerDataModel extends UIPickerViewModel {
 
-        public PickerDataModelDelegate delegate;
+        private PickerDataModelDelegate delegate;
 
         /**
          * The items to show up in the picker
          */
-        public Map<Integer, List<String>> items = new HashMap<Integer, List<String>>();
+        private Map<Integer, List<String>> items = new HashMap<Integer, List<String>>();
 
         public PickerDataModel() {
         }

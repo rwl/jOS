@@ -1,18 +1,13 @@
 package jos.samples.controls.screens.iphone;
 
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
-import com.google.j2objc.annotations.Selector;
-
-import jos.api.foundation.NSCoder;
 import jos.api.foundation.NSObject;
-import jos.api.graphicsimaging.CGGeometry;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIPageControl;
@@ -20,24 +15,21 @@ import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIViewController;
 
+import com.google.j2objc.annotations.Outlet;
+import com.google.j2objc.annotations.Selector;
+
 public class PagerControl extends UIViewController {
 
-    @Outlet UIPageControl pgrMain;
-    @Outlet UIScrollView scrlMain;
+    @Outlet
+    UIPageControl pgrMain;
+
+    @Outlet
+    UIScrollView scrlMain;
 
     /**
      * A list of all our controllers that hold the views for our pages
      */
-    List<UIViewController> controllers = new ArrayList<UIViewController>();
-
-    public PagerControl(IntPtr handle) {
-        super(handle);
-    }
-
-    @Export("initWithCoder:")
-    public PagerControl(NSCoder coder) {
-        super(coder);
-    }
+    private List<UIViewController> controllers = new ArrayList<UIViewController>();
 
     public PagerControl() {
         super("PagerControl_iPhone", null);
@@ -48,18 +40,17 @@ public class PagerControl extends UIViewController {
         super.viewDidLoad();
 
         // set our title
-        title = "Pager Control";
+        setTitle("Pager Control");
 
         // wire up our pager and scroll view event handlers
         pgrMain.addTarget(this, new Selector("handlePgrMainValueChanged"),
-                UIControlEvent.ValueChanged);
-        scrlMain.delegate = new UIScrollViewDelegate() {
-
+                UIControlEvent.VALUE_CHANGED);
+        scrlMain.setDelegate(new UIScrollViewDelegate() {
             @Override
             public void scrolled(UIScrollView view) {
                 handleScrlMainScrolled();
             }
-        };
+        });
 
         // load our controllers (we'll use one per page)
         loadControllers();
@@ -72,13 +63,13 @@ public class PagerControl extends UIViewController {
     protected void handleScrlMainScrolled() {
         // calculate the page number
         int pageNumber = (int) (Math
-                .floor((scrlMain.contentOffset.x - scrlMain.frame.size.width / 2)
-                        / scrlMain.frame.size.width) + 1);
+                .floor((scrlMain.getContentOffset().x - scrlMain.getFrame().size.width / 2)
+                        / scrlMain.getFrame().size.width) + 1);
 
         // if it's a valid page
         if (pageNumber >= 0 && pageNumber < controllers.size()) {
             // Set the current page on the pager control
-            pgrMain.currentPage = pageNumber;
+            pgrMain.setCurrentPage(pageNumber);
         }
     }
 
@@ -89,8 +80,8 @@ public class PagerControl extends UIViewController {
     protected void handlePgrMainValueChanged(NSObject sender, UIEvent e) {
         // it moves page by page. we scroll right to the next controller
         scrlMain.scrollRectToVisible(
-                controllers.get(((UIPageControl) sender).currentPage).view.frame,
-                true);
+                controllers.get(((UIPageControl) sender).getCurrentPage())
+                        .getView().getFrame(), true);
     }
 
     /**
@@ -107,19 +98,20 @@ public class PagerControl extends UIViewController {
         for (int i = 0; i < controllers.size(); i++) {
             // set their location and size, each one is moved to the
             // right by the width of the previous
-            CGRect viewFrame = CGGeometry.CGRectMake(scrlMain.frame.size.width
-                    * i, scrlMain.frame.point.y, scrlMain.frame.size.width,
-                    scrlMain.frame.size.height);
-            controllers.get(i).view.frame = viewFrame;
+            CGRect viewFrame = makeRect(scrlMain.getFrame().size.width * i,
+                    scrlMain.getFrame().point.y,
+                    scrlMain.getFrame().size.width,
+                    scrlMain.getFrame().size.height);
+            controllers.get(i).getView().setFrame(viewFrame);
 
             // add the view to the scrollview
-            scrlMain.addSubview(controllers.get(i).view);
+            scrlMain.addSubview(controllers.get(i).getView());
         }
 
         // set our scroll view content size (width = number of pages * scroll
         // view width)
-        scrlMain.contentSize = new CGSize(scrlMain.frame.size.width
-                * controllers.size(), scrlMain.frame.size.height);
+        scrlMain.setContentSize(new CGSize(scrlMain.getFrame().size.width
+                * controllers.size(), scrlMain.getFrame().size.height));
     }
 
 }

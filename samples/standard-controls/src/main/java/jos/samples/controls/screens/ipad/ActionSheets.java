@@ -45,12 +45,12 @@ public class ActionSheets extends UIViewController {
         title = "Action Sheets";
         btnSimpleActionSheet.addTarget(this,
                 new Selector("handleBtnSimpleActionSheetTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
         btnActionSheetWithOtherButtons.addTarget(
                 this,
                 new Selector(
                         "handleBtnActionSheetWithOtherButtonsTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
     }
 
     protected void handleBtnSimpleActionSheetTouchUpInside() {

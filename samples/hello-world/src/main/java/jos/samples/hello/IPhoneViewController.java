@@ -31,7 +31,7 @@ public class IPhoneViewController extends UIViewController {
         super.viewDidLoad();
 
         this.btnClickMe.addTarget(this, new Selector("onButtonClick"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
         /*this.btnClickMe.addTarget(new EventListener() {
 
             @Override
@@ -55,7 +55,7 @@ public class IPhoneViewController extends UIViewController {
     @Override
     public boolean shouldAutorotateToInterfaceOrientation(
             UIInterfaceOrientation toInterfaceOrientation) {
-        return (toInterfaceOrientation != UIInterfaceOrientation.PortraitUpsideDown);
+        return (toInterfaceOrientation != UIInterfaceOrientation.PORTRAIT_UPSIDE_DOWN);
     }
 
     /**

@@ -1,6 +1,6 @@
 package jos.samples.controls.controls;
 
-import static jos.api.graphicsimaging.CGGeometry.CGRectMake;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
@@ -30,23 +30,23 @@ import com.google.j2objc.annotations.Register;
 public class ActionSheetDatePicker {
 
     UIActionSheet actionSheet;
-    UIButton doneButton = UIButton.fromType(UIButtonType.RoundedRect);
+    UIButton doneButton = UIButton.fromType(UIButtonType.ROUNDED_RECT);
     UIView owner;
     UILabel titleLabel = new UILabel();
 
     /**
      * Set any datepicker properties here
      */
-    public UIDatePicker datePicker = new UIDatePicker(CGRectMake(0, 0, 0, 0));
+    private UIDatePicker datePicker = new UIDatePicker(makeRect(0, 0, 0, 0));
 
     /**
      * The title that shows up for the date picker
      */
-    public String title() {
+    public String getTitle() {
         return titleLabel.text;
     }
 
-    public void title(String value) {
+    public void setTitle(String value) {
         titleLabel.text = value;
     }
 
@@ -55,22 +55,22 @@ public class ActionSheetDatePicker {
         this.owner = owner;
 
         // configure the title label
-        titleLabel.backgroundColor = UIColor.clear;
-        titleLabel.textColor = UIColor.lightTextColor;
+        titleLabel.backgroundColor = UIColor.CLEAR;
+        titleLabel.textColor = UIColor.LIGHT_TEXT_COLOR;
         titleLabel.font = UIFont.boldSystemFontOfSize(18);
 
         // configure the done button
-        doneButton.setTitle("done", UIControlState.Normal);
+        doneButton.setTitle("done", UIControlState.NORMAL);
         doneButton.addTarget(new EventListener() {
 
             @Override
             public void onEvent(Object object, int event) {
                 actionSheet.dismissWithClickedButtonIndex(0, true);
             }
-        }, UIControlEvent.TouchUpInside);
+        }, UIControlEvent.TOUCH_UP_INSIDE);
 
         // create + configure the action sheet
-        actionSheet = new UIActionSheet();
+        actionSheet = new UIActionSheet("", null, "", "");
         actionSheet.style = UIActionSheetStyle.BlackTranslucent;
         actionSheet.delegate = new UIActionSheetDelegate() {
             @Override
@@ -94,7 +94,7 @@ public class ActionSheetDatePicker {
         CGSize doneButtonSize = new CGSize(71, 30);
         CGSize actionSheetSize = new CGSize(owner.frame.size.width,
                 datePicker.frame.size.height + titleBarHeight);
-        CGRect actionSheetFrame = CGRectMake(0, owner.frame.size.height
+        CGRect actionSheetFrame = makeRect(0, owner.frame.size.height
                 - actionSheetSize.height, actionSheetSize.width,
                 actionSheetSize.height);
 
@@ -106,14 +106,14 @@ public class ActionSheetDatePicker {
 
         // move our picker to be at the bottom of the actionsheet (view coords
         // are relative to the action sheet)
-        datePicker.frame = CGRectMake(datePicker.frame.point.x, titleBarHeight,
+        datePicker.frame = makeRect(datePicker.frame.point.x, titleBarHeight,
                 datePicker.frame.size.width, datePicker.frame.size.height);
 
         // move our label to the top of the action sheet
-        titleLabel.frame = CGRectMake(10, 4, owner.frame.size.width - 100, 35);
+        titleLabel.frame = makeRect(10, 4, owner.frame.size.width - 100, 35);
 
         // move our button
-        doneButton.frame = CGRectMake(actionSheetSize.width
+        doneButton.frame = makeRect(actionSheetSize.width
                 - doneButtonSize.width - 10, 7, doneButtonSize.width,
                 doneButtonSize.height);
     }
@@ -123,6 +123,10 @@ public class ActionSheetDatePicker {
      */
     public void hide(boolean animated) {
         actionSheet.dismissWithClickedButtonIndex(0, animated);
+    }
+
+    public UIDatePicker getDatePicker() {
+        return datePicker;
     }
 
 }

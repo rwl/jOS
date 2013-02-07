@@ -7,7 +7,7 @@ import com.google.j2objc.annotations.Register;
 public class CGGeometry {
 
     @Function
-    public static CGRect CGRectMake(float x, float y, float width, float height) {
+    public static CGRect makeRect(float x, float y, float width, float height) {
         return null;
     }
 }

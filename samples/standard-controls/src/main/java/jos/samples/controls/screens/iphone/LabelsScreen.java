@@ -1,53 +1,41 @@
 package jos.samples.controls.screens.iphone;
 
-import jos.api.foundation.NSCoder;
-import jos.api.graphicsimaging.CGGeometry;
-import jos.api.system.IntPtr;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
+import com.google.j2objc.annotations.Outlet;
+
+import jos.api.uikit.NSLineBreakMode;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
-import jos.api.uikit.UILineBreakMode;
+import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
-
-import com.google.j2objc.annotations.Export;
 
 public class LabelsScreen extends UIViewController {
 
+    @Outlet
+    UIView view;
+
     UILabel customLabel;
-
-    public LabelsScreen(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public LabelsScreen(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
 
     public LabelsScreen() {
         super("LabelsScreen_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        this.title = "UILabels";
+        setTitle("UILabels");
 
-        customLabel = new UILabel(CGGeometry.CGRectMake(20f, 300f, 280f, 40f));
-        customLabel.text = "A label created programatically";
-        customLabel.textColor = UIColor.blue;
-        customLabel.font = UIFont.fromName("Helvetica-Bold", 20);
-        customLabel.adjustsFontSizeToFitWidth = true;
-        customLabel.minimumFontSize = 12;
-        customLabel.lineBreakMode = UILineBreakMode.TailTruncation;
-        customLabel.lines = 1;
+        customLabel = new UILabel(makeRect(20f, 300f, 280f, 40f));
+        customLabel.setText("A label created programatically");
+        customLabel.setTextColor(UIColor.BLUE);
+        customLabel.setFont(UIFont.fromName("Helvetica-Bold", 20));
+        customLabel.setAdjustsFontSizeToFitWidth(true);
+        customLabel.setMinimumFontSize(12);
+        customLabel.setLineBreakMode(NSLineBreakMode.TAIL_TRUNCATION);
+        customLabel.setLines(1);
 
         view.addSubview(customLabel);
     }

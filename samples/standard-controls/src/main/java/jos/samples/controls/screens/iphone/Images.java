@@ -1,41 +1,24 @@
 package jos.samples.controls.screens.iphone;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
-
-import jos.api.foundation.NSCoder;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIViewController;
 
+import com.google.j2objc.annotations.Outlet;
+
 public class Images extends UIViewController {
 
-    @Outlet UIImageView imgMain;
-
-    public Images(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public Images(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
+    @Outlet
+    UIImageView imgMain;
 
     public Images() {
         super("Images_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        this.title = "Images";
+        setTitle("Images");
     }
 
 }

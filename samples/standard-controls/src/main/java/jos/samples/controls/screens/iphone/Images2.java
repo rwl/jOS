@@ -1,62 +1,50 @@
 package jos.samples.controls.screens.iphone;
 
-import com.google.j2objc.annotations.Export;
-
-import jos.api.foundation.NSCoder;
-import jos.api.graphicsimaging.CGGeometry;
-import jos.api.system.IntPtr;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
+import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
+
+import com.google.j2objc.annotations.Outlet;
 
 public class Images2 extends UIViewController {
 
+    @Outlet
+    UIView view;
+
     UIImageView imageView1;
+
     UIImageView imgSpinningCircle;
-
-    public Images2(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public Images2(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
 
     public Images2() {
         super("Images2_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        title = "Images";
+        setTitle("Images");
 
         // a simple image
         imageView1 = new UIImageView(
-                UIImage.fromBundle("Images/Icons/50_icon.png"));
-        imageView1.frame = CGGeometry
-                .CGRectMake(20, 20, imageView1.image.CGImage.width,
-                        imageView1.image.CGImage.height);
+                UIImage.fromBundle("images/icons/50_icon.png"));
+        imageView1.setFrame(makeRect(20, 20,
+                imageView1.getImage().getImage().width, imageView1.getImage()
+                        .getImage().height));
         view.addSubview(imageView1);
 
         // an animating image
         imgSpinningCircle = new UIImageView();
-        imgSpinningCircle.animationImages = new UIImage[] {
-                UIImage.fromBundle("Images/Spinning Circle_1.png"),
-                UIImage.fromBundle("Images/Spinning Circle_2.png"),
-                UIImage.fromBundle("Images/Spinning Circle_3.png"),
-                UIImage.fromBundle("Images/Spinning Circle_4.png") };
-        imgSpinningCircle.animationRepeatCount = 0;
-        imgSpinningCircle.animationDuration = .5;
-        imgSpinningCircle.frame = CGGeometry.CGRectMake(150, 20, 100, 100);
+        imgSpinningCircle.setAnimationImages(new UIImage[] {
+                UIImage.fromBundle("images/Spinning Circle_1.png"),
+                UIImage.fromBundle("images/Spinning Circle_2.png"),
+                UIImage.fromBundle("images/Spinning Circle_3.png"),
+                UIImage.fromBundle("images/Spinning Circle_4.png") });
+        imgSpinningCircle.setAnimationRepeatCount(0);
+        imgSpinningCircle.setAnimationDuration(.5);
+        imgSpinningCircle.setFrame(makeRect(150, 20, 100, 100));
         view.addSubview(imgSpinningCircle);
         imgSpinningCircle.startAnimating();
     }

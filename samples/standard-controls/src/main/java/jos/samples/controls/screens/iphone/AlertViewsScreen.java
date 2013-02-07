@@ -1,8 +1,6 @@
 package jos.samples.controls.screens.iphone;
 
-import jos.api.foundation.NSCoder;
 import jos.api.foundation.NSObject;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIAlertViewDelegate;
 import jos.api.uikit.UIButton;
@@ -11,7 +9,6 @@ import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActivityIndicatorAlertView;
 
-import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -19,10 +16,13 @@ public class AlertViewsScreen extends UIViewController {
 
     @Outlet
     UIButton btnCustomButtons;
+
     @Outlet
     UIButton btnSimpleAlert;
+
     @Outlet
     UIButton btnCustomButtonsWithDelegate;
+
     @Outlet
     UIButton btnCustomAlert;
 
@@ -35,43 +35,28 @@ public class AlertViewsScreen extends UIViewController {
      */
     UIAlertView alert;
 
-    public AlertViewsScreen(IntPtr handle) {
-        super(handle);
-        initialize();
-    }
-
-    @Export("initWithCoder:")
-    public AlertViewsScreen(NSCoder coder) {
-        super(coder);
-        initialize();
-    }
-
     public AlertViewsScreen() {
         super("AlertViewsScreen_iPhone", null);
-        initialize();
-    }
-
-    void initialize() {
     }
 
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        title = "Alert Views";
+        setTitle("Alert Views");
 
         btnSimpleAlert.addTarget(this, new Selector(
                 "handleBtnSimpleAlertTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
         btnCustomButtons.addTarget(this, new Selector(
                 "handleBtnCustomButtonsTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
         btnCustomButtonsWithDelegate.addTarget(this, new Selector(
                 "handleBtnCustomButtonsWithDelegateTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
         btnCustomAlert.addTarget(this, new Selector(
                 "handleBtnCustomAlertTouchUpInside"),
-                UIControlEvent.TouchUpInside);
+                UIControlEvent.TOUCH_UP_INSIDE);
     }
 
     /**
@@ -80,7 +65,7 @@ public class AlertViewsScreen extends UIViewController {
      */
     protected void handleBtnSimpleAlertTouchUpInside(NSObject sender, UIEvent e) {
         alert = new UIAlertView("alert title", "this is a simple alert.", null,
-                "OK", null);
+                "OK");
         alert.show();
     }
 
@@ -91,12 +76,12 @@ public class AlertViewsScreen extends UIViewController {
                         "custom button 1", "custom button 2" });
 
         // wire up a handler for the click event
-        alert.delegate = new UIAlertViewDelegate() {
+        alert.setDelegate(new UIAlertViewDelegate() {
             @Override
             public void clicked(UIAlertView view, int buttonIndex) {
                 System.out.println("Button " + buttonIndex + " clicked");
             }
-        };
+        });
         alert.show();
     }
 
@@ -106,12 +91,11 @@ public class AlertViewsScreen extends UIViewController {
      */
     protected void handleBtnCustomButtonsWithDelegateTouchUpInside(
             NSObject sender, UIEvent e) {
-        String[] otherButtons = new String[] { "custom button 1",
-                "custom button 2" };
 
         alert = new UIAlertView("custom buttons alert",
                 "this alert has custom buttons",
-                new CustomButtonsAlertDelegate(), "ok", otherButtons);
+                new CustomButtonsAlertDelegate(), "ok", "custom button 1",
+                "custom button 2");
         alert.show();
     }
 
@@ -160,7 +144,7 @@ public class AlertViewsScreen extends UIViewController {
      */
     protected void handleBtnCustomAlertTouchUpInside(Object sender, UIEvent e) {
         alert = new ActivityIndicatorAlertView();
-        ((ActivityIndicatorAlertView) alert).message = "performing stuff";
+        ((ActivityIndicatorAlertView) alert).setMessage("performing stuff");
         alert.show();
 
         Thread longRunningProc = new Thread(new Runnable() {
@@ -184,4 +168,5 @@ public class AlertViewsScreen extends UIViewController {
         }
         ((ActivityIndicatorAlertView) alert).hide(true);
     }
+
 }

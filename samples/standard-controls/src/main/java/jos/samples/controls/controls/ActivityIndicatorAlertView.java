@@ -29,16 +29,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     /**
      * The message that appears in the alert above the activity indicator
      */
-    public String message;
-
-    public ActivityIndicatorAlertView(IntPtr handle) {
-        super(handle);
-    }
-
-    @Export("initWithCoder:")
-    public ActivityIndicatorAlertView(NSCoder coder) {
-        super(coder);
-    }
+    String message;
 
     public ActivityIndicatorAlertView() {
         super();
@@ -52,7 +43,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     public void layoutSubviews() {
         super.layoutSubviews();
         // resize the control
-        this.frame = CGGeometry.CGRectMake(this.frame.point.x,
+        this.frame = CGGeometry.makeRect(this.frame.point.x,
                 this.frame.point.y, this.frame.size.width, 120);
     }
 
@@ -66,10 +57,10 @@ public class ActivityIndicatorAlertView extends UIAlertView {
         if (activityIndicator == null) {
             // if we have a message
             if (message != null || !message.isEmpty()) {
-                lblMessage = new UILabel(CGGeometry.CGRectMake(20, 10,
+                lblMessage = new UILabel(CGGeometry.makeRect(20, 10,
                         rect.size.width - 40, 33));
-                lblMessage.backgroundColor = UIColor.clear;
-                lblMessage.textColor = UIColor.lightTextColor;
+                lblMessage.backgroundColor = UIColor.CLEAR;
+                lblMessage.textColor = UIColor.LIGHT_TEXT_COLOR;
                 lblMessage.textAlignment = UITextAlignment.Center;
                 lblMessage.text = message;
                 this.addSubview(lblMessage);
@@ -78,7 +69,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
             // instantiate a new activity indicator
             activityIndicator = new UIActivityIndicatorView(
                     UIActivityIndicatorViewStyle.White);
-            activityIndicator.frame = CGGeometry.CGRectMake(
+            activityIndicator.frame = CGGeometry.makeRect(
                     (rect.size.width / 2)
                             - (activityIndicator.frame.size.width / 2), 50,
                     activityIndicator.frame.size.width,
@@ -101,4 +92,9 @@ public class ActivityIndicatorAlertView extends UIAlertView {
             }
         });
     }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
 }

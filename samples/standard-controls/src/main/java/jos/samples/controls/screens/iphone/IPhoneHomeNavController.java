@@ -7,13 +7,16 @@ import jos.api.uikit.UITableViewController;
 import jos.api.uikit.UITableViewStyle;
 import jos.samples.controls.navigation.NavItem;
 import jos.samples.controls.navigation.NavItemGroup;
-import jos.samples.controls.navigation.NavItemTableSource;
+import jos.samples.controls.navigation.NavItemTableDataSource;
+import jos.samples.controls.navigation.NavItemTableDelegate;
 
 public class IPhoneHomeNavController extends UITableViewController {
 
     private final List<NavItemGroup> navItems = new ArrayList<NavItemGroup>();
 
-    private NavItemTableSource tableSource;
+    private NavItemTableDataSource tableSource;
+
+    private NavItemTableDelegate tableDelegate;
 
     public IPhoneHomeNavController() {
         super(UITableViewStyle.GROUPED);
@@ -23,14 +26,14 @@ public class IPhoneHomeNavController extends UITableViewController {
     public void viewWillAppear(boolean animated) {
         super.viewWillAppear(animated);
         // hide the nav bar when this controller appears
-        this.navigationController.setNavigationBarHidden(true, true);
+        navigationController.setNavigationBarHidden(true, true);
     }
 
     @Override
     public void viewWillDisappear(boolean animated) {
         super.viewWillDisappear(animated);
         // show the nav bar when other controllers appear
-        this.navigationController.setNavigationBarHidden(false, true);
+        navigationController.setNavigationBarHidden(false, true);
     }
 
     @Override
@@ -79,11 +82,13 @@ public class IPhoneHomeNavController extends UITableViewController {
         navGroup.getItems().add(new NavItem("Programmatic Toolbar", ProgrammaticToolbar.class));
         navGroup.getItems().add(new NavItem("Toolbar Items", ToolbarItems.class));
 
-        // create a table source from our nav items
-        tableSource = new NavItemTableSource(this.navigationController, navItems);
+        // create a table source and delegate using our nav items
+        tableSource = new NavItemTableDataSource(navItems);
+        tableDelegate = new NavItemTableDelegate(navigationController, navItems);
 
         // set the source on the table to our data source
-        super.getTableView().setSource(tableSource);
+        tableView.setDataSource(tableSource);
+        tableView.setTableViewDelegate(tableDelegate);
     }
 
 }

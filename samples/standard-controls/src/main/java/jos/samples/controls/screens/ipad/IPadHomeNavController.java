@@ -6,17 +6,16 @@ import java.util.List;
 import jos.api.uikit.UITableViewController;
 import jos.samples.controls.navigation.NavItem;
 import jos.samples.controls.navigation.NavItemGroup;
-import jos.samples.controls.navigation.NavItemTableSource;
+import jos.samples.controls.navigation.NavItemTableDataSource;
+import jos.samples.controls.navigation.NavItemTableDelegate;
 
 public class IPadHomeNavController extends UITableViewController {
 
     private final List<NavItemGroup> navItems = new ArrayList<NavItemGroup>();
 
-    private NavItemTableSource tableSource;
+    private NavItemTableDataSource tableSource;
 
-    public IPadHomeNavController() {
-        super();
-    }
+    private NavItemTableDelegate tableDelegate;
 
     @Override
     public void viewWillAppear(boolean animated) {
@@ -52,10 +51,12 @@ public class IPadHomeNavController extends UITableViewController {
         // DatePicker.class));
 
         // create a table source from our nav items
-        tableSource = new NavItemTableSource(navigationController, navItems);
+        tableSource = new NavItemTableDataSource(navItems);
+        tableDelegate = new NavItemTableDelegate(navigationController, navItems);
 
         // set the source on the table to our data source
-        super.tableView.source = tableSource;
+        tableView.setDataSource(tableSource);
+        tableView.setTableViewDelegate(tableDelegate);
     }
 
 }

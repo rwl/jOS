@@ -1,11 +1,12 @@
 package jos.api.foundation;
 
-import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Bind;
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
 
-@BaseType(NSObject.class)
+@Register(isWrapper = true)
 public class NSIndexPath {
+
     @Export("indexPathWithIndex:")
     public static NSObject indexPathWithIndex(int index) {
         return null;
@@ -70,4 +71,5 @@ public class NSIndexPath {
     public int getRow() {
         return this.row;
     }
+
 }

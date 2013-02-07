@@ -11,7 +11,6 @@ public class ActivitySpinnerScreen extends UIViewController {
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-
         setTitle("Activity Spinners");
     }
 

@@ -31,7 +31,7 @@ public class Switches extends UIViewController {
             @Override
             public void onEvent(Object object, int event) {
                 new UIAlertView("Switch one change!", "is on: "
-                        + swchOne.isOn(), null, "OK", null).show();
+                        + swchOne.isOn(), null, "OK").show();
             }
         }, UIControlEvent.VALUE_CHANGED);
 
@@ -40,7 +40,7 @@ public class Switches extends UIViewController {
             @Override
             public void onEvent(Object object, int event) {
                 new UIAlertView("Switch two change!", "is on: "
-                        + swchTwo.isOn(), null, "OK", null).show();
+                        + swchTwo.isOn(), null, "OK").show();
             }
         }, UIControlEvent.VALUE_CHANGED);
     }

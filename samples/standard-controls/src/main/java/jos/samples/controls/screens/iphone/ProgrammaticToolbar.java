@@ -42,7 +42,7 @@ public class ProgrammaticToolbar extends UIViewController {
         // button one
         String buttonTitle = "One";
         UIBarButtonItem btnOne = new UIBarButtonItem(buttonTitle,
-                UIBarButtonItemStyle.Bordered, null, null);
+                UIBarButtonItemStyle.BORDERED, null, null);
         btnOne.setTarget(this);
         btnOne.setAction(new Selector("onButtonOne"));
 
@@ -53,7 +53,7 @@ public class ProgrammaticToolbar extends UIViewController {
 
         // button two
         UIBarButtonItem btnTwo = new UIBarButtonItem("second",
-                UIBarButtonItemStyle.Bordered, null, null);
+                UIBarButtonItemStyle.BORDERED, null, null);
 
         // flexible width space
         UIBarButtonItem flexibleWidth = new UIBarButtonItem(
@@ -61,11 +61,11 @@ public class ProgrammaticToolbar extends UIViewController {
 
         // button three
         UIBarButtonItem btnThree = new UIBarButtonItem("3",
-                UIBarButtonItemStyle.Bordered, null, null);
+                UIBarButtonItemStyle.BORDERED, null, null);
 
         // button four
         UIBarButtonItem btnFour = new UIBarButtonItem("another!",
-                UIBarButtonItemStyle.Bordered, null, null);
+                UIBarButtonItemStyle.BORDERED, null, null);
 
         // create the items array
         UIBarButtonItem[] items = new UIBarButtonItem[] { btnOne, fixedWidth,

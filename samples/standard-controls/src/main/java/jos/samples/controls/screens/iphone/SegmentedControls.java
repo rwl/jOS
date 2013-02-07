@@ -11,7 +11,6 @@ public class SegmentedControls extends UIViewController {
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-
         setTitle("Segmented Controls");
     }
 

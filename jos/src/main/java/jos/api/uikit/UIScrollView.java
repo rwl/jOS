@@ -1,14 +1,15 @@
 package jos.api.uikit;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Weak;
-
 import jos.api.foundation.NSCoder;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
-import jos.api.system.IntPtr;
 
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
+import com.google.j2objc.annotations.Weak;
+
+@Register(isWrapper = true)
 public class UIScrollView extends UIView {
 
     @Weak
@@ -22,9 +23,6 @@ public class UIScrollView extends UIView {
     @Export("initWithFrame:")
     public UIScrollView(CGRect frame) {
         super(frame);
-    }
-
-    public UIScrollView(IntPtr handle) {
     }
 
     @Export("initWithCoder:")

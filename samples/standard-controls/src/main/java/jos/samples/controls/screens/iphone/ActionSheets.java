@@ -6,6 +6,7 @@ import jos.api.uikit.UIActionSheetDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Outlet;
@@ -14,7 +15,11 @@ import com.google.j2objc.annotations.Selector;
 public class ActionSheets extends UIViewController {
 
     @Outlet
+    UIView view;
+
+    @Outlet
     UIButton btnSimpleActionSheet;
+
     @Outlet
     UIButton btnActionSheetWithOtherButtons;
 

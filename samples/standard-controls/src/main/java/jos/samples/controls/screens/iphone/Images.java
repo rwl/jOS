@@ -17,7 +17,6 @@ public class Images extends UIViewController {
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
-
         setTitle("Images");
     }
 

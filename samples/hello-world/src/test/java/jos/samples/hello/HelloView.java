@@ -17,7 +17,7 @@ public class HelloView extends UIView {
         label.text = "Hello World";
         label.center = this.center;
         label.backgroundColor = UIColor.CLEAR;
-        label.textAlignment = UITextAlignment.Center;
+        label.textAlignment = UITextAlignment.CENTER;
 
         addSubview(label);
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import jos.api.foundation.NSIndexPath;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
-import jos.api.uikit.UITableViewCellAccessory;
+import jos.api.uikit.UITableViewCellAccessoryType;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITableViewDataSource;
 
@@ -61,13 +61,13 @@ public class NavItemTableDataSource extends UITableViewDataSource {
     public UITableViewCell getCell(UITableView tableView, NSIndexPath indexPath) {
         UITableViewCell cell = tableView.dequeueReusableCell(CELL_IDENTIFIER);
         if (cell == null) {
-            cell = new UITableViewCell(UITableViewCellStyle.Default, CELL_IDENTIFIER);
+            cell = new UITableViewCell(UITableViewCellStyle.DEFAULT, CELL_IDENTIFIER);
             cell.tag = (int) System.currentTimeMillis();
         }
 
         // set the cell properties
         cell.textLabel.text = navItems.get(indexPath.section).getItems().get(indexPath.row).getName();
-        cell.accessory = UITableViewCellAccessory.DisclosureIndicator;
+        cell.accessory = UITableViewCellAccessoryType.DISCLOSURE_INDICATOR;
 
         // return the cell
         return cell;

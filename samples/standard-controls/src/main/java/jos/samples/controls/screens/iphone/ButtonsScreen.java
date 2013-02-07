@@ -36,7 +36,7 @@ public class ButtonsScreen extends UIViewController {
             @Override
             public void onEvent(Object object, int event) {
                 new UIAlertView("button two click!", "TouchUpInside Handled",
-                        null, "OK", null).show();
+                        null, "OK").show();
             }
 
         }, UIControlEvent.TOUCH_UP_INSIDE);
@@ -47,7 +47,7 @@ public class ButtonsScreen extends UIViewController {
 
     protected void handleBtnOneTouchUpInside() {
         new UIAlertView("button one click!", "TouchUpInside Handled", null,
-                "OK", null).show();
+                "OK").show();
     }
 
 }

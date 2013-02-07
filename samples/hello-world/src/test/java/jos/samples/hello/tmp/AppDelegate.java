@@ -17,7 +17,7 @@ public class AppDelegate extends UIApplicationDelegate {
 
         UILabel label = new UILabel(makeRect(0.0f, 50.0f, 320.0f, 30.0f));
         label.text = "Hello World";
-        label.textAlignment = UITextAlignment.Center;
+        label.textAlignment = UITextAlignment.CENTER;
 
         this.window.addSubview(label);
         this.window.makeKeyAndVisible();

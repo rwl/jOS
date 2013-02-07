@@ -1,8 +1,12 @@
 package jos.api.uikit;
 
+import com.google.j2objc.annotations.Bind;
+import com.google.j2objc.annotations.Register;
+
+@Register(isWrapper = true, isPrimitive = true)
 public enum UITableViewScrollPosition {
-    UITableViewScrollPositionNone,
-    UITableViewScrollPositionTop,
-    UITableViewScrollPositionMiddle,
-    UITableViewScrollPositionBottom
+    @Bind("UITableViewScrollPositionNone") NONE,
+    @Bind("UITableViewScrollPositionTop") TOP,
+    @Bind("UITableViewScrollPositionMiddle") MIDDLE,
+    @Bind("UITableViewScrollPositionBottom") BOTTOM
 }

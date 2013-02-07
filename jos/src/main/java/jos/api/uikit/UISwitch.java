@@ -1,7 +1,9 @@
 package jos.api.uikit;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
 
+@Register(isWrapper = true)
 public class UISwitch extends UIControl {
 
     public boolean on;

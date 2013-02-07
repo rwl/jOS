@@ -1,18 +1,14 @@
 package jos.samples.controls.controls;
 
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.foundation.NSAction;
-import jos.api.foundation.NSCoder;
-import jos.api.graphicsimaging.CGGeometry;
 import jos.api.graphicsimaging.CGRect;
-import jos.api.system.IntPtr;
 import jos.api.uikit.UIActivityIndicatorView;
 import jos.api.uikit.UIActivityIndicatorViewStyle;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UITextAlignment;
-
-import com.google.j2objc.annotations.Export;
 
 public class ActivityIndicatorAlertView extends UIAlertView {
 
@@ -31,10 +27,6 @@ public class ActivityIndicatorAlertView extends UIAlertView {
      */
     String message;
 
-    public ActivityIndicatorAlertView() {
-        super();
-    }
-
     /**
      * We use this to resize our alert view. doing it at any other time has
      * weird effects because of the lifecycle
@@ -43,8 +35,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     public void layoutSubviews() {
         super.layoutSubviews();
         // resize the control
-        this.frame = CGGeometry.makeRect(this.frame.point.x,
-                this.frame.point.y, this.frame.size.width, 120);
+        frame = makeRect(frame.point.x, frame.point.y, frame.size.width, 120);
     }
 
     /**
@@ -57,24 +48,23 @@ public class ActivityIndicatorAlertView extends UIAlertView {
         if (activityIndicator == null) {
             // if we have a message
             if (message != null || !message.isEmpty()) {
-                lblMessage = new UILabel(CGGeometry.makeRect(20, 10,
-                        rect.size.width - 40, 33));
-                lblMessage.backgroundColor = UIColor.CLEAR;
-                lblMessage.textColor = UIColor.LIGHT_TEXT_COLOR;
-                lblMessage.textAlignment = UITextAlignment.Center;
-                lblMessage.text = message;
-                this.addSubview(lblMessage);
+                lblMessage = new UILabel(makeRect(20, 10, rect.size.width - 40,
+                        33));
+                lblMessage.setBackgroundColor(UIColor.CLEAR);
+                lblMessage.setTextColor(UIColor.LIGHT_TEXT_COLOR);
+                lblMessage.setTextAlignment(UITextAlignment.CENTER);
+                lblMessage.setText(message);
+                addSubview(lblMessage);
             }
 
             // instantiate a new activity indicator
             activityIndicator = new UIActivityIndicatorView(
-                    UIActivityIndicatorViewStyle.White);
-            activityIndicator.frame = CGGeometry.makeRect(
-                    (rect.size.width / 2)
-                            - (activityIndicator.frame.size.width / 2), 50,
-                    activityIndicator.frame.size.width,
-                    activityIndicator.frame.size.height);
-            this.addSubview(activityIndicator);
+                    UIActivityIndicatorViewStyle.WHITE);
+            activityIndicator.setFrame(makeRect((rect.size.width / 2)
+                    - (activityIndicator.getFrame().size.width / 2), 50,
+                    activityIndicator.getFrame().size.width,
+                    activityIndicator.getFrame().size.height));
+            addSubview(activityIndicator);
             activityIndicator.startAnimating();
         }
         super.draw(rect);

@@ -29,7 +29,7 @@ public class DatePickerSimple extends UIViewController {
         pkrDate.addTarget(new EventListener() {
             @Override
             public void onEvent(Object object, int event) {
-                lblDate.setText(((UIDatePicker) object).date.toString());
+                lblDate.setText(((UIDatePicker) object).getDate().toString());
             }
         }, UIControlEvent.VALUE_CHANGED);
     }

@@ -16,4 +16,5 @@ public abstract class UIScrollViewDelegate extends NSObject {
     public UIView viewForZoomingInScrollView(UIScrollView view) {
         return null;
     }
+    
 }

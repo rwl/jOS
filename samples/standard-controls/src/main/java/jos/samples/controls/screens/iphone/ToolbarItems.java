@@ -19,12 +19,8 @@ public class ToolbarItems extends UIViewController {
     @Override
     public boolean shouldAutorotateToInterfaceOrientation(
             UIInterfaceOrientation orientation) {
-        if (orientation == UIInterfaceOrientation.LANDSCAPE_LEFT
-                || orientation == UIInterfaceOrientation.LANDSCAPE_RIGHT) {
-            return true;
-        } else {
-            return false;
-        }
+        return orientation == UIInterfaceOrientation.LANDSCAPE_LEFT
+                || orientation == UIInterfaceOrientation.LANDSCAPE_RIGHT;
     }
 
 }

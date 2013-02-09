@@ -19,8 +19,8 @@ public class AppDelegate extends UIApplicationDelegate {
 
     @Override
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
-        window = new UIWindow(UIScreen.mainScreen.bounds);
-        window.makeKeyAndVisible();
+        this.window = new UIWindow(UIScreen.mainScreen.bounds);
+        this.window.makeKeyAndVisible();
 
         mainNavController = new UINavigationController();
 
@@ -32,7 +32,7 @@ public class AppDelegate extends UIApplicationDelegate {
             mainNavController.pushViewController(iPadHome, false);
         }
 
-        window.setRootViewController(mainNavController);
+        this.window.setRootViewController(mainNavController);
         return true;
     }
 

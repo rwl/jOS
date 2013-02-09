@@ -1,20 +1,21 @@
 package jos.api.uikit;
 
-import com.google.j2objc.annotations.EventListener;
+import jos.api.foundation.NSObject;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 import com.google.j2objc.annotations.Selector;
 
-import jos.api.foundation.NSObject;
-
 @Register(isWrapper = true)
 public class UIControl extends UIView {
 
-    public void addTarget(EventListener listener, UIControlEvent controlEvents) {
+    @Export("addTarget:forControlEvents:")
+    public void addTarget(Object listener, UIControlEvent controlEvents) {
     }
 
     @Export("addTarget:action:forControlEvents:")
     public void addTarget(NSObject actionSheets_iPad,
             Selector selector, UIControlEvent controlEvents) {
     }
+
 }

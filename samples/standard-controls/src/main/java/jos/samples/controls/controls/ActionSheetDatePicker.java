@@ -1,6 +1,10 @@
 package jos.samples.controls.controls;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
+import com.google.j2objc.annotations.Selector;
+
+import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIActionSheet;
@@ -16,7 +20,6 @@ import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
 
-import com.google.j2objc.annotations.EventListener;
 
 /**
  * A class to show a date picker on an action sheet. To use, create a new
@@ -24,7 +27,7 @@ import com.google.j2objc.annotations.EventListener;
  * property, and call show(). It will automatically dismiss when the user clicks
  * "Done," or you can call Hide() to dismiss it manually.
  */
-public class ActionSheetDatePicker {
+public class ActionSheetDatePicker extends NSObject {
 
     UIActionSheet actionSheet;
 
@@ -50,12 +53,14 @@ public class ActionSheetDatePicker {
 
         // configure the done button
         doneButton.setTitle("done", UIControlState.NORMAL);
-        doneButton.addTarget(new EventListener() {
+        /*doneButton.addTarget(new EventListener() {
             @Override
-            public void onEvent(Object object, int event) {
+            public void onEvent(NSObject object, UIEvent event) {
                 actionSheet.dismissWithClickedButtonIndex(0, true);
             }
-        }, UIControlEvent.TOUCH_UP_INSIDE);
+        }, UIControlEvent.TOUCH_UP_INSIDE);*/
+        doneButton.addTarget(this, new Selector("onDone"),
+                UIControlEvent.TOUCH_UP_INSIDE);
 
         // create + configure the action sheet
         actionSheet = new UIActionSheet("", null, "", "");
@@ -71,6 +76,10 @@ public class ActionSheetDatePicker {
         actionSheet.addSubview(datePicker);
         actionSheet.addSubview(titleLabel);
         actionSheet.addSubview(doneButton);
+    }
+
+    protected void onDone() {
+        actionSheet.dismissWithClickedButtonIndex(0, true);
     }
 
     /**

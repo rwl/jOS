@@ -7,7 +7,6 @@ import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIControlState;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -31,15 +30,17 @@ public class ButtonsScreen extends UIViewController {
 
         btnOne.addTarget(this, new Selector("handleBtnOneTouchUpInside"),
                 UIControlEvent.TOUCH_UP_INSIDE);
-        btnTwo.addTarget(new EventListener() {
+        /*btnTwo.addTarget(new EventListener() {
 
             @Override
-            public void onEvent(Object object, int event) {
+            public void onEvent(NSObject object, UIEvent event) {
                 new UIAlertView("button two click!", "TouchUpInside Handled",
                         null, "OK").show();
             }
 
-        }, UIControlEvent.TOUCH_UP_INSIDE);
+        }, UIControlEvent.TOUCH_UP_INSIDE);*/
+        btnTwo.addTarget(this, new Selector("handleBtnTwoTouchUpInside"),
+                UIControlEvent.TOUCH_UP_INSIDE);
 
         UIButton button = UIButton.fromType(UIButtonType.ROUNDED_RECT);
         button.setTitle("My Button", UIControlState.NORMAL);
@@ -48,6 +49,11 @@ public class ButtonsScreen extends UIViewController {
     protected void handleBtnOneTouchUpInside() {
         new UIAlertView("button one click!", "TouchUpInside Handled", null,
                 "OK").show();
+    }
+
+    protected void handleBtnTwoTouchUpInside() {
+        new UIAlertView("button two click!", "TouchUpInside Handled",
+                null, "OK").show();
     }
 
 }

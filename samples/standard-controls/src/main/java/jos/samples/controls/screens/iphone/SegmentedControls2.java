@@ -1,15 +1,15 @@
 package jos.samples.controls.screens.iphone;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
-
+import jos.api.foundation.NSObject;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UISegmentedControl;
 import jos.api.uikit.UISegmentedControlStyle;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Outlet;
+import com.google.j2objc.annotations.Selector;
 
 public class SegmentedControls2 extends UIViewController {
 
@@ -37,14 +37,22 @@ public class SegmentedControls2 extends UIViewController {
         segControl1.setFrame(makeRect(20, 20, 280, 44));
         view.addSubview(segControl1);
 
-        segControl1.addTarget(new EventListener() {
+        /*segControl1.addTarget(new EventListener() {
             @Override
-            public void onEvent(Object sender, int event) {
+            public void onEvent(NSObject sender, UIEvent event) {
                 System.out.println("Item "
                         + ((UISegmentedControl) sender).selectedSegment
                         + " selected");
             }
-        }, UIControlEvent.VALUE_CHANGED);
+        }, UIControlEvent.VALUE_CHANGED);*/
+        segControl1.addTarget(this, new Selector("handleSegmentedControl1"),
+                UIControlEvent.VALUE_CHANGED);
+    }
+
+    protected void handleSegmentedControl1(NSObject sender) {
+        System.out.println("Item "
+                + ((UISegmentedControl) sender).selectedSegment
+                + " selected");
     }
 
 }

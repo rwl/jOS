@@ -13,7 +13,6 @@ import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
-import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -58,19 +57,25 @@ public class DatePicker extends UIViewController {
         calendar.add(GregorianCalendar.DAY_OF_MONTH, 14);
         actionSheetDatePicker.getDatePicker()
                 .setMaximumDate(calendar.getTime());
-        btnChooseDate.addTarget(new EventListener() {
+        /*btnChooseDate.addTarget(new EventListener() {
 
             @Override
-            public void onEvent(Object object, int event) {
+            public void onEvent(NSObject object, UIEvent event) {
                 actionSheetDatePicker.show();
             }
-        }, UIControlEvent.TOUCH_UP_INSIDE);
+        }, UIControlEvent.TOUCH_UP_INSIDE);*/
+        btnChooseDate.addTarget(this, new Selector("handle_btnChooseDate"),
+                UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
         actionSheetTimerPicker = new ActionSheetDatePicker(view);
         actionSheetTimerPicker.setTitle("Choose Time:");
         actionSheetTimerPicker.getDatePicker().setMode(
                 UIDatePickerMode.COUNTDOWN_TIMER);
+    }
+
+    protected void handle_btnChooseDate() {
+        actionSheetDatePicker.show();
     }
 
     protected void handle_actionSheetDatePickerDatePickerValueChanged(

@@ -1,12 +1,13 @@
 package jos.samples.controls.screens.iphone;
 
+import jos.api.foundation.NSObject;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.EventListener;
 import com.google.j2objc.annotations.Outlet;
+import com.google.j2objc.annotations.Selector;
 
 public class DatePickerSimple extends UIViewController {
 
@@ -26,12 +27,18 @@ public class DatePickerSimple extends UIViewController {
 
         setTitle("Simple Date Picker");
 
-        pkrDate.addTarget(new EventListener() {
+        /*pkrDate.addTarget(new EventListener() {
             @Override
-            public void onEvent(Object object, int event) {
+            public void onEvent(NSObject object, UIEvent event) {
                 lblDate.setText(((UIDatePicker) object).getDate().toString());
             }
-        }, UIControlEvent.VALUE_CHANGED);
+        }, UIControlEvent.VALUE_CHANGED);*/
+        pkrDate.addTarget(this, new Selector("handle_pkrDate:"),
+                UIControlEvent.VALUE_CHANGED);
+    }
+
+    protected void handle_pkrDate(NSObject object) {
+        lblDate.setText(((UIDatePicker) object).getDate().toString());
     }
 
 }

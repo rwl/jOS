@@ -35,7 +35,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     public void layoutSubviews() {
         super.layoutSubviews();
         // resize the control
-        frame = makeRect(frame.point.x, frame.point.y, frame.size.width, 120);
+        setFrame(makeRect(frame.point.x, frame.point.y, frame.size.width, 120));
     }
 
     /**
@@ -83,6 +83,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
         });
     }
 
+    @Override
     public void setMessage(String message) {
         this.message = message;
     }

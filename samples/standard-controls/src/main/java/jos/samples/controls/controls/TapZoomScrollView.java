@@ -19,7 +19,7 @@ public class TapZoomScrollView extends UIScrollView {
         UITouch touch = (UITouch) touches.anyObject();
 
         if (touch.tapCount == 2) {
-            setZoomScale(zoomScale >= 2 ? 1 : 3, true);
+            setZoomScale(getZoomScale() >= 2 ? 1 : 3, true);
         }
     }
 

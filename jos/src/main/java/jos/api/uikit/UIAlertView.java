@@ -11,6 +11,8 @@ public class UIAlertView extends UIView {
 
     public UIAlertViewDelegate delegate;
 
+    public String message;
+
     @Export("initWithFrame:")
     public UIAlertView(CGRect frame) {
         super(frame);
@@ -42,6 +44,16 @@ public class UIAlertView extends UIView {
     @Export("setDelegate:")
     public void setDelegate(UIAlertViewDelegate delegate) {
         this.delegate = delegate;
+    }
+
+    @Export("message")
+    public String getMessage() {
+        return message;
+    }
+
+    @Export("setMessage:")
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

@@ -3,7 +3,9 @@ package jos.api.uikit;
 import jos.api.foundation.NSObject;
 
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
 
+@Register(isWrapper = true)
 public class UIActionSheet extends UIView {
 
     public UIActionSheetDelegate delegate;

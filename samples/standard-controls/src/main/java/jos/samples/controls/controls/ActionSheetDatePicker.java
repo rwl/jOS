@@ -1,6 +1,7 @@
 package jos.samples.controls.controls;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
 
 import com.google.j2objc.annotations.Selector;
 
@@ -19,7 +20,6 @@ import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
-
 
 /**
  * A class to show a date picker on an action sheet. To use, create a new
@@ -88,8 +88,8 @@ public class ActionSheetDatePicker extends NSObject {
     public void show() {
         // declare vars
         float titleBarHeight = 40;
-        CGSize doneButtonSize = new CGSize(71, 30);
-        CGSize actionSheetSize = new CGSize(owner.getFrame().size.width,
+        CGSize doneButtonSize = makeSize(71, 30);
+        CGSize actionSheetSize = makeSize(owner.getFrame().size.width,
                 datePicker.getFrame().size.height + titleBarHeight);
         CGRect actionSheetFrame = makeRect(0, owner.getFrame().size.height
                 - actionSheetSize.height, actionSheetSize.width,
@@ -103,8 +103,9 @@ public class ActionSheetDatePicker extends NSObject {
 
         // move our picker to be at the bottom of the actionsheet (view coords
         // are relative to the action sheet)
-        datePicker.setFrame(makeRect(datePicker.frame.point.x, titleBarHeight,
-                datePicker.frame.size.width, datePicker.frame.size.height));
+        datePicker.setFrame(makeRect(datePicker.getFrame().point.x,
+                titleBarHeight, datePicker.getFrame().size.width,
+                datePicker.getFrame().size.height));
 
         // move our label to the top of the action sheet
         titleLabel.setFrame(makeRect(10, 4, owner.frame.size.width - 100, 35));

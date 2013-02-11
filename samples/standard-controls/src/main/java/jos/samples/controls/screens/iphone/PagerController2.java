@@ -18,12 +18,12 @@ public class PagerController2 extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        view.setBackgroundColor(UIColor.LIGHT_GRAY);
+        getView().setBackgroundColor(UIColor.LIGHT_GRAY);
 
         lblMain = new UILabel(makeRect(20, 200, 280, 33));
         lblMain.setText("Controller 2");
         lblMain.setBackgroundColor(UIColor.CLEAR);
-        view.addSubview(lblMain);
+        getView().addSubview(lblMain);
     }
 
 }

@@ -32,7 +32,7 @@ public class TapToZoom extends UIViewController {
         scrollView = new TapZoomScrollView(
                 makeRect(0, 0, view.getFrame().size.width,
                         view.getFrame().size.height
-                                - navigationController.getNavigationBar()
+                                - getNavigationController().getNavigationBar()
                                         .getFrame().size.height));
         view.addSubview(scrollView);
 

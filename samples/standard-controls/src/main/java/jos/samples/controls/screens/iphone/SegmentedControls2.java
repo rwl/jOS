@@ -8,6 +8,7 @@ import jos.api.uikit.UISegmentedControlStyle;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
+import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -45,10 +46,11 @@ public class SegmentedControls2 extends UIViewController {
                         + " selected");
             }
         }, UIControlEvent.VALUE_CHANGED);*/
-        segControl1.addTarget(this, new Selector("handleSegmentedControl1"),
+        segControl1.addTarget(this, new Selector("handleSegmentedControl1:"),
                 UIControlEvent.VALUE_CHANGED);
     }
 
+    @Export("handleSegmentedControl1:")
     protected void handleSegmentedControl1(NSObject sender) {
         System.out.println("Item "
                 + ((UISegmentedControl) sender).selectedSegment

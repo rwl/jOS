@@ -30,11 +30,10 @@ public class ScrollView extends UIViewController {
         setTitle("Scroll View");
 
         // create our scroll view
-        scrollView = new UIScrollView(
-                makeRect(0, 0, view.getFrame().size.width,
-                        view.getFrame().size.height
-                                - navigationController.getNavigationBar()
-                                        .getFrame().size.height));
+        scrollView = new UIScrollView(makeRect(0, 0,
+                view.getFrame().size.width, view.getFrame().size.height
+                        - getNavigationController().getNavigationBar()
+                                .getFrame().size.height));
         view.addSubview(scrollView);
 
         // create our image view

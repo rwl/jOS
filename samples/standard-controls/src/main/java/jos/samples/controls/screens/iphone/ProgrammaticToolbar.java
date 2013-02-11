@@ -33,11 +33,11 @@ public class ProgrammaticToolbar extends UIViewController {
 
         // new up the toolbar
         float toolbarHeight = 44;
-        toolbar = new UIToolbar(makeRect(0, this.view.frame.size.height
-                - this.navigationController.navigationBar.frame.size.height,
-                this.view.frame.size.width, toolbarHeight));
-        toolbar.autoresizingMask = UIViewAutoresizing.FLEXIBLE_TOP_MARGIN
-                .mask() | UIViewAutoresizing.FLEXIBLE_WIDTH.mask();
+        toolbar = new UIToolbar(makeRect(0, view.getFrame().size.height
+                - getNavigationController().getNavigationBar().getFrame().size.height,
+                view.getFrame().size.width, toolbarHeight));
+        toolbar.setAutoresizingMask(UIViewAutoresizing.FLEXIBLE_TOP_MARGIN
+                .mask() | UIViewAutoresizing.FLEXIBLE_WIDTH.mask());
 
         // button one
         String buttonTitle = "One";

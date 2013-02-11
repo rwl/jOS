@@ -6,27 +6,27 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UIPickerView extends UIView {
 
-    public UIPickerViewModel source;
-    public UIPickerViewModel model;
+    public UIPickerViewDataSource dataSource;
+    public UIPickerViewDelegate delegate;
 
-    @Export("source")
-    public UIPickerViewModel getSource() {
-        return source;
+    @Export("dataSource")
+    public UIPickerViewDataSource getDataSource() {
+        return dataSource;
     }
 
-    @Export("setSource:")
-    public void setSource(UIPickerViewModel source) {
-        this.source = source;
+    @Export("setDataSource:")
+    public void setDataSource(UIPickerViewDataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
-    @Export("model")
-    public UIPickerViewModel getModel() {
-        return model;
+    @Export("delegate")
+    public UIPickerViewDelegate getDelegate() {
+        return delegate;
     }
 
-    @Export("setModel:")
-    public void setModel(UIPickerViewModel model) {
-        this.model = model;
+    @Export("setDelegate:")
+    public void setDelegate(UIPickerViewDelegate delegate) {
+        this.delegate = delegate;
     }
 
 }

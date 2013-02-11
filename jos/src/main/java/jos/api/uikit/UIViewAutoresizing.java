@@ -1,6 +1,7 @@
 package jos.api.uikit;
 
 import com.google.j2objc.annotations.Bind;
+import com.google.j2objc.annotations.Mask;
 import com.google.j2objc.annotations.Register;
 
 @Register(isWrapper = true, isPrimitive = true)
@@ -33,6 +34,7 @@ public enum UIViewAutoresizing {
         this.mask = mask;
     }
 
+    @Mask
     public int mask() {
         return mask;
     }

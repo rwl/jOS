@@ -20,7 +20,8 @@ public class TranslationTest extends TestCase {
                 "-sourcepath", System.getProperty("user.dir") + "/src/main/java",
                 "-classpath", System.getProperty("java.class.path"),
                 //"src/main/java/jos/samples/controls/AppDelegate.java",
-                "src/main/java/jos/samples/controls/screens/iphone/ButtonsScreen.java"
+                "src/main/java/jos/samples/controls/controls/ActionSheetDatePicker.java"
+                //"src/main/java/jos/samples/controls/screens/iphone/ButtonsScreen.java"
         });
     }
 

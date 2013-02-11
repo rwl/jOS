@@ -7,12 +7,12 @@ import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
-import jos.api.uikit.UIEvent;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
+import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -43,7 +43,7 @@ public class DatePicker extends UIViewController {
         datePicker = new ActionSheetDatePicker(view);
         datePicker.setTitle("Choose Date:");
         datePicker.getDatePicker().addTarget(this, new Selector(
-                "handle_actionSheetDatePickerDatePickerValueChanged"),
+                "handleActionSheetDatePickerValueChanged:"),
                 UIControlEvent.VALUE_CHANGED);
         datePicker.getDatePicker().setMode(UIDatePickerMode.DATE_AND_TIME);
         GregorianCalendar calendar = new GregorianCalendar();
@@ -57,7 +57,7 @@ public class DatePicker extends UIViewController {
                 datePicker.show();
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);*/
-        btnChooseDate.addTarget(this, new Selector("handle_btnChooseDate"),
+        btnChooseDate.addTarget(this, new Selector("handleBtnChooseDate"),
                 UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
@@ -66,12 +66,13 @@ public class DatePicker extends UIViewController {
         timerPicker.getDatePicker().setMode(UIDatePickerMode.COUNTDOWN_TIMER);
     }
 
-    protected void handle_actionSheetDatePickerDatePickerValueChanged(
-            NSObject sender, UIEvent e) {
+    @Export("handleActionSheetDatePickerValueChanged:")
+    protected void handleActionSheetDatePickerValueChanged(
+            NSObject sender) {
         this.lblDate.text = ((UIDatePicker) sender).date.toString();
     }
 
-    protected void handle_btnChooseDate() {
+    protected void handleBtnChooseDate() {
         datePicker.show();
     }
 

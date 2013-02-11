@@ -43,8 +43,7 @@ public class ActionSheets extends UIViewController {
                 UIControlEvent.TOUCH_UP_INSIDE);
     }
 
-    protected void handleBtnSimpleActionSheetTouchUpInside(NSObject sender,
-            UIEvent e) {
+    protected void handleBtnSimpleActionSheetTouchUpInside() {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
                 "delete");
@@ -57,8 +56,7 @@ public class ActionSheets extends UIViewController {
         actionSheet.showInView(view);
     }
 
-    protected void handleBtnActionSheetWithOtherButtonsTouchUpInside(
-            NSObject sender, UIEvent e) {
+    protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
         actionSheet = new UIActionSheet("action sheet with other buttons",
                 null, "", "");
         actionSheet.addButton("delete");

@@ -1,11 +1,9 @@
 package jos.samples.controls.screens.iphone;
 
-import jos.api.foundation.NSObject;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIAlertViewDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
-import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActivityIndicatorAlertView;
 
@@ -63,14 +61,13 @@ public class AlertViewsScreen extends UIViewController {
      * Runs when the simple alert button is clicked. launches a very simple
      * alert that presents an "OK" button, does not use a delegate
      */
-    protected void handleBtnSimpleAlertTouchUpInside(NSObject sender, UIEvent e) {
+    protected void handleBtnSimpleAlertTouchUpInside() {
         alert = new UIAlertView("alert title", "this is a simple alert.", null,
                 "OK");
         alert.show();
     }
 
-    protected void handleBtnCustomButtonsTouchUpInside(NSObject sender,
-            UIEvent e) {
+    protected void handleBtnCustomButtonsTouchUpInside() {
         alert = new UIAlertView("custom buttons alert",
                 "this alert has custom buttons", null, "ok", new String[] {
                         "custom button 1", "custom button 2" });
@@ -89,9 +86,7 @@ public class AlertViewsScreen extends UIViewController {
      * Runs when the Custom Buttons alert button is clicked. launches an alert
      * with additional buttons added
      */
-    protected void handleBtnCustomButtonsWithDelegateTouchUpInside(
-            NSObject sender, UIEvent e) {
-
+    protected void handleBtnCustomButtonsWithDelegateTouchUpInside() {
         alert = new UIAlertView("custom buttons alert",
                 "this alert has custom buttons",
                 new CustomButtonsAlertDelegate(), "ok", "custom button 1",
@@ -142,7 +137,7 @@ public class AlertViewsScreen extends UIViewController {
      * kicks off a secondary thread that spins for 5 seconds and then closes the
      * alert.
      */
-    protected void handleBtnCustomAlertTouchUpInside(Object sender, UIEvent e) {
+    protected void handleBtnCustomAlertTouchUpInside() {
         alert = new ActivityIndicatorAlertView();
         ((ActivityIndicatorAlertView) alert).setMessage("performing stuff");
         alert.show();

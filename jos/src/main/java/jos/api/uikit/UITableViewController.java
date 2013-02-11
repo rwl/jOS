@@ -2,11 +2,9 @@ package jos.api.uikit;
 
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Model;
 import com.google.j2objc.annotations.Register;
 
 @BaseType({ UITableViewDelegate.class, UITableViewDataSource.class })
-@Model
 @Register(isWrapper = true)
 public class UITableViewController extends UIViewController {
 

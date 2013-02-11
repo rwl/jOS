@@ -7,12 +7,12 @@ import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
-import jos.api.uikit.UIEvent;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
+import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
@@ -46,7 +46,7 @@ public class DatePicker extends UIViewController {
         actionSheetDatePicker.getDatePicker().addTarget(
                 this,
                 new Selector(
-                        "handle_actionSheetDatePickerDatePickerValueChanged"),
+                        "handle_actionSheetDatePickerDatePickerValueChanged:"),
                 UIControlEvent.VALUE_CHANGED);
         actionSheetDatePicker.getDatePicker().setMode(
                 UIDatePickerMode.DATE_AND_TIME);
@@ -78,8 +78,9 @@ public class DatePicker extends UIViewController {
         actionSheetDatePicker.show();
     }
 
+    @Export("handle_actionSheetDatePickerDatePickerValueChanged:")
     protected void handle_actionSheetDatePickerDatePickerValueChanged(
-            NSObject sender, UIEvent e) {
+            NSObject sender) {
         lblDate.setText(((UIDatePicker) sender).date.toString());
     }
 

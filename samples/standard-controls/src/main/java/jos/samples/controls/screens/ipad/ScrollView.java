@@ -13,10 +13,10 @@ public class ScrollView extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        view.setBackgroundColor(UIColor.WHITE);
+        getView().setBackgroundColor(UIColor.WHITE);
 
-        scrollView = new UIScrollView(view.getFrame());
-        view.addSubview(scrollView);
+        scrollView = new UIScrollView(getView().getFrame());
+        getView().addSubview(scrollView);
     }
 
 }

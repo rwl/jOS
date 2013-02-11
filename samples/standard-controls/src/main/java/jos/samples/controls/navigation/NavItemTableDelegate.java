@@ -28,13 +28,13 @@ public class NavItemTableDelegate extends UITableViewDelegate {
     @Override
     public void rowSelected(UITableView tableView, NSIndexPath indexPath) {
         // get a reference to the nav item
-        NavItem navItem = navItems.get(indexPath.section).getItems().get(indexPath.row);
+        NavItem navItem = navItems.get(indexPath.getSection()).getItems().get(indexPath.getRow());
 
         // if the nav item has a proper controller, push it on to the NavigationController
         if (navItem.getController() != null) {
             navigationController.pushViewController(navItem.getController(), true);
             // show the nav bar (we don't show it on the home page)
-            navigationController.navigationBarHidden = false;
+            navigationController.setNavigationBarHidden(false);
         } else {
             if (navItem.getControllerType() != null) {
                 Constructor<? extends UIViewController> ctor = null;
@@ -63,10 +63,10 @@ public class NavItemTableDelegate extends UITableViewDelegate {
                         // push the view controller onto the stack
                         navigationController.pushViewController(navItem.getController(), true);
                     } else {
-                        System.err.println("instance of view controller not created");
+                        System.out.println("instance of view controller not created");
                     }
                 } else {
-                    System.err.println("constructor not found");
+                    System.out.println("constructor not found");
                 }
             }
         }

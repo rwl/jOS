@@ -17,18 +17,22 @@ public class IPadHomeNavController extends UITableViewController {
 
     private NavItemTableDelegate tableDelegate;
 
+    public IPadHomeNavController() {
+        super();
+    }
+
     @Override
     public void viewWillAppear(boolean animated) {
         super.viewWillAppear(animated);
         // hide the nav bar when this controller appears
-        navigationController.setNavigationBarHidden(true, true);
+        getNavigationController().setNavigationBarHidden(true, true);
     }
 
     @Override
     public void viewWillDisappear(boolean animated) {
         super.viewWillDisappear(animated);
         // show the nav bar when other controllers appear
-        navigationController.setNavigationBarHidden(false, true);
+        getNavigationController().setNavigationBarHidden(false, true);
     }
 
     @Override
@@ -52,11 +56,11 @@ public class IPadHomeNavController extends UITableViewController {
 
         // create a table source from our nav items
         tableSource = new NavItemTableDataSource(navItems);
-        tableDelegate = new NavItemTableDelegate(navigationController, navItems);
+        tableDelegate = new NavItemTableDelegate(getNavigationController(), navItems);
 
         // set the source on the table to our data source
-        tableView.setDataSource(tableSource);
-        tableView.setTableViewDelegate(tableDelegate);
+        getTableView().setDataSource(tableSource);
+        getTableView().setTableViewDelegate(tableDelegate);
     }
 
 }

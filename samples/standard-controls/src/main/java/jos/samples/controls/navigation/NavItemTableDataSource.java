@@ -62,12 +62,12 @@ public class NavItemTableDataSource extends UITableViewDataSource {
         UITableViewCell cell = tableView.dequeueReusableCell(CELL_IDENTIFIER);
         if (cell == null) {
             cell = new UITableViewCell(UITableViewCellStyle.DEFAULT, CELL_IDENTIFIER);
-            cell.tag = (int) System.currentTimeMillis();
+            cell.setTag((int) System.currentTimeMillis());
         }
 
         // set the cell properties
-        cell.textLabel.text = navItems.get(indexPath.section).getItems().get(indexPath.row).getName();
-        cell.accessory = UITableViewCellAccessoryType.DISCLOSURE_INDICATOR;
+        cell.getTextLabel().setText(navItems.get(indexPath.section).getItems().get(indexPath.getRow()).getName());
+        cell.setAccessory(UITableViewCellAccessoryType.DISCLOSURE_INDICATOR);
 
         // return the cell
         return cell;

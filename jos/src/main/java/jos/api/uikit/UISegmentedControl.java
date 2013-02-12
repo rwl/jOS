@@ -8,7 +8,7 @@ public class UISegmentedControl extends UIControl {
 
     public UISegmentedControlStyle controlStyle;
 
-    public int selectedSegment;
+    public int selectedSegmentIndex;
 
     @Export("insertSegmentWithTitle:atIndex:animated:")
     public void insertSegment(String title, int pos, boolean animated) {
@@ -28,14 +28,14 @@ public class UISegmentedControl extends UIControl {
         this.controlStyle = controlStyle;
     }
 
-    @Export("selectedSegment")
-    public int getSelectedSegment() {
-        return selectedSegment;
+    @Export("selectedSegmentIndex")
+    public int getSelectedSegmentIndex() {
+        return selectedSegmentIndex;
     }
 
-    @Export("setSelectedSegment:")
-    public void setSelectedSegment(int selectedSegment) {
-        this.selectedSegment = selectedSegment;
+    @Export("setSelectedSegmentIndex:")
+    public void setSelectedSegmentIndex(int selectedSegment) {
+        this.selectedSegmentIndex = selectedSegment;
     }
 
 }

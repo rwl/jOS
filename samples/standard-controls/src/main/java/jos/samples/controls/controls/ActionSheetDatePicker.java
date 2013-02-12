@@ -102,7 +102,7 @@ public class ActionSheetDatePicker extends NSObject {
 
         // move our picker to be at the bottom of the actionsheet (view coords
         // are relative to the action sheet)
-        datePicker.setFrame(makeRect(datePicker.getFrame().point.x,
+        datePicker.setFrame(makeRect(datePicker.getFrame().origin.x,
                 titleBarHeight, datePicker.getFrame().size.width,
                 datePicker.getFrame().size.height));
 

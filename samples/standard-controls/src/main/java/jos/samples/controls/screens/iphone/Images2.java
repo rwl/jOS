@@ -30,9 +30,10 @@ public class Images2 extends UIViewController {
         // a simple image
         imageView1 = new UIImageView(
                 UIImage.fromBundle("images/icons/50_icon.png"));
-        imageView1.setFrame(makeRect(20, 20,
-                imageView1.getImage().getImage().width, imageView1.getImage()
-                        .getImage().height));
+// FIXME: CGImage pointer error
+//        imageView1.setFrame(makeRect(20, 20,
+//                imageView1.getImage().CGImage.width, imageView1.getImage()
+//                        .CGImage.height));
         view.addSubview(imageView1);
 
         // an animating image

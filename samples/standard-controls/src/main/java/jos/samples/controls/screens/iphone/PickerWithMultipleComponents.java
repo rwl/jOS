@@ -86,17 +86,17 @@ public class PickerWithMultipleComponents extends UIViewController {
          * particular spinner item.
          */
         @Override
-        public String getTitle(UIPickerView picker, int row, int component) {
-            return items.get(component).get(row);
+        public String getRowTitle(UIPickerView picker, int row, int component) {
+            return "";//items.get(component).get(row);  FIXME: 'component' argument not generated
         }
 
         /**
          * Called when a row is selected in the spinner
          */
         @Override
-        public void selected(UIPickerView picker, int row, int component) {
+        public void selectedRow(UIPickerView picker, int row, int component) {
             if (this.delegate != null) {
-                this.delegate.onValueChanged(getTitle(picker, row, component));
+                //this.delegate.onValueChanged(getRowTitle(picker, row, component));  FIXME: 'component' argument not generated
             }
         }
 

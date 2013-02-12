@@ -1,7 +1,6 @@
 package jos.samples.controls.controls;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
-import jos.api.foundation.NSAction;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.uikit.UIActivityIndicatorView;
 import jos.api.uikit.UIActivityIndicatorViewStyle;
@@ -35,7 +34,7 @@ public class ActivityIndicatorAlertView extends UIAlertView {
     public void layoutSubviews() {
         super.layoutSubviews();
         // resize the control
-        setFrame(makeRect(frame.point.x, frame.point.y, frame.size.width, 120));
+        setFrame(makeRect(getFrame().origin.x, getFrame().origin.y, getFrame().size.width, 120));
     }
 
     /**
@@ -75,12 +74,13 @@ public class ActivityIndicatorAlertView extends UIAlertView {
      * case it's called from a worker thread.
      */
     public void hide(final boolean animated) {
-        this.invokeOnMainThread(new NSAction() {
+        /*this.invokeOnMainThread(new NSAction() {
             @Override
             public void action() {
                 dismissWithClickedButtonIndex(0, animated);
             }
-        });
+        });*/
+        dismissWithClickedButtonIndex(0, animated);
     }
 
     @Override

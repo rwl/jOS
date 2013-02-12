@@ -87,7 +87,7 @@ public class PickerView1 extends UIViewController {
          * particular spinner item
          */
         @Override
-        public String getTitle(UIPickerView picker, int row, int component) {
+        public String getRowTitle(UIPickerView picker, int row, int component) {
             return items.get(row);
         }
 
@@ -95,7 +95,7 @@ public class PickerView1 extends UIViewController {
          * Called when a row is selected in the spinner
          */
         @Override
-        public void selected(UIPickerView picker, int row, int component) {
+        public void selectedRow(UIPickerView picker, int row, int component) {
             selectedIndex = row;
             if (this.delegate != null) {
                 this.delegate.onValueChanged(this);

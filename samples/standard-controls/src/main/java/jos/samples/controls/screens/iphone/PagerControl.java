@@ -1,13 +1,13 @@
 package jos.samples.controls.screens.iphone;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
-import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIPageControl;
 import jos.api.uikit.UIScrollView;
@@ -100,7 +100,7 @@ public class PagerControl extends UIViewController {
             // set their location and size, each one is moved to the
             // right by the width of the previous
             CGRect viewFrame = makeRect(scrlMain.getFrame().size.width * i,
-                    scrlMain.getFrame().point.y,
+                    scrlMain.getFrame().origin.y,
                     scrlMain.getFrame().size.width,
                     scrlMain.getFrame().size.height);
             controllers.get(i).getView().setFrame(viewFrame);
@@ -111,7 +111,7 @@ public class PagerControl extends UIViewController {
 
         // set our scroll view content size (width = number of pages * scroll
         // view width)
-        scrlMain.setContentSize(new CGSize(scrlMain.getFrame().size.width
+        scrlMain.setContentSize(makeSize(scrlMain.getFrame().size.width
                 * controllers.size(), scrlMain.getFrame().size.height));
     }
 

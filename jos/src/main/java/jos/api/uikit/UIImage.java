@@ -4,7 +4,7 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 
 import jos.api.foundation.NSObject;
-import jos.api.graphicsimaging.CGImage;
+import jos.api.graphicsimaging.CGImageRef;
 import jos.api.graphicsimaging.CGSize;
 
 @Register(isWrapper = true)
@@ -20,11 +20,11 @@ public class UIImage extends NSObject {
         return null;
     }
 
-    public CGImage CGImage;
+    public CGImageRef CGImage;
     public CGSize size;
 
     @Export("CGImage")
-    public CGImage getImage() {
+    public CGImageRef getImage() {
         return CGImage;
     }
 

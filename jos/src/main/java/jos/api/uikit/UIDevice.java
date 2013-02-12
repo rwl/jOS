@@ -1,9 +1,11 @@
 package jos.api.uikit;
 
-import com.google.j2objc.annotations.Export;
-
 import jos.api.foundation.NSObject;
 
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
+
+@Register(isWrapper = true)
 public class UIDevice extends NSObject {
 
     public static UIDevice currentDevice;

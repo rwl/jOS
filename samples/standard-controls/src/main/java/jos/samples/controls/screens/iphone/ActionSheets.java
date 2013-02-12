@@ -1,11 +1,9 @@
 package jos.samples.controls.screens.iphone;
 
-import jos.api.foundation.NSObject;
 import jos.api.uikit.UIActionSheet;
 import jos.api.uikit.UIActionSheetDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
-import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
@@ -46,7 +44,7 @@ public class ActionSheets extends UIViewController {
     protected void handleBtnSimpleActionSheetTouchUpInside() {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
-                "delete");
+                "delete", null);
         actionSheet.setDelegate(new UIActionSheetDelegate() {
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
@@ -58,7 +56,7 @@ public class ActionSheets extends UIViewController {
 
     protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
         actionSheet = new UIActionSheet("action sheet with other buttons",
-                null, "", "");
+                null, "", "", null);
         actionSheet.addButton("delete");
         actionSheet.addButton("cancel");
         actionSheet.addButton("a different option!");

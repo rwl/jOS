@@ -10,13 +10,13 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class DatePickerSimple extends UIViewController {
+public class IPadDatePickerSimple extends UIViewController {
 
     @Outlet UILabel lblDate;
 
     @Outlet UIDatePicker pkrDate;
 
-    public DatePickerSimple() {
+    public IPadDatePickerSimple() {
         super("DatePickerSimple_iPad", null);
     }
 

@@ -12,11 +12,33 @@
 		<plugins>
 			<plugin>
 				<groupId>jos</groupId>
-				<artifactId>jos-maven-plugin</artifactId>
+				<artifactId>j2objc-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<configuration>
-					<ignoreMissingImports>true</ignoreMissingImports>
+					<prefix>jos.samples.controls=SC</prefix>
+					<!-- <verbose>true</verbose>
+					<useARC>true</useARC> -->
+					<noPackageDirectories>true</noPackageDirectories>
+					<outputDirectory>${basedir}/src/xcode</outputDirectory>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>jos</groupId>
+				<artifactId>ios-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<configuration>
+					<name>Controls</name>
+					<sourceDirectory>${basedir}/src/xcode</sourceDirectory>
+					<libraries>
+						<library>${basedir}/../hello-world/lib/libjre_emul.a</library>
+					</libraries>
+					<includes>
+						<include>${basedir}/../hello-world/include</include>
+					</includes>
+					<delegateClassName>SCAppDelegate</delegateClassName>
+				</configuration>
+				<!--declare that this plugin contributes the component extensions
+				<extensions>true</extensions> -->
 			</plugin>
 		</plugins>
 	</build>

@@ -10,7 +10,7 @@ import jos.api.uikit.UIViewController;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class ActionSheets extends UIViewController {
+public class IPadActionSheets extends UIViewController {
 
     @Outlet
     UIView view;
@@ -23,7 +23,7 @@ public class ActionSheets extends UIViewController {
 
     UIActionSheet actionSheet;
 
-    public ActionSheets() {
+    public IPadActionSheets() {
         super("ActionSheets_iPad", null);
     }
 
@@ -43,7 +43,7 @@ public class ActionSheets extends UIViewController {
     protected void handleBtnSimpleActionSheetTouchUpInside() {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
-                "delete");
+                "delete", null);
         actionSheet.setDelegate(new UIActionSheetDelegate() {
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
@@ -55,7 +55,7 @@ public class ActionSheets extends UIViewController {
 
     protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
         actionSheet = new UIActionSheet("action sheet with other buttons",
-                null, "", "");
+                null, "", "", null);
         actionSheet.addButton("delete");
         actionSheet.addButton("a different option!");
         actionSheet.addButton("another option");

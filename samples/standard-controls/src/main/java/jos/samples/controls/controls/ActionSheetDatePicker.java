@@ -2,9 +2,6 @@ package jos.samples.controls.controls;
 
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import static jos.api.graphicsimaging.CGGeometry.makeSize;
-
-import com.google.j2objc.annotations.Selector;
-
 import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
@@ -20,6 +17,8 @@ import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UILabel;
 import jos.api.uikit.UIView;
+
+import com.google.j2objc.annotations.Selector;
 
 /**
  * A class to show a date picker on an action sheet. To use, create a new
@@ -63,7 +62,7 @@ public class ActionSheetDatePicker extends NSObject {
                 UIControlEvent.TOUCH_UP_INSIDE);
 
         // create + configure the action sheet
-        actionSheet = new UIActionSheet("", null, "", "");
+        actionSheet = new UIActionSheet("", null, "", "", null);
         actionSheet.setStyle(UIActionSheetStyle.BLACK_TRANSLUCENT);
         actionSheet.setDelegate(new UIActionSheetDelegate() {
             @Override

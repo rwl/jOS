@@ -16,7 +16,7 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
-public class DatePicker extends UIViewController {
+public class IPadDatePicker extends UIViewController {
 
     @Outlet
     UIView view;
@@ -30,7 +30,7 @@ public class DatePicker extends UIViewController {
     ActionSheetDatePicker actionSheetDatePicker;
     ActionSheetDatePicker actionSheetTimerPicker;
 
-    public DatePicker() {
+    public IPadDatePicker() {
         super("ActionSheetDatePicker_iPad", null);
     }
 

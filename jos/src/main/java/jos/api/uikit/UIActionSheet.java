@@ -14,11 +14,11 @@ public class UIActionSheet extends UIView {
 
     public int cancelButtonIndex;
 
-    public UIActionSheetStyle style;
+    public UIActionSheetStyle actionSheetStyle;
 
     @Export("initWithTitle:delegate:cancelButtonTitle:destructiveButtonTitle:otherButtonTitles:")
     public UIActionSheet(String title, NSObject delegate, String cancelButtonTitle,
-            String destructiveButtonTitle, String... otherButtonTitles) {
+            String destructiveButtonTitle, String otherButtonTitles) {
     }
 
     @Export("showInView:")
@@ -64,14 +64,14 @@ public class UIActionSheet extends UIView {
         this.cancelButtonIndex = cancelButtonIndex;
     }
 
-    @Export("style")
+    @Export("actionSheetStyle")
     public UIActionSheetStyle getStyle() {
-        return style;
+        return actionSheetStyle;
     }
 
-    @Export("setStyle:")
-    public void setStyle(UIActionSheetStyle style) {
-        this.style = style;
+    @Export("setActionSheetStyle:")
+    public void setStyle(UIActionSheetStyle actionSheetStyle) {
+        this.actionSheetStyle = actionSheetStyle;
     }
 
 }

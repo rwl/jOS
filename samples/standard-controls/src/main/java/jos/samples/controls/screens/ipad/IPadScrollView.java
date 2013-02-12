@@ -4,7 +4,7 @@ import jos.api.uikit.UIColor;
 import jos.api.uikit.UIScrollView;
 import jos.api.uikit.UIViewController;
 
-public class ScrollView extends UIViewController {
+public class IPadScrollView extends UIViewController {
 
     UIScrollView scrollView;
 

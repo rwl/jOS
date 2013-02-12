@@ -34,12 +34,12 @@ public class DatePickerSimple extends UIViewController {
                 lblDate.setText(((UIDatePicker) object).getDate().toString());
             }
         }, UIControlEvent.VALUE_CHANGED);*/
-        pkrDate.addTarget(this, new Selector("handle_pkrDate:"),
+        pkrDate.addTarget(this, new Selector("handlePkrDate:"),
                 UIControlEvent.VALUE_CHANGED);
     }
 
-    @Export("handle_pkrDate:")
-    protected void handle_pkrDate(NSObject object) {
+    @Export("handlePkrDate:")
+    protected void handlePkrDate(NSObject object) {
         lblDate.setText(((UIDatePicker) object).getDate().toString());
     }
 

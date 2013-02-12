@@ -46,7 +46,7 @@ public class IPadDatePicker extends UIViewController {
         actionSheetDatePicker.getDatePicker().addTarget(
                 this,
                 new Selector(
-                        "handle_actionSheetDatePickerDatePickerValueChanged:"),
+                        "handleActionSheetDatePickerValueChanged:"),
                 UIControlEvent.VALUE_CHANGED);
         actionSheetDatePicker.getDatePicker().setMode(
                 UIDatePickerMode.DATE_AND_TIME);
@@ -78,8 +78,8 @@ public class IPadDatePicker extends UIViewController {
         actionSheetDatePicker.show();
     }
 
-    @Export("handle_actionSheetDatePickerDatePickerValueChanged:")
-    protected void handle_actionSheetDatePickerDatePickerValueChanged(
+    @Export("handleActionSheetDatePickerValueChanged:")
+    protected void handleActionSheetDatePickerValueChanged(
             NSObject sender) {
         lblDate.setText(((UIDatePicker) sender).date.toString());
     }

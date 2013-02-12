@@ -79,7 +79,9 @@ public class Builder {
                     }
 
                     // Assemble fat binary.
-                    logger.info("Assembling " + obj.getAbsolutePath());
+                    if (archs.size() > 1) {
+                    	logger.info("Assembling " + obj.getAbsolutePath());
+                    }
                     sh(ImmutableList.<String>builder()
                             .add("/usr/bin/lipo")
                             .add("-create")

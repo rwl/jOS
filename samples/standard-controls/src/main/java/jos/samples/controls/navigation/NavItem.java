@@ -24,6 +24,12 @@ public class NavItem {
      */
     private final Class<? extends UIViewController> controllerType;
 
+    public NavItem (String name, UIViewController controller) {
+        this.name = name;
+        this.controller = controller;
+        this.controllerType = null;
+    }
+
     public NavItem (String name, Class<? extends UIViewController> controllerType) {
         this.name = name;
         this.controller = null;

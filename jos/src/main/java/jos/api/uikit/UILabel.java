@@ -13,9 +13,9 @@ public class UILabel extends UIView {
     public UIColor textColor;
     public UIFont font;
     public boolean adjustsFontSizeToFitWidth;
-    public int minimumFontSize;
+    public float minimumFontSize;
     public NSLineBreakMode lineBreakMode;
-    public int lines;
+    public int numberOfLines;
 
     @Export("initWithFrame:")
     public UILabel(CGRect frame) {
@@ -77,12 +77,12 @@ public class UILabel extends UIView {
     }
 
     @Export("minimumFontSize")
-    public int getMinimumFontSize() {
+    public float getMinimumFontSize() {
         return minimumFontSize;
     }
 
     @Export("setMinimumFontSize:")
-    public void setMinimumFontSize(int minimumFontSize) {
+    public void setMinimumFontSize(float minimumFontSize) {
         this.minimumFontSize = minimumFontSize;
     }
 
@@ -96,14 +96,14 @@ public class UILabel extends UIView {
         this.lineBreakMode = lineBreakMode;
     }
 
-    @Export("lines")
-    public int getLines() {
-        return lines;
+    @Export("numberOfLines")
+    public int getNumberOfLines() {
+        return numberOfLines;
     }
 
-    @Export("setLines:")
-    public void setLines(int lines) {
-        this.lines = lines;
+    @Export("setNumberOfLines:")
+    public void setNumberOfLines(int lines) {
+        this.numberOfLines = lines;
     }
 
 }

@@ -23,7 +23,7 @@ public class Sliders extends UIViewController {
         setTitle("Sliders");
 
         sldrWithImages.setThumbImage(
-                UIImage.fromFile("images/icons/29_icon.png"),
+                UIImage.fromFile("images/icons/icon-29.png"),
                 UIControlState.NORMAL);
     }
 

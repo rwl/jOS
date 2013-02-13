@@ -29,7 +29,7 @@ public class Images2 extends UIViewController {
 
         // a simple image
         imageView1 = new UIImageView(
-                UIImage.fromBundle("images/icons/50_icon.png"));
+                UIImage.fromBundle("images/icons/icon-50.png"));
 // FIXME: CGImage pointer error
 //        imageView1.setFrame(makeRect(20, 20,
 //                imageView1.getImage().CGImage.width, imageView1.getImage()

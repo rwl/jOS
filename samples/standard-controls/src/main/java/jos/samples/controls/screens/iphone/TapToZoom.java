@@ -38,7 +38,7 @@ public class TapToZoom extends UIViewController {
 
         // create our image view
         imageView = new UIImageView(
-                UIImage.fromFile("images/icons/512_icon.png"));
+                UIImage.fromFile("images/icons/icon-512.png"));
         scrollView.setContentSize(imageView.getImage().getSize());
         scrollView.setMaximumZoomScale(3f);
         scrollView.setMinimumZoomScale(.1f);

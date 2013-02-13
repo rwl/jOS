@@ -66,8 +66,8 @@ public class NavItemTableDataSource extends UITableViewDataSource {
         }
 
         // set the cell properties
-        cell.getTextLabel().setText(navItems.get(indexPath.section).getItems().get(indexPath.getRow()).getName());
-        cell.setAccessory(UITableViewCellAccessoryType.DISCLOSURE_INDICATOR);
+        cell.getTextLabel().setText(navItems.get(indexPath.getSection()).getItems().get(indexPath.getRow()).getName());
+        cell.setAccessoryType(UITableViewCellAccessoryType.DISCLOSURE_INDICATOR);
 
         // return the cell
         return cell;

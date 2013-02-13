@@ -1,14 +1,14 @@
 package jos.api.uikit;
 
+import jos.api.graphicsimaging.CGRect;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
-
-import jos.api.graphicsimaging.CGRect;
 
 @Register(isWrapper = true)
 public class UITableViewCell extends UIView {
 
-    public UITableViewCellAccessoryType accessory;
+    public UITableViewCellAccessoryType accessoryType;
     public UILabel textLabel;
 
     @Export("initWithFrame:")
@@ -20,14 +20,14 @@ public class UITableViewCell extends UIView {
     public UITableViewCell(UITableViewCellStyle style, String reuseIdentifier) {
     }
 
-    @Export("accessory")
-    public UITableViewCellAccessoryType getAccessory() {
-        return accessory;
+    @Export("accessoryType")
+    public UITableViewCellAccessoryType getAccessoryType() {
+        return accessoryType;
     }
 
-    @Export("setAccessory:")
-    public void setAccessory(UITableViewCellAccessoryType accessory) {
-        this.accessory = accessory;
+    @Export("setAccessoryType:")
+    public void setAccessoryType(UITableViewCellAccessoryType accessory) {
+        this.accessoryType = accessory;
     }
 
     @Export("textLabel")

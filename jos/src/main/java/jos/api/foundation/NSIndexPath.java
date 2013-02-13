@@ -58,16 +58,16 @@ public class NSIndexPath {
 
     /* UITableView */
 
-    @Export("section")
     public int section;
 
+    @Export("section")
     public int getSection() {
         return this.section;
     }
 
-    @Export("row")
     public int row;
 
+    @Export("row")
     public int getRow() {
         return this.row;
     }

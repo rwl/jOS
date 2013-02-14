@@ -317,8 +317,7 @@ public class Builder {
                     logger.severe("Cannot use '" + resPath + "' as a resource file because it's a reserved application bundle file");
                     throw new BuildError();
                 }
-                final File destPath = new File(bundlePath, resPath.getAbsolutePath()
-                		.substring(config.getResourcesDir().getAbsolutePath().length()));
+                final File destPath = new File(bundlePath, resPath.getName());
                 if (!destPath.exists() || resPath.lastModified() > destPath.lastModified()) {
                     destPath.getParentFile().mkdirs();
                     logger.info("Copying " + resPath);

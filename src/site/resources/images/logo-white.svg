@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1500"
+   height="1500"
+   id="svg3075"
+   version="1.1"
+   inkscape:version="0.48.3.1 r9886"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/rwl/java/jOS/jos/samples/standard-controls/src/main/resources/icon-512.png"
+   inkscape:export-xdpi="30.719999"
+   inkscape:export-ydpi="30.719999">
+  <defs
+     id="defs3077">
+    <linearGradient
+       id="linearGradient3867">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0.73076922;"
+         offset="0"
+         id="stop3869" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3871" />
+    </linearGradient>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.24748737"
+     inkscape:cx="725.41114"
+     inkscape:cy="775.37252"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="500"
+     fit-margin-left="500"
+     fit-margin-right="500"
+     fit-margin-bottom="500"
+     inkscape:window-width="2048"
+     inkscape:window-height="1512"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3080">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(889.09337,-36.30609)">
+    <rect
+       style="fill:#000000;fill-opacity:1;stroke:none"
+       id="rect4109"
+       width="1500"
+       height="1500"
+       x="-889.09338"
+       y="36.306091"
+       ry="0" />
+    <g
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       id="text3027"
+       transform="matrix(12.010638,0,0,12.098079,-2839.8605,-3338.613)" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none"
+       d="m -813.9594,286.30609 c -41.63324,0 -75.13395,33.35418 -75.13395,74.76721 l 0,850.4962 c 0,41.413 33.50071,74.7366 75.13395,74.7366 l 1349.73212,0 c 41.6333,0 75.1339,-33.3236 75.1339,-74.7366 l 0,-850.4962 c 0,-41.41303 -33.5006,-74.76721 -75.1339,-74.76721 l -1349.73212,0 z m 84.61806,48.51752 1178.5252,0 c 9.09865,0 16.41241,7.27513 16.41241,16.32566 l 0,874.26483 c 0,9.0506 -7.31376,16.3257 -16.41241,16.3257 l -1178.5252,0 c -9.09864,0 -16.41245,-7.2751 -16.41245,-16.3257 l 0,-874.26483 c 0,-9.05053 7.31381,-16.32566 16.41245,-16.32566 z"
+       id="rect3148"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/rwl/java/jOS/jos/src/site/resources/images/icon-512-white.png"
+       inkscape:export-xdpi="30.719999"
+       inkscape:export-ydpi="30.719999" />
+    <text
+       xml:space="preserve"
+       style="font-size:358.96917724999997290px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       x="-484.04318"
+       y="1005.871"
+       id="text2985"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/rwl/java/jOS/jos/src/site/resources/images/icon-512-white.png"
+       inkscape:export-xdpi="30.719999"
+       inkscape:export-ydpi="30.719999"><tspan
+         sodipodi:role="line"
+         id="tspan2987"
+         x="-484.04318"
+         y="1005.871"
+         style="font-size:646.14459228999999141px;font-weight:bold;-inkscape-font-specification:Ubuntu Bold;fill:#ffffff">OS</tspan></text>
+    <g
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       id="text3039"
+       transform="matrix(8.9742302,0,0,8.9742302,-2958.7108,-2105.3599)"
+       inkscape:export-filename="/home/rwl/java/jOS/jos/src/site/resources/images/icon-512-white.png"
+       inkscape:export-xdpi="30.719999"
+       inkscape:export-ydpi="30.719999">
+      <path
+         d="m 258.23906,361.74986 c -0.576,-2e-5 -1.32,-0.072 -2.232,-0.216 -0.912,-0.14401 -1.68,-0.33601 -2.304,-0.576 l 0.864,-5.472 c 0.48,0.14399 1.032,0.26399 1.656,0.36 0.624,0.096 1.2,0.14399 1.728,0.144 2.304,-1e-5 3.936,-0.72001 4.896,-2.16 1.00799,-1.39201 1.51199,-3.456 1.512,-6.192 l 0,-0.11084 6.696,0 0,0.0388 c 0,4.79999 -1.10401,8.35199 -3.312,10.656 -2.16001,2.35199 -5.328,3.52798 -9.504,3.528"
+         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Ubuntu"
+         id="path3046"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="cccccccsccscc" />
+    </g>
+    <path
+       d="m -586.2917,1014.4223 0,-310.3603 60.09144,0 0,309.753"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       id="path3049"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccc"
+       inkscape:export-filename="/home/rwl/java/jOS/jos/src/site/resources/images/icon-512-white.png"
+       inkscape:export-xdpi="30.719999"
+       inkscape:export-ydpi="30.719999" />
+    <g
+       id="g3073"
+       style="font-size:40px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
+       transform="matrix(8.9742302,0,0,8.9742302,-2958.7108,-2067.4114)"
+       inkscape:export-filename="/home/rwl/java/jOS/jos/src/site/resources/images/icon-512-white.png"
+       inkscape:export-xdpi="30.719999"
+       inkscape:export-ydpi="30.719999">
+      <path
+         sodipodi:nodetypes="ccscccccc"
+         inkscape:connector-curvature="0"
+         id="path3075"
+         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Ubuntu"
+         d="m 267.67106,304.07782 c -1.20001,4e-5 -2.23201,-0.38396 -3.096,-1.152 -0.81601,-0.81596 -1.224,-1.89595 -1.224,-3.24 0,-1.34395 0.40799,-2.39995 1.224,-3.168 0.86399,-0.81595 1.89599,-1.22395 3.096,-1.224 1.19999,5e-5 2.20799,0.40805 3.024,1.224 0.86399,0.76805 1.29599,1.82405 1.296,3.168 -1e-5,1.34405 -0.43201,2.42404 -1.296,3.24 -0.81601,0.76804 -1.82401,1.15204 -3.024,1.152" />
+      <path
+         d="m 267.67106,304.07782 c -1.20001,4e-5 -2.23201,-0.38396 -3.096,-1.152 -0.81601,-0.81596 -1.224,-1.89595 -1.224,-3.24 0,-1.34395 0.40799,-2.39995 1.224,-3.168 0.86399,-0.81595 1.89599,-1.22395 3.096,-1.224 1.19999,5e-5 2.20799,0.40805 3.024,1.224 0.86399,0.76805 1.29599,1.82405 1.296,3.168 -1e-5,1.34405 -0.43201,2.42404 -1.296,3.24 -0.81601,0.76804 -1.82401,1.15204 -3.024,1.152"
+         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Ubuntu"
+         id="path3077"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccscccccc" />
+      <path
+         sodipodi:nodetypes="ccscccccc"
+         inkscape:connector-curvature="0"
+         id="path3079"
+         style="font-style:normal;font-weight:normal;fill:#ffffff;fill-opacity:1;-inkscape-font-specification:Ubuntu"
+         d="m 267.67106,304.07782 c -1.20001,4e-5 -2.23201,-0.38396 -3.096,-1.152 -0.81601,-0.81596 -1.224,-1.89595 -1.224,-3.24 0,-1.34395 0.40799,-2.39995 1.224,-3.168 0.86399,-0.81595 1.89599,-1.22395 3.096,-1.224 1.19999,5e-5 2.20799,0.40805 3.024,1.224 0.86399,0.76805 1.29599,1.82405 1.296,3.168 -1e-5,1.34405 -0.43201,2.42404 -1.296,3.24 -0.81601,0.76804 -1.82401,1.15204 -3.024,1.152" />
+    </g>
+  </g>
+</svg>

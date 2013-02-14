@@ -6,12 +6,10 @@ import static jos.api.graphicsimaging.CGGeometry.makeSize;
 import java.util.ArrayList;
 import java.util.List;
 
-import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIPageControl;
 import jos.api.uikit.UIScrollView;
-import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
@@ -43,14 +41,14 @@ public class PagerControl extends UIViewController {
         setTitle("Pager Control");
 
         // wire up our pager and scroll view event handlers
-        pgrMain.addTarget(this, new Selector("handlePgrMainValueChanged:"),
+        pgrMain.addTarget(this, new Selector("handlePgrMainValueChanged"),
                 UIControlEvent.VALUE_CHANGED);
-        scrlMain.setDelegate(new UIScrollViewDelegate() {
+        /*scrlMain.setDelegate(new UIScrollViewDelegate() { // FIXME: delegate
             @Override
-            public void scrolled(UIScrollView view) {
+            public void scrolled(UIScrollView scrollView) {
                 handleScrlMainScrolled();
             }
-        });
+        });*/
 
         // load our controllers (we'll use one per page)
         loadControllers();
@@ -77,11 +75,11 @@ public class PagerControl extends UIViewController {
      * Runs when a dot on the pager is clicked. Scrolls the scroll view to the
      * appropriate page, based on which one was clicked
      */
-    @Export("handlePgrMainValueChanged:")
-    protected void handlePgrMainValueChanged(NSObject sender) {
+    @Export("handlePgrMainValueChanged")
+    protected void handlePgrMainValueChanged() {
         // it moves page by page. we scroll right to the next controller
         scrlMain.scrollRectToVisible(
-                controllers.get(((UIPageControl) sender).getCurrentPage())
+                controllers.get(pgrMain.getCurrentPage())
                         .getView().getFrame(), true);
     }
 

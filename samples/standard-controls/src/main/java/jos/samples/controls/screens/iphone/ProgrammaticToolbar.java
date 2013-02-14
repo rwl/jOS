@@ -8,17 +8,12 @@ import jos.api.uikit.UIBarButtonSystemItem;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIToolbar;
-import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewAutoresizing;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 public class ProgrammaticToolbar extends UIViewController {
-
-    @Outlet
-    UIView view;
 
     UIToolbar toolbar;
 
@@ -29,19 +24,18 @@ public class ProgrammaticToolbar extends UIViewController {
         setTitle("Programmatic Toolbar");
 
         // set the background color of the view to white
-        view.setBackgroundColor(UIColor.WHITE);
+        getView().setBackgroundColor(UIColor.WHITE);
 
         // new up the toolbar
         float toolbarHeight = 44;
-        toolbar = new UIToolbar(makeRect(0, view.getFrame().size.height
+        toolbar = new UIToolbar(makeRect(0, getView().getFrame().size.height
                 - getNavigationController().getNavigationBar().getFrame().size.height,
-                view.getFrame().size.width, toolbarHeight));
+                getView().getFrame().size.width, toolbarHeight));
         toolbar.setAutoresizingMask(UIViewAutoresizing.FLEXIBLE_TOP_MARGIN
                 .mask() | UIViewAutoresizing.FLEXIBLE_WIDTH.mask());
 
         // button one
-        String buttonTitle = "One";
-        UIBarButtonItem btnOne = new UIBarButtonItem(buttonTitle,
+        UIBarButtonItem btnOne = new UIBarButtonItem("One",
                 UIBarButtonItemStyle.BORDERED, null, null);
         btnOne.setTarget(this);
         btnOne.setAction(new Selector("onButtonOne"));
@@ -72,14 +66,14 @@ public class ProgrammaticToolbar extends UIViewController {
                 btnTwo, flexibleWidth, btnThree, btnFour };
 
         // add the items to the toolbar
-        toolbar.setItems(items, false);
+//        toolbar.setItems(items, false);  // FIXME: NSArray
 
         // add the toolbar to the page
-        view.addSubview(toolbar);
+        getView().addSubview(toolbar);
     }
 
     protected void onButtonOne() {
-        new UIAlertView("click!", "btnOne clicked", null, "OK").show();
+        new UIAlertView("click!", "btnOne clicked", null, "OK", null).show();
     }
 
     @Override

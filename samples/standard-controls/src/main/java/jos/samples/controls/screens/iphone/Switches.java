@@ -49,14 +49,14 @@ public class Switches extends UIViewController {
                 UIControlEvent.VALUE_CHANGED);
     }
 
-    protected void handleSwitchOne() {
-        new UIAlertView("Switch one change!", "is on: "
-                + swchOne.isOn(), null, "OK").show();
-    }
+	protected void handleSwitchOne() {
+		new UIAlertView("Switch one change!", swchOne.isOn() ? "on" : "off",
+				null, "OK", null).show();
+	}
 
     protected void handleSwitchTwo() {
-        new UIAlertView("Switch two change!", "is on: "
-                + swchTwo.isOn(), null, "OK").show();
+        new UIAlertView("Switch two change!", swchTwo.isOn() ? "on" : "off",
+        		null, "OK", null).show();
     }
 
 }

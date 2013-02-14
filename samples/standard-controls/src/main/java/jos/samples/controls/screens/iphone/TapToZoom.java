@@ -10,12 +10,7 @@ import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.TapZoomScrollView;
 
-import com.google.j2objc.annotations.Outlet;
-
 public class TapToZoom extends UIViewController {
-
-    @Outlet
-    UIView view;
 
     TapZoomScrollView scrollView;
 
@@ -26,15 +21,15 @@ public class TapToZoom extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        view.setBackgroundColor(UIColor.WHITE);
+        getView().setBackgroundColor(UIColor.WHITE);
 
         // create our scroll view
         scrollView = new TapZoomScrollView(
-                makeRect(0, 0, view.getFrame().size.width,
-                        view.getFrame().size.height
+                makeRect(0, 0, getView().getFrame().size.width,
+                		getView().getFrame().size.height
                                 - getNavigationController().getNavigationBar()
                                         .getFrame().size.height));
-        view.addSubview(scrollView);
+        getView().addSubview(scrollView);
 
         // create our image view
         imageView = new UIImageView(

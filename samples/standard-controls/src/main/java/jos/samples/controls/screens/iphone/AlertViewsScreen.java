@@ -46,12 +46,12 @@ public class AlertViewsScreen extends UIViewController {
         btnSimpleAlert.addTarget(this, new Selector(
                 "handleBtnSimpleAlertTouchUpInside"),
                 UIControlEvent.TOUCH_UP_INSIDE);
-        btnCustomButtons.addTarget(this, new Selector(
+        /*btnCustomButtons.addTarget(this, new Selector(  // FIXME: varargs and delegates
                 "handleBtnCustomButtonsTouchUpInside"),
                 UIControlEvent.TOUCH_UP_INSIDE);
         btnCustomButtonsWithDelegate.addTarget(this, new Selector(
                 "handleBtnCustomButtonsWithDelegateTouchUpInside"),
-                UIControlEvent.TOUCH_UP_INSIDE);
+                UIControlEvent.TOUCH_UP_INSIDE);*/
         btnCustomAlert.addTarget(this, new Selector(
                 "handleBtnCustomAlertTouchUpInside"),
                 UIControlEvent.TOUCH_UP_INSIDE);
@@ -63,14 +63,14 @@ public class AlertViewsScreen extends UIViewController {
      */
     protected void handleBtnSimpleAlertTouchUpInside() {
         alert = new UIAlertView("alert title", "this is a simple alert.", null,
-                "OK");
+                "OK", null);
         alert.show();
     }
 
     protected void handleBtnCustomButtonsTouchUpInside() {
         alert = new UIAlertView("custom buttons alert",
-                "this alert has custom buttons", null, "ok", new String[] {
-                        "custom button 1", "custom button 2" });
+                "this alert has custom buttons", null, "ok",
+                new String[] {"custom button 1", "custom button 2", null});
 
         // wire up a handler for the click event
         alert.setDelegate(new UIAlertViewDelegate() {
@@ -89,8 +89,8 @@ public class AlertViewsScreen extends UIViewController {
     protected void handleBtnCustomButtonsWithDelegateTouchUpInside() {
         alert = new UIAlertView("custom buttons alert",
                 "this alert has custom buttons",
-                new CustomButtonsAlertDelegate(), "ok", "custom button 1",
-                "custom button 2");
+                new CustomButtonsAlertDelegate(), "ok",
+                new String[] {"custom button 1", "custom button 2", null});
         alert.show();
     }
 

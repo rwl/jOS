@@ -1,11 +1,10 @@
 package jos.api.uikit;
 
-import java.util.Date;
+import jos.api.foundation.NSDate;
+import jos.api.graphicsimaging.CGRect;
 
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
-
-import jos.api.graphicsimaging.CGRect;
 
 @Register(isWrapper = true)
 public class UIDatePicker extends UIControl {
@@ -14,48 +13,48 @@ public class UIDatePicker extends UIControl {
     public UIDatePicker(CGRect frame) {
     }
 
-    public UIDatePickerMode mode;
-    public Date minimumDate;
-    public Date maximumDate;
-    public Date date;
+    public UIDatePickerMode datePickerMode;
+    public NSDate minimumDate;
+    public NSDate maximumDate;
+    public NSDate date;
 
-    @Export("mode")
+    @Export("datePickerMode")
     public UIDatePickerMode getMode() {
-        return mode;
+        return datePickerMode;
     }
 
-    @Export("setMode:")
+    @Export("setDatePickerMode:")
     public void setMode(UIDatePickerMode mode) {
-        this.mode = mode;
+        this.datePickerMode = mode;
     }
 
     @Export("minimumDate")
-    public Date getMinimumDate() {
+    public NSDate getMinimumDate() {
         return minimumDate;
     }
 
     @Export("setMinimumDate:")
-    public void setMinimumDate(Date minimumDate) {
+    public void setMinimumDate(NSDate minimumDate) {
         this.minimumDate = minimumDate;
     }
 
     @Export("maximumDate")
-    public Date getMaximumDate() {
+    public NSDate getMaximumDate() {
         return maximumDate;
     }
 
     @Export("setMaximumDate:")
-    public void setMaximumDate(Date maximumDate) {
+    public void setMaximumDate(NSDate maximumDate) {
         this.maximumDate = maximumDate;
     }
 
     @Export("date")
-    public Date getDate() {
+    public NSDate getDate() {
         return date;
     }
 
     @Export("setDate:")
-    public void setDate(Date date) {
+    public void setDate(NSDate date) {
         this.date = date;
     }
 

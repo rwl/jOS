@@ -4,10 +4,10 @@ import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 
 @Register(isWrapper = true)
-public class NSArray extends NSObject {
+public class NSDate extends NSObject {
 
-	@Export("initWithObjects:count:")
-	public NSArray(Object[] objects, int count) {
+	@Export("initWithTimeIntervalSince1970:")
+	public NSDate(double interval) {
 	}
 
 }

@@ -11,11 +11,11 @@ import com.google.j2objc.annotations.Register;
 public abstract class UIScrollViewDelegate extends NSObject {
 
     @Export("scrollViewDidScroll:")
-    public void scrolled(UIScrollView view) {
+    public void scrolled(UIScrollView scrollView) {
     }
 
     @Export("viewForZoomingInScrollView:")
-    public UIView viewForZoomingInScrollView(UIScrollView view) {
+    public UIView viewForZoomingInScrollView(UIScrollView scrollView) {
         return null;
     }
 

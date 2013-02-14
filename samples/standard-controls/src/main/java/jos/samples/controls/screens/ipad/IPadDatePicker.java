@@ -2,13 +2,13 @@ package jos.samples.controls.screens.ipad;
 
 import java.util.GregorianCalendar;
 
+import jos.api.foundation.NSDate;
 import jos.api.foundation.NSObject;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
 import jos.api.uikit.UILabel;
-import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 import jos.samples.controls.controls.ActionSheetDatePicker;
 
@@ -17,9 +17,6 @@ import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 public class IPadDatePicker extends UIViewController {
-
-    @Outlet
-    UIView view;
 
     @Outlet
     UIButton btnChooseDate;
@@ -41,7 +38,7 @@ public class IPadDatePicker extends UIViewController {
         setTitle("Date Picker");
 
         // setup our custom action sheet date picker
-        actionSheetDatePicker = new ActionSheetDatePicker(view);
+        actionSheetDatePicker = new ActionSheetDatePicker(getView());
         actionSheetDatePicker.setTitle("Choose Date:");
         actionSheetDatePicker.getDatePicker().addTarget(
                 this,
@@ -53,10 +50,10 @@ public class IPadDatePicker extends UIViewController {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -7);
         actionSheetDatePicker.getDatePicker()
-                .setMinimumDate(calendar.getTime());
+                .setMinimumDate(new NSDate(calendar.getTimeInMillis() / 1000l));
         calendar.add(GregorianCalendar.DAY_OF_MONTH, 14);
         actionSheetDatePicker.getDatePicker()
-                .setMaximumDate(calendar.getTime());
+                .setMaximumDate(new NSDate(calendar.getTimeInMillis() / 1000l));
         /*btnChooseDate.addTarget(new EventListener() {
 
             @Override
@@ -68,7 +65,7 @@ public class IPadDatePicker extends UIViewController {
                 UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
-        actionSheetTimerPicker = new ActionSheetDatePicker(view);
+        actionSheetTimerPicker = new ActionSheetDatePicker(getView());
         actionSheetTimerPicker.setTitle("Choose Time:");
         actionSheetTimerPicker.getDatePicker().setMode(
                 UIDatePickerMode.COUNTDOWN_TIMER);

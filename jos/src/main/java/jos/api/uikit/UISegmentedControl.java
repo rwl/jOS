@@ -6,7 +6,7 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UISegmentedControl extends UIControl {
 
-    public UISegmentedControlStyle controlStyle;
+    public UISegmentedControlStyle segmentedControlStyle;
 
     public int selectedSegmentIndex;
 
@@ -18,14 +18,14 @@ public class UISegmentedControl extends UIControl {
     public void setWidth(float width, int segment) {
     }
 
-    @Export("controlStyle")
-    public UISegmentedControlStyle getControlStyle() {
-        return controlStyle;
+    @Export("segmentedControlStyle")
+    public UISegmentedControlStyle getSegmentedControlStyle() {
+        return segmentedControlStyle;
     }
 
-    @Export("setControlStyle:")
-    public void setControlStyle(UISegmentedControlStyle controlStyle) {
-        this.controlStyle = controlStyle;
+    @Export("setSegmentedControlStyle:")
+    public void setSegmentedControlStyle(UISegmentedControlStyle controlStyle) {
+        this.segmentedControlStyle = controlStyle;
     }
 
     @Export("selectedSegmentIndex")

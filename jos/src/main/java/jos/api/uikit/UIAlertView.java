@@ -20,7 +20,7 @@ public class UIAlertView extends UIView {
 
     @Export("initWithTitle:message:delegate:cancelButtonTitle:otherButtonTitles:")
     public UIAlertView(String title, String message, NSObject delegate,
-            String cancelButtonTitle, String... otherButtonTitles) {
+            String cancelButtonTitle, String[] otherButtonTitles /* FIXME: varargs */) {
         super(null);
     }
 

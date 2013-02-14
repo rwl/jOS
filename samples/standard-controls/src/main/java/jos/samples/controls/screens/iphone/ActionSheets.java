@@ -1,19 +1,14 @@
 package jos.samples.controls.screens.iphone;
 
 import jos.api.uikit.UIActionSheet;
-import jos.api.uikit.UIActionSheetDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
-import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Outlet;
 import com.google.j2objc.annotations.Selector;
 
 public class ActionSheets extends UIViewController {
-
-    @Outlet
-    UIView view;
 
     @Outlet
     UIButton btnSimpleActionSheet;
@@ -45,18 +40,18 @@ public class ActionSheets extends UIViewController {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
                 "delete", null);
-        actionSheet.setDelegate(new UIActionSheetDelegate() {
+        /*actionSheet.setDelegate(new UIActionSheetDelegate() {
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
                 System.out.println("Button " + buttonIndex + " clicked");
             }
-        });
-        actionSheet.showInView(view);
+        });*/
+        actionSheet.showInView(getView());
     }
 
     protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
         actionSheet = new UIActionSheet("action sheet with other buttons",
-                null, "", "", null);
+                null, null, null, null);
         actionSheet.addButton("delete");
         actionSheet.addButton("cancel");
         actionSheet.addButton("a different option!");
@@ -64,13 +59,13 @@ public class ActionSheets extends UIViewController {
         actionSheet.setDestructiveButtonIndex(0);
         actionSheet.setCancelButtonIndex(1);
         // actionSheet.setFirstOtherButtonIndex(2);
-        actionSheet.setDelegate(new UIActionSheetDelegate() {
+        /*actionSheet.setDelegate(new UIActionSheetDelegate() {
             @Override
             public void onClick(UIActionSheet sheet, int buttonIndex) {
                 System.out.println("Button " + buttonIndex + " clicked");
             }
-        });
-        actionSheet.showInView(view);
+        });*/
+        actionSheet.showInView(getView());
     }
 
 }

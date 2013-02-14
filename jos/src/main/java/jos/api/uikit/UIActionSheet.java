@@ -18,7 +18,7 @@ public class UIActionSheet extends UIView {
 
     @Export("initWithTitle:delegate:cancelButtonTitle:destructiveButtonTitle:otherButtonTitles:")
     public UIActionSheet(String title, NSObject delegate, String cancelButtonTitle,
-            String destructiveButtonTitle, String otherButtonTitles) {
+            String destructiveButtonTitle, String otherButtonTitles /* FIXME: varargs */) {
     }
 
     @Export("showInView:")

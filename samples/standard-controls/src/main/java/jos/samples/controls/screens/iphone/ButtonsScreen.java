@@ -48,12 +48,12 @@ public class ButtonsScreen extends UIViewController {
 
     protected void handleBtnOneTouchUpInside() {
         new UIAlertView("button one click!", "TouchUpInside Handled", null,
-                "OK").show();
+                "OK", null).show();
     }
 
     protected void handleBtnTwoTouchUpInside() {
         new UIAlertView("button two click!", "TouchUpInside Handled",
-                null, "OK").show();
+                null, "OK", null).show();
     }
 
 }

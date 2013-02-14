@@ -34,7 +34,7 @@ public class Toolbar1 extends UIViewController {
     }
 
     protected void handleButtonClick() {
-        new UIAlertView("click!", "btnOne clicked", null, "OK").show();
+        new UIAlertView("click!", "btnOne clicked", null, "OK", null).show();
     }
 
     @Override

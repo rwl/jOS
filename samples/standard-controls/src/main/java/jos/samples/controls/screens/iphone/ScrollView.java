@@ -9,12 +9,7 @@ import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
-import com.google.j2objc.annotations.Outlet;
-
 public class ScrollView extends UIViewController {
-
-    @Outlet
-    UIView view;
 
     UIScrollView scrollView;
 
@@ -25,16 +20,16 @@ public class ScrollView extends UIViewController {
         super.viewDidLoad();
 
         // set the background color of the view to white
-        view.setBackgroundColor(UIColor.WHITE);
+        getView().setBackgroundColor(UIColor.WHITE);
 
         setTitle("Scroll View");
 
         // create our scroll view
         scrollView = new UIScrollView(makeRect(0, 0,
-                view.getFrame().size.width, view.getFrame().size.height
+        		getView().getFrame().size.width, getView().getFrame().size.height
                         - getNavigationController().getNavigationBar()
                                 .getFrame().size.height));
-        view.addSubview(scrollView);
+        getView().addSubview(scrollView);
 
         // create our image view
         imageView = new UIImageView(

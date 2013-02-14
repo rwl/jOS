@@ -36,6 +36,10 @@
 						<include>${basedir}/../hello-world/include</include>
 					</includes>
 					<delegateClassName>SCAppDelegate</delegateClassName>
+					<families>
+						<family>iPhone</family>
+						<family>iPad</family>
+					</families>
 				</configuration>
 				<!--declare that this plugin contributes the component extensions
 				<extensions>true</extensions> -->

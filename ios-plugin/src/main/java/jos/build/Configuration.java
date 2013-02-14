@@ -681,4 +681,8 @@ public class Configuration {
 		this.headers = headers;
 	}
 
+	public void setDeviceFamilies(List<Family> deviceFamilies) {
+		this.deviceFamilies = deviceFamilies;
+	}
+
 }

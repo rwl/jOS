@@ -15,7 +15,7 @@ public class CompileMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
     	try {
-    		new Builder(getConfig(BuildMode.RELEASE), Platform.IPHONE_SIMULATOR).compile();
+    		new Builder(getConfig(BuildMode.DEVELOPMENT), Platform.IPHONE_SIMULATOR).compile();
     	} catch (BuildError e) {
     		throw new MojoExecutionException("Compilation error occurred", e);
     	}

@@ -13,7 +13,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 public class BundleMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new Builder(getConfig(BuildMode.RELEASE), Platform.IPHONE_SIMULATOR).bundle();
+        new Builder(getConfig(BuildMode.DEVELOPMENT), Platform.IPHONE_SIMULATOR).bundle();
     }
 
 }

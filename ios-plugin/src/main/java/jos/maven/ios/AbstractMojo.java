@@ -43,6 +43,9 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
     @Parameter
     String[] families;
 
+    @Parameter
+    String[] icons;
+
     Configuration getConfig(final BuildMode buildMode) throws MojoExecutionException {
         final Configuration config = new Configuration(project.getBasedir(),
                 buildMode);
@@ -72,6 +75,9 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
         	if (familyEnums.size() > 0) {
         		config.setDeviceFamilies(familyEnums);
         	}
+        }
+        if (icons != null) {
+        	config.setIcons(Lists.newArrayList(icons));
         }
         return config;
     }

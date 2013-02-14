@@ -65,6 +65,7 @@ public class Configuration {
     private String[] xcodeVersion;
 
     private List<String> icons;
+    /** Icon files already incorporate a shine effect */
     private boolean prerenderedIcon;
 
     private List<String> fonts;
@@ -683,6 +684,10 @@ public class Configuration {
 
 	public void setDeviceFamilies(List<Family> deviceFamilies) {
 		this.deviceFamilies = deviceFamilies;
+	}
+
+	public void setIcons(List<String> icons) {
+		this.icons = icons;
 	}
 
 }

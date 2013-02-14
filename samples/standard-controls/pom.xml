@@ -40,6 +40,12 @@
 						<family>iPhone</family>
 						<family>iPad</family>
 					</families>
+					<icons>
+						<icon>Icon.png</icon>
+						<icon>Icon@2x.png</icon>
+						<icon>Icon-72.png</icon>
+						<icon>Icon-72@2x.png</icon>
+					</icons>
 				</configuration>
 				<!--declare that this plugin contributes the component extensions
 				<extensions>true</extensions> -->

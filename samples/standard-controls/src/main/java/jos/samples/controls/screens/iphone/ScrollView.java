@@ -15,6 +15,13 @@ public class ScrollView extends UIViewController {
 
     UIImageView imageView;
 
+    UIScrollViewDelegate delegate = new UIScrollViewDelegate() {
+        @Override
+        public UIView viewForZoomingInScrollView(UIScrollView view) {
+            return imageView;
+        }
+    };
+
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
@@ -33,18 +40,13 @@ public class ScrollView extends UIViewController {
 
         // create our image view
         imageView = new UIImageView(
-                UIImage.fromFile("images/icons/icon-512.png"));
+                UIImage.fromBundle("icon-512.png"));
         scrollView.setContentSize(imageView.getImage().size);
         scrollView.setMaximumZoomScale(3f);
         scrollView.setMinimumZoomScale(.1f);
         scrollView.addSubview(imageView);
 
-        scrollView.setDelegate(new UIScrollViewDelegate() {
-            @Override
-            public UIView viewForZoomingInScrollView(UIScrollView view) {
-                return imageView;
-            }
-        });
+        scrollView.setDelegate(delegate);
     }
 
 }

@@ -33,7 +33,7 @@ public class Images2 extends UIViewController {
 
         // an animating image
         imgSpinningCircle = new UIImageView();
-//        imgSpinningCircle.setAnimationImages(new UIImage[] {  FIXME: animated image
+//        imgSpinningCircle.setAnimationImages(new UIImage[] {  // FIXME: NSArray
 //                UIImage.fromBundle("Spinning Circle_1.png"),
 //                UIImage.fromBundle("Spinning Circle_2.png"),
 //                UIImage.fromBundle("Spinning Circle_3.png"),

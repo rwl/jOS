@@ -87,7 +87,7 @@ public class PickerWithMultipleComponents extends UIViewController {
          */
         @Override
         public String getRowTitle(UIPickerView picker, int row, int component) {
-            return "fixme";//items.get(component).get(row);  FIXME: 'component' argument not generated
+            return "";//items.get(component).get(row);  FIXME: 'component' argument not generated
         }
 
         /**

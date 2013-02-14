@@ -31,7 +31,6 @@ public class ButtonsScreen extends UIViewController {
         btnOne.addTarget(this, new Selector("handleBtnOneTouchUpInside"),
                 UIControlEvent.TOUCH_UP_INSIDE);
         /*btnTwo.addTarget(new EventListener() {
-
             @Override
             public void onEvent(NSObject object, UIEvent event) {
                 new UIAlertView("button two click!", "TouchUpInside Handled",

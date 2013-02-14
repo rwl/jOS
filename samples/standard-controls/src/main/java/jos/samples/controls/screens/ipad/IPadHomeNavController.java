@@ -44,15 +44,11 @@ public class IPadHomeNavController extends UITableViewController {
 
         navGroup = new NavItemGroup("Popups");
         navItems.add(navGroup);
-        // navGroup.items.add(new NavItem("Alert Views", "",
-        // AlertViewsScreen_iPhone.class));
         navGroup.getItems().add(new NavItem("Action Sheets", IPadActionSheets.class));
 
         navGroup = new NavItemGroup("Pickers");
         navItems.add(navGroup);
         navGroup.getItems().add(new NavItem("Simple Date Picker", IPadDatePickerSimple.class));
-        // navGroup.getItems().add(new NavItem("Action Sheet Date Picker", "",
-        // DatePicker.class));
 
         // create a table source from our nav items
         tableSource = new NavItemTableDataSource(navItems);

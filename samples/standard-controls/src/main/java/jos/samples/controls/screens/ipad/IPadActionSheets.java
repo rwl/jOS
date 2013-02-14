@@ -19,6 +19,13 @@ public class IPadActionSheets extends UIViewController {
 
     UIActionSheet actionSheet;
 
+    final UIActionSheetDelegate delegate = new UIActionSheetDelegate() {
+        @Override
+        public void onClick(UIActionSheet sheet, int buttonIndex) {
+            System.out.println("Button " + buttonIndex + " clicked");
+        }
+    };
+
     public IPadActionSheets() {
         super("ActionSheets_iPad", null);
     }
@@ -40,29 +47,18 @@ public class IPadActionSheets extends UIViewController {
         // create an action sheet using the qualified constructor
         actionSheet = new UIActionSheet("simple action sheet", null, "cancel",
                 "delete", null);
-        actionSheet.setDelegate(new UIActionSheetDelegate() {
-            @Override
-            public void onClick(UIActionSheet sheet, int buttonIndex) {
-                System.out.println("Button " + buttonIndex + " clicked");
-            }
-        });
+        actionSheet.setDelegate(delegate);
         actionSheet.showInView(getView());
     }
 
     protected void handleBtnActionSheetWithOtherButtonsTouchUpInside() {
         actionSheet = new UIActionSheet("action sheet with other buttons",
-                null, "", "", null);
+                null, null, null, null);
         actionSheet.addButton("delete");
         actionSheet.addButton("a different option!");
         actionSheet.addButton("another option");
         actionSheet.setDestructiveButtonIndex(0);
-        actionSheet.setDelegate(new UIActionSheetDelegate() {
-
-            @Override
-            public void onClick(UIActionSheet sheet, int buttonIndex) {
-                System.out.println("Button " + buttonIndex + " clicked");
-            };
-        });
+        actionSheet.setDelegate(delegate);
         actionSheet.showInView(getView());
     }
 

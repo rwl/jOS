@@ -10,6 +10,7 @@ import jos.api.graphicsimaging.CGRect;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIPageControl;
 import jos.api.uikit.UIScrollView;
+import jos.api.uikit.UIScrollViewDelegate;
 import jos.api.uikit.UIViewController;
 
 import com.google.j2objc.annotations.Export;
@@ -23,6 +24,26 @@ public class PagerControl extends UIViewController {
 
     @Outlet
     UIScrollView scrlMain;
+
+    UIScrollViewDelegate delegate = new UIScrollViewDelegate() {  // FIXME: release of anonymous delegates
+    	/**
+         * Runs when the scroll view is scrolled. Updates the pager control so that
+         * it's current, based on the page
+         */
+        @Override
+        public void scrolled(UIScrollView scrollView) {
+            // calculate the page number
+            int pageNumber = (int) (Math
+                    .floor((scrlMain.getContentOffset().x - scrlMain.getFrame().size.width / 2)
+                            / scrlMain.getFrame().size.width) + 1);
+
+            // if it's a valid page
+            if (pageNumber >= 0 && pageNumber < controllers.size()) {
+                // Set the current page on the pager control
+                pgrMain.setCurrentPage(pageNumber);
+            }
+        }
+    };;
 
     /**
      * A list of all our controllers that hold the views for our pages
@@ -43,32 +64,10 @@ public class PagerControl extends UIViewController {
         // wire up our pager and scroll view event handlers
         pgrMain.addTarget(this, new Selector("handlePgrMainValueChanged"),
                 UIControlEvent.VALUE_CHANGED);
-        /*scrlMain.setDelegate(new UIScrollViewDelegate() { // FIXME: delegate
-            @Override
-            public void scrolled(UIScrollView scrollView) {
-                handleScrlMainScrolled();
-            }
-        });*/
+        scrlMain.setDelegate(delegate);
 
         // load our controllers (we'll use one per page)
         loadControllers();
-    }
-
-    /**
-     * Runs when the scroll view is scrolled. Updates the pager control so that
-     * it's current, based on the page
-     */
-    protected void handleScrlMainScrolled() {
-        // calculate the page number
-        int pageNumber = (int) (Math
-                .floor((scrlMain.getContentOffset().x - scrlMain.getFrame().size.width / 2)
-                        / scrlMain.getFrame().size.width) + 1);
-
-        // if it's a valid page
-        if (pageNumber >= 0 && pageNumber < controllers.size()) {
-            // Set the current page on the pager control
-            pgrMain.setCurrentPage(pageNumber);
-        }
     }
 
     /**

@@ -1,8 +1,5 @@
 package jos.samples.controls.screens.ipad;
 
-import java.util.GregorianCalendar;
-
-import jos.api.foundation.NSDate;
 import jos.api.foundation.NSObject;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
@@ -47,21 +44,20 @@ public class IPadDatePicker extends UIViewController {
                 UIControlEvent.VALUE_CHANGED);
         actionSheetDatePicker.getDatePicker().setMode(
                 UIDatePickerMode.DATE_AND_TIME);
-        GregorianCalendar calendar = new GregorianCalendar();
+        /*GregorianCalendar calendar = new GregorianCalendar();
         calendar.add(GregorianCalendar.DAY_OF_MONTH, -7);
         actionSheetDatePicker.getDatePicker()
                 .setMinimumDate(new NSDate(calendar.getTimeInMillis() / 1000l));
         calendar.add(GregorianCalendar.DAY_OF_MONTH, 14);
         actionSheetDatePicker.getDatePicker()
-                .setMaximumDate(new NSDate(calendar.getTimeInMillis() / 1000l));
+                .setMaximumDate(new NSDate(calendar.getTimeInMillis() / 1000l));*/
         /*btnChooseDate.addTarget(new EventListener() {
-
             @Override
             public void onEvent(NSObject object, UIEvent event) {
                 actionSheetDatePicker.show();
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);*/
-        btnChooseDate.addTarget(this, new Selector("handle_btnChooseDate"),
+        btnChooseDate.addTarget(this, new Selector("handleBtnChooseDate"),
                 UIControlEvent.TOUCH_UP_INSIDE);
 
         // setup our countdown timer
@@ -71,7 +67,7 @@ public class IPadDatePicker extends UIViewController {
                 UIDatePickerMode.COUNTDOWN_TIMER);
     }
 
-    protected void handle_btnChooseDate() {
+    protected void handleBtnChooseDate() {
         actionSheetDatePicker.show();
     }
 

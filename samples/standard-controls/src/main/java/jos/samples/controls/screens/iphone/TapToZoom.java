@@ -16,6 +16,13 @@ public class TapToZoom extends UIViewController {
 
     UIImageView imageView;
 
+    UIScrollViewDelegate delegate = new UIScrollViewDelegate() {
+        @Override
+        public UIView viewForZoomingInScrollView(UIScrollView view) {
+            return imageView;
+        }
+    };
+
     @Override
     public void viewDidLoad() {
         super.viewDidLoad();
@@ -33,7 +40,7 @@ public class TapToZoom extends UIViewController {
 
         // create our image view
         imageView = new UIImageView(
-                UIImage.fromFile("images/icons/icon-512.png"));
+                UIImage.fromBundle("icon-512.png"));
         scrollView.setContentSize(imageView.getImage().getSize());
         scrollView.setMaximumZoomScale(3f);
         scrollView.setMinimumZoomScale(.1f);
@@ -41,12 +48,7 @@ public class TapToZoom extends UIViewController {
 
         // when the scroll view wants to zoom, it asks for the view to zoom, so
         // in this case, we tell it that we want it to zoom the image view
-        scrollView.setDelegate(new UIScrollViewDelegate() {
-            @Override
-            public UIView viewForZoomingInScrollView(UIScrollView view) {
-                return imageView;
-            }
-        });
+        scrollView.setDelegate(delegate);
     }
 
 }

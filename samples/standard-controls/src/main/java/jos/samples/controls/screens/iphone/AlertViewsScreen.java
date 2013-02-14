@@ -33,6 +33,15 @@ public class AlertViewsScreen extends UIViewController {
      */
     UIAlertView alert;
 
+    UIAlertViewDelegate delegate = new UIAlertViewDelegate() {  // FIXME: release of anonymous delegates
+        @Override
+        public void clicked(UIAlertView view, int buttonIndex) {
+            System.out.println("Button " + buttonIndex + " clicked");
+        }
+    };
+
+    UIAlertViewDelegate customDelegate = new CustomButtonsAlertDelegate();  // FIXME: release of anonymous delegates
+
     public AlertViewsScreen() {
         super("AlertViewsScreen_iPhone", null);
     }
@@ -73,12 +82,7 @@ public class AlertViewsScreen extends UIViewController {
                 new String[] {"custom button 1", "custom button 2", null});
 
         // wire up a handler for the click event
-        alert.setDelegate(new UIAlertViewDelegate() {
-            @Override
-            public void clicked(UIAlertView view, int buttonIndex) {
-                System.out.println("Button " + buttonIndex + " clicked");
-            }
-        });
+        alert.setDelegate(delegate);
         alert.show();
     }
 
@@ -88,8 +92,7 @@ public class AlertViewsScreen extends UIViewController {
      */
     protected void handleBtnCustomButtonsWithDelegateTouchUpInside() {
         alert = new UIAlertView("custom buttons alert",
-                "this alert has custom buttons",
-                new CustomButtonsAlertDelegate(), "ok",
+                "this alert has custom buttons", customDelegate, "ok",
                 new String[] {"custom button 1", "custom button 2", null});
         alert.show();
     }
@@ -98,9 +101,6 @@ public class AlertViewsScreen extends UIViewController {
      * This is our custom buttons alert delegate.
      */
     protected class CustomButtonsAlertDelegate extends UIAlertViewDelegate {
-        public CustomButtonsAlertDelegate() {
-            super();
-        }
 
         @Override
         public void canceled(UIAlertView alertView) {

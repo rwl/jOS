@@ -6,7 +6,9 @@ import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIActionSheet;
+import jos.api.uikit.UIActionSheetDelegate;
 import jos.api.uikit.UIActionSheetStyle;
+import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIButtonType;
 import jos.api.uikit.UIColor;
@@ -34,6 +36,14 @@ public class ActionSheetDatePicker extends NSObject {
     UIView owner;
 
     final UILabel titleLabel = new UILabel();
+
+    final UIActionSheetDelegate delegate = new UIActionSheetDelegate() {  // FIXME: release of anonymous delegates
+        @Override
+        public void onClick(UIActionSheet sheet, int buttonIndex) {
+        	new UIAlertView("Click Event", "Clicked on item " + buttonIndex,
+        			null, "OK", null).show();
+        }
+    };
 
     /**
      * Set any datepicker properties here
@@ -63,12 +73,7 @@ public class ActionSheetDatePicker extends NSObject {
         // create + configure the action sheet
         actionSheet = new UIActionSheet("", null, null, null, null);
         actionSheet.setStyle(UIActionSheetStyle.BLACK_TRANSLUCENT);
-        /*actionSheet.setDelegate(new UIActionSheetDelegate() {  // FIXME: delegate
-            @Override
-            public void onClick(UIActionSheet sheet, int buttonIndex) {
-                System.out.println("Clicked on item " + buttonIndex);
-            }
-        });*/
+        actionSheet.setDelegate(delegate);
 
         // add our controls to the action sheet
         actionSheet.addSubview(datePicker);

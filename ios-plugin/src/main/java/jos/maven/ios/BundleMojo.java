@@ -1,6 +1,7 @@
 package jos.maven.ios;
 
 import jos.build.Builder;
+import jos.build.types.BuildError;
 import jos.build.types.BuildMode;
 import jos.build.types.Platform;
 
@@ -13,7 +14,11 @@ import org.apache.maven.plugins.annotations.Mojo;
 public class BundleMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new Builder(getConfig(BuildMode.DEVELOPMENT), Platform.IPHONE_SIMULATOR).bundle();
+    	try {
+    		new Builder(getConfig(BuildMode.DEVELOPMENT), Platform.IPHONE_SIMULATOR).bundle();
+    	} catch (BuildError e) {
+    		throw new MojoExecutionException("Error occurred while bundling", e);
+    	}
     }
 
 }

@@ -90,20 +90,43 @@ public class Util {
         return result;
     }
 
+    protected static boolean system(final String cmd) {
+        boolean success = false;
+        try {
+            final Process p = Runtime.getRuntime().exec(cmd);
+            success = p.waitFor() == 0;
+            /*if (!success) {
+            	final String stdout = IOUtils.toString(p.getInputStream());
+				if (!stdout.isEmpty()) {
+					logger.severe(stdout);
+				}
+				final String stderr = IOUtils.toString(p.getErrorStream());
+				if (!stderr.isEmpty()) {
+					logger.severe(stderr);
+				}
+            }*/
+        } catch (final IOException e) {
+            throw new BuildError("Failed to execute command: " + cmd, e);
+        } catch (InterruptedException e) {
+			throw new BuildError("Interruption of command: " + cmd);
+		}
+        return success;
+    }
+
 	protected static boolean system(final List<String> args) {
 		return system(args.toArray(new String[args.size()]));
 	}
 
     protected static boolean system(final String... args) {
-        boolean result = false;
+        boolean success = false;
         try {
             final Process p = Runtime.getRuntime().exec(args);
-            result = p.exitValue() == 0;
+            success = p.exitValue() == 0;
         } catch (final IOException e) {
             throw new BuildError("Failed to execute command: "
             		+ StringUtils.join(args, " "), e);
         }
-        return result;
+        return success;
     }
 
     protected static String read(final File file) {

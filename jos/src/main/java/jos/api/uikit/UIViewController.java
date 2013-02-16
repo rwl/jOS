@@ -40,9 +40,11 @@ public class UIViewController extends UIResponder {
         return navigationController;
     }
 
-    @Export("setNavigationController:")
-    public void setNavigationController(UINavigationController navigationController) {
-        this.navigationController = navigationController;
+    public UINavigationItem navigationItem;
+
+    @Export("navigationItem")
+    public UINavigationItem getNavigationItem() {
+        return navigationItem;
     }
 
     @Export("init")

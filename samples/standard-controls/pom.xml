@@ -8,6 +8,13 @@
 	</parent>
 	<artifactId>jos-standard-controls-sample</artifactId>
 	<packaging>jar</packaging>
+	<repositories>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype OSS Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -16,8 +23,7 @@
 				<version>${project.version}</version>
 				<configuration>
 					<prefix>jos.samples.controls=SC</prefix>
-					<!-- <verbose>true</verbose>
-					<useARC>true</useARC> -->
+					<!-- <verbose>true</verbose> <useARC>true</useARC> -->
 					<noPackageDirectories>true</noPackageDirectories>
 					<outputDirectory>${basedir}/src/xcode</outputDirectory>
 				</configuration>
@@ -29,12 +35,9 @@
 				<configuration>
 					<name>Controls</name>
 					<sourceDirectory>${basedir}/src/xcode</sourceDirectory>
-					<libraries>
-						<library>${basedir}/../hello-world/lib/libjre_emul.a</library>
-					</libraries>
-					<includes>
-						<include>${basedir}/../hello-world/include</include>
-					</includes>
+					<!-- <libraries> <library>${basedir}/../hello-world/lib/libjre_emul.a</library> 
+						</libraries> <includes> <include>${basedir}/../hello-world/include</include> 
+						</includes> -->
 					<delegateClassName>SCAppDelegate</delegateClassName>
 					<families>
 						<family>iPhone</family>
@@ -47,12 +50,25 @@
 						<icon>Icon-72@2x.png</icon>
 					</icons>
 				</configuration>
-				<!--declare that this plugin contributes the component extensions
-				<extensions>true</extensions> -->
+				<!--declare that this plugin contributes the component extensions <extensions>true</extensions> -->
 			</plugin>
 		</plugins>
 	</build>
 	<dependencies>
+		<dependency>
+			<groupId>com.github.rwl</groupId>
+			<artifactId>jre_emul</artifactId>
+			<version>0.5.9</version>
+			<classifier>headers</classifier>
+			<type>tar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.github.rwl</groupId>
+			<artifactId>jre_emul</artifactId>
+			<version>0.5.9</version>
+			<classifier>library</classifier>
+			<type>a</type>
+		</dependency>
 		<dependency>
 			<groupId>jos</groupId>
 			<artifactId>jos-api</artifactId>

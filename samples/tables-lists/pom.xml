@@ -15,7 +15,7 @@
 				<artifactId>j2objc-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<configuration>
-					<prefix>jos.samples.content=TL</prefix>
+					<prefix>jos.samples.lists=TL</prefix>
 					<!-- <verbose>true</verbose> <useARC>true</useARC> -->
 					<noPackageDirectories>true</noPackageDirectories>
 					<outputDirectory>${basedir}/src/xcode</outputDirectory>

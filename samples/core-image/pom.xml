@@ -6,7 +6,7 @@
 		<artifactId>jos-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>jos-core-animation-sample</artifactId>
+	<artifactId>jos-core-image-sample</artifactId>
 	<packaging>jar</packaging>
 	<build>
 		<plugins>
@@ -15,7 +15,7 @@
 				<artifactId>j2objc-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<configuration>
-					<prefix>jos.samples.animation=CA</prefix>
+					<prefix>jos.samples.image=CI</prefix>
 					<!-- <verbose>true</verbose> <useARC>true</useARC> -->
 					<noPackageDirectories>true</noPackageDirectories>
 					<outputDirectory>${basedir}/src/xcode</outputDirectory>

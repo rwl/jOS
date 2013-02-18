@@ -6,7 +6,7 @@
 		<artifactId>jos-samples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>jos-tables-lists-sample</artifactId>
+	<artifactId>jos-core-animation-sample</artifactId>
 	<packaging>jar</packaging>
 	<build>
 		<plugins>
@@ -15,7 +15,7 @@
 				<artifactId>j2objc-maven-plugin</artifactId>
 				<version>${project.version}</version>
 				<configuration>
-					<prefix>jos.samples.content=TL</prefix>
+					<prefix>jos.samples.content=CA</prefix>
 					<!-- <verbose>true</verbose> <useARC>true</useARC> -->
 					<noPackageDirectories>true</noPackageDirectories>
 					<outputDirectory>${basedir}/src/xcode</outputDirectory>
@@ -30,7 +30,6 @@
 					<sourceDirectory>${basedir}/src/xcode</sourceDirectory>
 					<delegateClassName>CCAppDelegate</delegateClassName>
 					<families>
-						<family>iPhone</family>
 						<family>iPad</family>
 					</families>
 					<icons>

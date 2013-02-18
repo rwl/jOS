@@ -5,6 +5,8 @@ import jos.api.uikit.UIApplication;
 import jos.api.uikit.UIApplicationDelegate;
 import jos.api.uikit.UINavigationController;
 import jos.api.uikit.UIScreen;
+import jos.api.uikit.UIWindow;
+import jos.samples.lists.screens.HomeNavController;
 
 public class AppDelegate extends UIApplicationDelegate {
 
@@ -15,7 +17,7 @@ public class AppDelegate extends UIApplicationDelegate {
     public boolean finishedLaunching(UIApplication app, NSDictionary options) {
 
         // create our window
-        window = new UIWindow (UIScreen.getMainScreen().getBounds());
+        window = new UIWindow(UIScreen.getMainScreen().getBounds());
         window.makeKeyAndVisible ();
 
         // create our navigation controller

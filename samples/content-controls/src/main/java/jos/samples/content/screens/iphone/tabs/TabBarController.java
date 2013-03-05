@@ -2,6 +2,9 @@ package jos.samples.content.screens.iphone.tabs;
 
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UINavigationController;
+import jos.api.uikit.UITabBarController;
+import jos.api.uikit.UITabBarItem;
+import jos.api.uikit.UITabBarSystemItem;
 import jos.api.uikit.UIViewController;
 import jos.samples.content.screens.iphone.browsers.BrowsersHome;
 import jos.samples.content.screens.iphone.customizingnavbar.CustomizingNavBarScreen;
@@ -78,15 +81,14 @@ public class TabBarController extends UITabBarController {
         };
 
         // attach the view controllers
-        this.viewControllers = viewControllers;
+        setViewControllers(viewControllers);
 
         // tell the tab bar which controllers are allowed to customize. if we
         // don't set this, it assumes all controllers are customizable.
-        this.customizableViewControllers = customizableControllers;
+        setCustomizableViewControllers(customizableControllers);
 
         // set our selected item
-        this.selectedViewController = browsersTabNavController;
-
+        setSelectedViewController(browsersTabNavController);
     }
 
     @Override

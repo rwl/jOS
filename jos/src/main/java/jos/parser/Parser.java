@@ -132,7 +132,7 @@ public class Parser {
                         || properties.contains(d.selector)) {
                     continue;
                 }
-                final String dummyReturn = Parser.mapDummyReturn(d.retval);
+//                final String dummyReturn = Parser.mapDummyReturn(d.retval);
 
                 if (extraAnnotation != null) {
                     gencs.println("\t/**");
@@ -143,18 +143,19 @@ public class Parser {
                 if (d.appearance) {
                     gencs.println("\t@Appearance");
                 }
-                //gencs.printf("\t@Export(selector = \"%s\")", d.selector);
-                //gencs.println();
+                gencs.printf("\t@Export(\"%s\")", d.selector);
+                gencs.println();
                 gencs.printf("\tpublic %s%s%s %s(%s) {",
                         (d.isStatic ? "static " : ""),
                         (d.isAbstract ? ""/*"abstract "*/ : ""),
                         d.retval,
                         Parser.cleanSelector(d.selector), d.parameters);
                 gencs.println();
-                if (dummyReturn != null) {
-                    gencs.printf("\t\treturn %s;", dummyReturn);
-                    gencs.println();
-                }
+                gencs.println("\t\tthrow new RuntimeException();");
+//                if (dummyReturn != null) {
+//                    gencs.printf("\t\treturn %s;", dummyReturn);
+//                    gencs.println();
+//                }
                 gencs.printf("\t}");
                 gencs.println();
                 gencs.println();
@@ -177,34 +178,35 @@ public class Parser {
                             + sel.substring(3);
                 }
 
-                //gencs.printf("\t@Export(selector = \"%s\")", sel);
+                //gencs.printf("\t@Export(\"%s\")", sel);
                 //gencs.println();
-                gencs.printf("\tpublic %s%s%s %s;",
-                        (decl.isStatic ? "static " : ""),
-                        (decl.isAbstract ? ""/*"abstract "*/ : ""),
-                        decl.retval, sel);
-                gencs.println();
-                gencs.println();
+//                gencs.printf("\tpublic %s%s%s %s;",
+//                        (decl.isStatic ? "static " : ""),
+//                        (decl.isAbstract ? ""/*"abstract "*/ : ""),
+//                        decl.retval, sel);
+//                gencs.println();
+//                gencs.println();
 
                 if (d.startsWith("is")) {
                     gencs.printf("\t@Bind(\"%s\")", d);
                     gencs.println();
                 }
-                gencs.printf("\t@Export(selector = \"%s\")", sel);
+                gencs.printf("\t@Export(\"%s\")", sel);
                 gencs.println();
                 gencs.printf("\tpublic %s get%s() {", decl.retval, StringUtils.capitalize(sel));
                 gencs.println();
-                gencs.printf("\t\treturn this.%s;");
+//                gencs.printf("\t\treturn this.%s;");
+                gencs.printf("\t\tthrow new RuntimeException();");
                 gencs.println();
                 gencs.printf("\t}");
                 gencs.println();
                 gencs.println();
 
-                gencs.printf("\t@Export(selector = \"set%s:\")", StringUtils.capitalize(sel));
+                gencs.printf("\t@Export(\"set%s:\")", StringUtils.capitalize(sel));
                 gencs.println();
                 gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(sel), decl.retval);
                 gencs.println();
-                gencs.printf("\t\tthis.%s = value;");
+                gencs.printf("\t\tthrow new RuntimeException();");
                 gencs.println();
                 gencs.printf("\t}");
                 gencs.println();
@@ -288,34 +290,34 @@ public class Parser {
             gencs.printf("\t@Appearance");
             gencs.println();
         }
-        //gencs.printf("\t@Export(selector = \"%s\")", selector);
+        //gencs.printf("\t@Export(\"%s\")", selector);
         //gencs.println();
 
         final String retval = remapType(type.toString());
-        gencs.printf("\tpublic %s %s;", retval, selector);
-        gencs.println();
-        gencs.println();
+//        gencs.printf("\tpublic %s %s;", retval, selector);
+//        gencs.println();
+//        gencs.println();
 
         if (getter != null) {
             gencs.printf("\t@Bind(\"" + getter + "\")");
             gencs.println();
         }
-        gencs.printf("\t@Export(selector = \"%s\")", selector.toString());
+        gencs.printf("\t@Export(\"%s\")", selector.toString());
         gencs.println();
         gencs.printf("\tpublic %s get%s() {", retval, StringUtils.capitalize(selector.toString()));
         gencs.println();
-        gencs.printf("\t\treturn this.%s;", selector);
+        gencs.printf("\t\tthrow new RuntimeException();");
         gencs.println();
         gencs.printf("\t}");
         gencs.println();
         gencs.println();
 
         if (!ro) {
-            gencs.printf("\t@Export(selector = \"set%s:\")", StringUtils.capitalize(selector.toString()));
+            gencs.printf("\t@Export(\"set%s:\")", StringUtils.capitalize(selector.toString()));
             gencs.println();
             gencs.printf("\tpublic void set%s(%s value) {", StringUtils.capitalize(selector.toString()), retval);
             gencs.println();
-            gencs.printf("\t\tthis.%s = value;", selector);
+            gencs.printf("\t\tthrow new RuntimeException();");
             gencs.println();
             gencs.printf("\t}");
             gencs.println();
@@ -463,7 +465,7 @@ public class Parser {
         return type;
     }
 
-    private static String mapDummyReturn(final String type) {
+    /*private static String mapDummyReturn(final String type) {
         if (type.equals("void")) {
             return null;
         } else if (type.equals("int")) {
@@ -479,7 +481,7 @@ public class Parser {
         } else {
             return "null";
         }
-    }
+    }*/
 
     private String rx = "(NS_AVAILABLE\\(.*\\)|NS_AVAILABLE_IOS\\([0-9_]+\\)|NS_AVAILABLE_MAC\\([0-9_]+\\)|__OSX_AVAILABLE_STARTING\\([_A-Z0-9,]+\\))";
     private String rx2 = "AVAILABLE_MAC_OS_X_VERSION[_A-Z0-9]*";
@@ -589,7 +591,7 @@ public class Parser {
             gencs.println(")");
         }
 
-        gencs.println("@Model");
+        gencs.println("@Register(isWrapper = true)");
         gencs.printf("public class %s", cols[1]);
         if (baseTypes.size() > 0) {
             gencs.printf(" extends");
@@ -616,7 +618,7 @@ public class Parser {
 
         Declarations decl = new Declarations(gencs);
         while ((line = r.readLine()) != null && !line.startsWith("@end")) {
-            String full = "";
+            String full = line;
 
             while ((line = r.readLine()) != null && !line.startsWith("@end")) {
                 full += line;
@@ -667,12 +669,11 @@ public class Parser {
         }
 
         gencs.println("@Model");
-        gencs.printf("public class %s", d[1]);
+        gencs.println("@Register(isWrapper = true)");
+        gencs.printf("public class %s extends NSObject", d[1]);
         if (baseTypes.size() > 0) {
-            gencs.printf(" extends");
             for (int i = 0; i < baseTypes.size(); i++) {
-                gencs.printf(" %s", baseTypes.get(i));
-                if (i != baseTypes.size() - 1) gencs.printf(",");
+                gencs.printf(", %s", baseTypes.get(i));
             }
         }
         gencs.println(" {");
@@ -684,7 +685,7 @@ public class Parser {
                 optional = true;
             }
 
-            String full = "";
+            String full = line;
             while ((line = r.readLine()) != null && !line.startsWith("@end")) {
                 full += line;
                 if (full.indexOf(';') != -1) {

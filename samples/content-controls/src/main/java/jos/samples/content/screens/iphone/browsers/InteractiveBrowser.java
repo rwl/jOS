@@ -4,11 +4,13 @@ import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSBundle;
 import jos.api.foundation.NSObject;
+import jos.api.foundation.NSURLRequest;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIViewController;
+import jos.api.uikit.UIWebView;
 import jos.samples.content.EventListener;
 
 public class InteractiveBrowser extends UIViewController {
@@ -51,7 +53,7 @@ public class InteractiveBrowser extends UIViewController {
      * do it, we need to return false, so that the navigation doesn't happen. in this
      * particular case we are checking for links that have //LOCAL/Action='whateverAction'
      */
-    public boolean handleStartLoad(UIWebView webView, NSUrlRequest request,
+    public boolean handleStartLoad(UIWebView webView, NSURLRequest request,
                      UIWebViewNavigationType navigationType) {
         System.out.println(navigationType.toString());
 

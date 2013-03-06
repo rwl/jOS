@@ -54,22 +54,22 @@ public class NSUrl extends NSObject {
     }
 
     @Export("absoluteString")
-    public String absoluteString() {
+    public String getAbsoluteString() {
         throw new RuntimeException();
     }
 
     @Export("relativeString")
-    public String relativeString() {
+    public String getRelativeString() {
         throw new RuntimeException();
     }
 
     @Export("baseURL")
-    public NSUrl baseURL() {
+    public NSUrl getBaseURL() {
         throw new RuntimeException();
     }
 
     @Export("absoluteURL")
-    public NSUrl absoluteURL() {
+    public NSUrl getAbsoluteURL() {
         throw new RuntimeException();
     }
 

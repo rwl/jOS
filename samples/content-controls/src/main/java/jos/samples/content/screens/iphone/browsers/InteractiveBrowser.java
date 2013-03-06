@@ -5,12 +5,15 @@ import com.google.j2objc.annotations.Outlet;
 import jos.api.foundation.NSBundle;
 import jos.api.foundation.NSObject;
 import jos.api.foundation.NSURLRequest;
+import jos.api.foundation.NSUrl;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIViewController;
 import jos.api.uikit.UIWebView;
+import jos.api.uikit.UIWebViewDelegate;
+import jos.api.uikit.UIWebViewNavigationType;
 import jos.samples.content.EventListener;
 
 public class InteractiveBrowser extends UIViewController {
@@ -33,7 +36,7 @@ public class InteractiveBrowser extends UIViewController {
 
             @Override
             public void onEvent(NSObject sender, UIEvent event) {
-                webMain.evaluateJavascript("RunAction();");
+                webMain.evaluateJavaScript("RunAction();");
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);
 
@@ -42,9 +45,15 @@ public class InteractiveBrowser extends UIViewController {
         // can load the request directly
         String homePageUrl = NSBundle.getMainBundle().getBundlePath()
                 + "/Content/InteractivePages/Home.html";
-        webMain.loadRequest(new NSUrlRequest(new NSUrl(homePageUrl, false)));
+        webMain.loadRequest(new NSURLRequest(new NSUrl(homePageUrl, false)));
 
-        webMain.shouldStartLoad += this.HandleStartLoad;
+        webMain.setDelegate(new UIWebViewDelegate() {
+            @Override
+            public boolean shouldStartLoad(UIWebView webView, NSURLRequest request,
+                    UIWebViewNavigationType navigationType) {
+                return handleStartLoad(webView, request, navigationType);
+            }
+        });
     }
 
     /**

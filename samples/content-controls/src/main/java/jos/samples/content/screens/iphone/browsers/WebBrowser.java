@@ -1,6 +1,9 @@
 package jos.samples.content.screens.iphone.browsers;
 
+import jos.api.foundation.NSError;
 import jos.api.foundation.NSObject;
+import jos.api.foundation.NSURLRequest;
+import jos.api.foundation.NSUrl;
 import jos.api.uikit.UIActivityIndicatorView;
 import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIButton;
@@ -8,7 +11,10 @@ import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UITextField;
+import jos.api.uikit.UITextFieldDelegate;
 import jos.api.uikit.UIViewController;
+import jos.api.uikit.UIWebView;
+import jos.api.uikit.UIWebViewDelegate;
 import jos.samples.content.EventListener;
 
 import com.google.j2objc.annotations.Outlet;
@@ -76,10 +82,28 @@ public class WebBrowser extends UIViewController {
                 navigateToUrl();
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);
-        txtAddress.shouldReturn = handleEditingDone;
-        webMain.loadStarted = loadStarted;
-        webMain.loadFinished = loadingFinished;
-        webMain.loadError = loadError;
+        txtAddress.setDelegate(new UITextFieldDelegate() {
+            @Override
+            public void textFieldDidEndEditing(UITextField textField) {
+                handleEditingDone();
+            }
+        });
+        webMain.setDelegate(new UIWebViewDelegate() {
+            @Override
+            public void didStartLoad(UIWebView webView) {
+                loadStarted();
+            }
+
+            @Override
+            public void didFinishLoad(UIWebView webView) {
+                loadingFinished();
+            }
+
+            @Override
+            public void didFailLoad(UIWebView webView, NSError error) {
+                loadError(webView, error);
+            }
+        });
 
         // disable our buttons to start
         btnBack.setEnabled(false);
@@ -99,7 +123,7 @@ public class WebBrowser extends UIViewController {
             url = "http://" + url;
         }
 
-        webMain.loadRequest(new NSUrlRequest(new NSUrl(url)));
+        webMain.loadRequest(new NSURLRequest(new NSUrl(url)));
     }
 
     protected void setBackAndForwardEnable() {
@@ -114,24 +138,24 @@ public class WebBrowser extends UIViewController {
     }
 
     public void loadStarted() {
-        btnStop.Enabled = true;
-        SetBackAndForwardEnable();
-        imgBusy.StartAnimating();
+        btnStop.setEnabled(true);
+        setBackAndForwardEnable();
+        imgBusy.startAnimating();
     }
 
-    public void LoadingFinished() {
+    public void loadingFinished() {
         setBackAndForwardEnable();
         btnStop.setEnabled(false);
         imgBusy.stopAnimating();
     }
 
-    public void loadError(NSObject sender, UIWebErrorArgs e) {
+    public void loadError(NSObject sender, NSError e) {
         imgBusy.stopAnimating();
         btnStop.setEnabled(false);
         setBackAndForwardEnable();
         // show the error
         UIAlertView alert = new UIAlertView("Browse Error",
-                "Web page failed to load: " + e.getError().toString(), null,
+                "Web page failed to load: " + e.toString(), null,
                 "OK", null);
         alert.show();
     }

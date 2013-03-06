@@ -30,7 +30,7 @@ public class NSURLRequest extends NSObject {
     }
 
     @Export("URL")
-    public NSUrl URL() {
+    public NSUrl getUrl() {
         throw new RuntimeException();
     }
 

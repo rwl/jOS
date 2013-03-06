@@ -3,8 +3,11 @@ package jos.samples.content.screens.iphone.browsers;
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSBundle;
+import jos.api.foundation.NSURLRequest;
+import jos.api.foundation.NSUrl;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIViewController;
+import jos.api.uikit.UIWebView;
 
 public class LocalBrowser extends UIViewController {
 
@@ -23,13 +26,12 @@ public class LocalBrowser extends UIViewController {
 
         // can load the request directly
         String homePageUrl = NSBundle.getMainBundle().getBundlePath() + "/Content/Home.html";
-        webMain.loadRequest(new NSUrlRequest(new NSUrl(homePageUrl, false)));
+        webMain.loadRequest(new NSURLRequest(new NSUrl(homePageUrl, false)));
 
         // can also manually create html
         String contentDirectoryPath = NSBundle.getMainBundle().getBundlePath() + "/Content/";
-        webMain.LoadHtmlString("<html><a href=\"Home.html\">Click Me</a>",
+        webMain.loadHTML("<html><a href=\"Home.html\">Click Me</a>",
                 new NSUrl(contentDirectoryPath, true));
-
     }
 
     @Override

@@ -50,10 +50,10 @@ public class UIImageView extends UIView {
         return animationDuration;
     }
 
-    @Export("setAnimationDuration:")
-    public void setAnimationDuration(double animationDuration) {
-        this.animationDuration = animationDuration;
-    }
+//    @Export("setAnimationDuration:")
+//    public void setAnimationDuration(double animationDuration) {
+//        this.animationDuration = animationDuration;
+//    }
 
     @Export("image")
     public UIImage getImage() {

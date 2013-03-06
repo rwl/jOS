@@ -37,13 +37,13 @@ public class UIWebView extends UIView {
 
     @Bind("canGoBack")
     @Export("canGoBack")
-    public boolean getCanGoBack() {
+    public boolean canGoBack() {
         throw new RuntimeException();
     }
 
     @Bind("canGoForward")
     @Export("canGoForward")
-    public boolean getCanGoForward() {
+    public boolean canGoForward() {
         throw new RuntimeException();
     }
 
@@ -139,7 +139,7 @@ public class UIWebView extends UIView {
     }
 
     @Export("loadHTMLString:baseURL:")
-    public void loadHTMLStringbaseURL(String string, NSUrl baseURL) {
+    public void loadHTML(String string, NSUrl baseURL) {
         throw new RuntimeException();
     }
 
@@ -169,7 +169,7 @@ public class UIWebView extends UIView {
     }
 
     @Export("stringByEvaluatingJavaScriptFromString:")
-    public String stringByEvaluatingJavaScriptFromString(String script) {
+    public String evaluateJavaScript(String script) {
         throw new RuntimeException();
     }
 

@@ -10,6 +10,7 @@ public class UITableViewController extends UIViewController {
 
     @Export("init")
     public UITableViewController() {
+        super();
     }
 
     @Export("initWithStyle:")

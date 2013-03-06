@@ -3,6 +3,9 @@ package jos.samples.content.screens.iphone.customizingnavbar;
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSObject;
+import jos.api.uikit.UIBarButtonItem;
+import jos.api.uikit.UIBarButtonSystemItem;
+import jos.api.uikit.UIBarStyle;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIControlEvent;
@@ -51,11 +54,11 @@ public class CustomizingNavBarScreen extends UIViewController {
             @Override
             public void onEvent(NSObject sender, UIEvent event) {
              // if it's red, reset it by setting it to null
-                if (getNavigationController().getNavigationBar().setTintColor(UIColor.RED)) {
+                if (getNavigationController().getNavigationBar().getTintColor() == UIColor.redColor()) {
                     getNavigationController().getNavigationBar().setTintColor(null);
                 // otherwise, make it red
                 } else {
-                    getNavigationController().getNavigationBar().setTintColor(UIColor.RED));
+                    getNavigationController().getNavigationBar().setTintColor(UIColor.redColor());
                 }
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);
@@ -77,9 +80,11 @@ public class CustomizingNavBarScreen extends UIViewController {
             @Override
             public void onEvent(NSObject sender, UIEvent event) {
                 if (getNavigationItem().getRightBarButtonItem() == null) {
-                    getNavigationItem().setRightBarButtonItem(new UIBarButtonItem(UIBarButtonSystemItem.Action, null), true);
+                    getNavigationItem().setRightBarButtonItems(new UIBarButtonItem[] {
+                            new UIBarButtonItem(UIBarButtonSystemItem.ACTION, null, null)
+                    }, true);
                 } else {
-                    getNavigationItem().setRightBarButtonItem(null, true);
+                    getNavigationItem().setRightBarButtonItems(null, true);
                 }
             }
         }, UIControlEvent.TOUCH_UP_INSIDE);
@@ -87,11 +92,13 @@ public class CustomizingNavBarScreen extends UIViewController {
         // setup the toolbar items. the navigation controller gets the items from the controller
         // because they're specific to each controller on the stack, hence 'setToolbarItems' rather
         // than navigationController.toolbar.setToolbarItems
+        UIBarButtonItem flexible = new UIBarButtonItem(UIBarButtonSystemItem.FLEXIBLE_SPACE, null, null);
+        flexible.setWidth(50);
         setToolbarItems(new UIBarButtonItem[] {
-                new UIBarButtonItem(UIBarButtonSystemItem.Refresh),
-                new UIBarButtonItem(UIBarButtonSystemItem.FlexibleSpace) { Width = 50 },
-                new UIBarButtonItem(UIBarButtonSystemItem.Pause)
-            }, false);
+                new UIBarButtonItem(UIBarButtonSystemItem.REFRESH, null, null),
+                flexible,
+                new UIBarButtonItem(UIBarButtonSystemItem.PAUSE, null, null)
+            });
 
         // toggle the display of the toolbar
         btnShowToolbar.addTarget(new EventListener() {

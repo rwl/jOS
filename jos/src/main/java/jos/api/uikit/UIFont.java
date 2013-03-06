@@ -1,9 +1,9 @@
 package jos.api.uikit;
 
+import jos.api.foundation.NSObject;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
-
-import jos.api.foundation.NSObject;
 
 @Register(isWrapper = true)
 public class UIFont extends NSObject {
@@ -16,6 +16,16 @@ public class UIFont extends NSObject {
     @Export("boldSystemFontOfSize:")
     public static UIFont boldSystemFontOfSize(int size) {
         return null;
+    }
+
+    @Export("buttonFontSize")
+    public static float buttonFontSize() {
+        throw new RuntimeException();
+    }
+
+    @Export("systemFontSize")
+    public static float systemFontSize() {
+        throw new RuntimeException();
     }
 
 }

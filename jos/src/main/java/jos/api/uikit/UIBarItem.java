@@ -9,6 +9,7 @@ import com.google.j2objc.annotations.Register;
 
 @Register(isWrapper = true)
 public class UIBarItem extends UIAppearance {
+
     @Bind("isEnabled")
     @Export("enabled")
     public boolean getEnabled() {

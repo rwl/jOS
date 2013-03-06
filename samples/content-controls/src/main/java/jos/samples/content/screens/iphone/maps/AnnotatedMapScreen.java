@@ -1,8 +1,15 @@
 package jos.samples.content.screens.iphone.maps;
 
+import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 
+import jos.api.corelocation.CLLocationCoordinate2D;
 import jos.api.foundation.NSObject;
+import jos.api.mapkit.MKAnnotation;
+import jos.api.mapkit.MKAnnotationView;
+import jos.api.mapkit.MKCoordinateSpan;
+import jos.api.mapkit.MKMapView;
+import jos.api.mapkit.MKMapViewDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIButtonType;
 import jos.api.uikit.UIControlEvent;
@@ -110,7 +117,7 @@ public class AnnotatedMapScreen extends UIViewController {
     // invoking for properties yet?
     protected static class BasicMapAnnotationProto extends NSObject
     {
-        @Export("coordinate")]
+        @Export("coordinate")
         public CLLocationCoordinate2D getCoordinate ()
         {
             return coordinate;
@@ -123,7 +130,7 @@ public class AnnotatedMapScreen extends UIViewController {
             }
 
         @Export ("subtitle")
-        public string getSubtitle ()
+        public String getSubtitle ()
         { return subtitle; }
 
     }

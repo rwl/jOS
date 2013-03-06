@@ -89,7 +89,7 @@ public class UINavigationController extends UIViewController {
     }
 
     @Export("pushViewController:animated:")
-    public void pushViewControlleranimated(UIViewController viewController, boolean animated) {
+    public void pushViewController(UIViewController viewController, boolean animated) {
         throw new RuntimeException();
     }
 

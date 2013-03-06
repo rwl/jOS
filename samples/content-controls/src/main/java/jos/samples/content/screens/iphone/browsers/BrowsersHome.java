@@ -1,8 +1,5 @@
 package jos.samples.content.screens.iphone.browsers;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
-
 import jos.api.foundation.NSObject;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
@@ -10,6 +7,8 @@ import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIViewController;
 import jos.samples.content.EventListener;
+
+import com.google.j2objc.annotations.Outlet;
 
 public class BrowsersHome extends UIViewController {
 

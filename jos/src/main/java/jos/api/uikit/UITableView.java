@@ -35,4 +35,9 @@ public class UITableView extends UIScrollView {
         return null;
     }
 
+    @Export("reloadData")
+    public void reloadData() {
+        throw new RuntimeException();
+    }
+
 }

@@ -12,57 +12,57 @@ import com.google.j2objc.annotations.Register;
 public class UISearchBarDelegate extends NSObject {
 
     @Export("searchBarShouldBeginEditing:")
-    public boolean searchBarShouldBeginEditing(UISearchBar searchBar) {
+    public boolean shouldBeginEditing(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarTextDidBeginEditing:")
-    public void searchBarTextDidBeginEditing(UISearchBar searchBar) {
+    public void textDidBeginEditing(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarShouldEndEditing:")
-    public boolean searchBarShouldEndEditing(UISearchBar searchBar) {
+    public boolean shouldEndEditing(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarTextDidEndEditing:")
-    public void searchBarTextDidEndEditing(UISearchBar searchBar) {
+    public void textDidEndEditing(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBar:textDidChange:")
-    public void searchBartextDidChange(UISearchBar searchBar, String searchText) {
+    public void textChanged(UISearchBar searchBar, String searchText) {
         throw new RuntimeException();
     }
 
     @Export("searchBar:shouldChangeTextInRange:replacementText:")
-    public boolean searchBarshouldChangeTextInRangereplacementText(UISearchBar searchBar, NSRange range, String text) {
+    public boolean shouldChangeTextInRangereplacementText(UISearchBar searchBar, NSRange range, String text) {
         throw new RuntimeException();
     }
 
     @Export("searchBarSearchButtonClicked:")
-    public void searchBarSearchButtonClicked(UISearchBar searchBar) {
+    public void searchButtonClicked(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarBookmarkButtonClicked:")
-    public void searchBarBookmarkButtonClicked(UISearchBar searchBar) {
+    public void bookmarkButtonClicked(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarCancelButtonClicked:")
-    public void searchBarCancelButtonClicked(UISearchBar searchBar) {
+    public void cancelButtonClicked(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBarResultsListButtonClicked:")
-    public void searchBarResultsListButtonClicked(UISearchBar searchBar) {
+    public void resultsListButtonClicked(UISearchBar searchBar) {
         throw new RuntimeException();
     }
 
     @Export("searchBar:selectedScopeButtonIndexDidChange:")
-    public void searchBarselectedScopeButtonIndexDidChange(UISearchBar searchBar, int selectedScope) {
+    public void selectedScopeButtonIndexDidChange(UISearchBar searchBar, int selectedScope) {
         throw new RuntimeException();
     }
 

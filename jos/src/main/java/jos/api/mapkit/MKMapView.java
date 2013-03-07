@@ -69,8 +69,18 @@ public class MKMapView extends UIView {
         throw new RuntimeException();
     }
 
+    @Export("setMapType:")
+    public void setMapType(MKMapType type) {
+        throw new RuntimeException();
+    }
+
     @Export("region")
     public MKCoordinateRegion region() {
+        throw new RuntimeException();
+    }
+
+    @Export("setRegion:")
+    public void setRegion(MKCoordinateRegion region) {
         throw new RuntimeException();
     }
 
@@ -195,7 +205,7 @@ public class MKMapView extends UIView {
     }
 
     @Export("dequeueReusableAnnotationViewWithIdentifier:")
-    public MKAnnotationView dequeueReusableAnnotationViewWithIdentifier(String identifier) {
+    public MKAnnotationView dequeueReusableAnnotation(String identifier) {
         throw new RuntimeException();
     }
 

@@ -14,10 +14,15 @@ import jos.api.mapkit.MKAnnotationView;
 import jos.api.mapkit.MKCoordinateSpan;
 import jos.api.mapkit.MKMapView;
 import jos.api.mapkit.MKMapViewDelegate;
+import jos.api.mapkit.MKPinAnnotationColor;
+import jos.api.mapkit.MKPinAnnotationView;
+import jos.api.uikit.UIAlertView;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIButtonType;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIImage;
+import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIViewController;
 import jos.samples.content.EventListener;
 
@@ -38,8 +43,8 @@ public class AnnotatedMapScreen extends UIViewController {
 
         // create our location and zoom for los angeles
         CLLocationCoordinate2D coords = makeLocationCoordinate2D(34.120, -118.188);
-        MKCoordinateSpan span = makeCoordinateSpan(milesToLatitudeDegrees (20),
-                milesToLongitudeDegrees(20, coords.latitude));
+        MKCoordinateSpan span = makeCoordinateSpan(Util.milesToLatitudeDegrees (20),
+                Util.milesToLongitudeDegrees(20, coords.latitude));
 
         // set the coords and zoom on the map
         mapMain.regionThatFits(makeCoordinateRegion(coords, span));
@@ -53,12 +58,12 @@ public class AnnotatedMapScreen extends UIViewController {
                 "Los Angeles", "City of Demons"));
 
         // can use this as well.
-//      mapMain.addAnnotationObject(
-//          new BasicMapAnnotationProto() {
-//              coordinate = new CLLocationCoordinate2D(34.120, -118.188),
-//              title = "Los Angeles", Subtitle = "City of Demons"
-//          }
-//      );
+        /*mapMain.addAnnotationObject(
+            new BasicMapAnnotationProto() {
+                coordinate = new CLLocationCoordinate2D(34.120, -118.188),
+                title = "Los Angeles", Subtitle = "City of Demons"
+            }
+        );*/
     }
 
     // The map delegate is much like the table delegate.
@@ -71,7 +76,7 @@ public class AnnotatedMapScreen extends UIViewController {
          * This is very much like the GetCell method on the table delegate
          */
         @Override
-        public MKAnnotationView getViewForAnnotation(MKAnnotation annotation)
+        public MKAnnotationView getViewForAnnotation(MKMapView mapView, MKAnnotation annotation)
         {
             // try and dequeue the annotation view
             MKAnnotationView annotationView = mapView.dequeueReusableAnnotation(annotationIdentifier);
@@ -80,7 +85,7 @@ public class AnnotatedMapScreen extends UIViewController {
             if (annotationView == null) {
                 annotationView = new MKPinAnnotationView(annotation, annotationIdentifier);
             } else {  // if we did dequeue one for reuse, assign the annotation to it
-                annotationView.Annotation = annotation;
+                annotationView.setAnnotation(annotation);
             }
 
             // configure our annotation view properties
@@ -93,15 +98,16 @@ public class AnnotatedMapScreen extends UIViewController {
             detailButton = UIButton.fromType(UIButtonType.DETAIL_DISCLOSURE);
             detailButton.addTarget(new EventListener() {
                 @Override
-                public void onEvent(NSObject sender, UIEvent event) {
-                    Coordinate c = ((MKAnnotation) annotation).coordinate;
+                public void onEvent(NSObject annotation, UIEvent event) {
+                    CLLocationCoordinate2D c = ((MKAnnotation) annotation).coordinate();
                     new UIAlertView("Annotation Clicked", "You clicked on "
-                            + c.latitude.toString() + ", "
-                            + c.longitude.toString() , null, "OK", null).show();
+                            + c.latitude + ", "
+                            + c.longitude, null, "OK", null).show();
                 }
             }, UIControlEvent.TOUCH_UP_INSIDE);
             annotationView.setRightCalloutAccessoryView(detailButton);
-            annotationView.setLeftCalloutAccessoryView(new UIImageView(UIImage.fromBundle("Images/Icon/29_icon.png")));
+            annotationView.setLeftCalloutAccessoryView(new UIImageView(UIImage
+                    .fromBundle("Images/Icon/29_icon.png")));
             //annotationView.setImage(UIImage.fromBundle("Images/Apress-29x29.png"));
 
             return annotationView;
@@ -112,7 +118,7 @@ public class AnnotatedMapScreen extends UIViewController {
          * map zooms in or out.
          */
         @Override
-        public void regionChanged (MKMapView mapView, bool animated) {}
+        public void regionChanged (MKMapView mapView, boolean animated) {}
 
     }
 
@@ -120,86 +126,55 @@ public class AnnotatedMapScreen extends UIViewController {
     // TODO: is this fixed now??
     // TODO: yes, but the better question is, do we support opt-in selector
     // invoking for properties yet?
-    protected static class BasicMapAnnotationProto extends NSObject
-    {
+    protected static class BasicMapAnnotationProto extends NSObject {
+
+        CLLocationCoordinate2D coordinate;
+        String title;
+        String subtitle;
+
         @Export("coordinate")
-        public CLLocationCoordinate2D getCoordinate ()
-        {
+        public CLLocationCoordinate2D getCoordinate () {
             return coordinate;
         }
 
         @Export ("title")
-        public String getTitle ()
-        {
+        public String getTitle () {
             return title;
-            }
+        }
 
         @Export ("subtitle")
-        public String getSubtitle ()
-        { return subtitle; }
+        public String getSubtitle () {
+            return subtitle;
+        }
 
     }
 
-    // MonoTouch doesn't provide even a basic map annotation base class, so this can
+    // jOS doesn't provide even a basic map annotation base class, so this can
     // serve as one.
-    protected class BasicMapAnnotation extends MKAnnotation
-    {
+    protected class BasicMapAnnotation extends MKAnnotation {
+
         /**
          * The location of the annotation
          */
-        @Override
-        public CLLocationCoordinate2D getCoordinate() {
-            return coordinate;
-        }
+        CLLocationCoordinate2D coordinate;
 
         /**
          * The title text
          */
-        @Override
-        public String getTitle()
-        { return title; }
-        protected String title;
+        String title;
 
         /**
          * The subtitle text
          */
-        @Override
-        public String getSubtitle()
-        { return subtitle; }
-        protected String subtitle;
+        String subtitle;
 
-        public BasicMapAnnotation(CLLocationCoordinate2D coordinate, String title, String subTitle)
-        {
+        public BasicMapAnnotation(CLLocationCoordinate2D coordinate, String title, String subTitle) {
             super();
             this.coordinate = coordinate;
             this.title = title;
             this.subtitle = subTitle;
         }
 
-    }
-
-    /**
-     * Converts miles to latitude degrees
-     */
-    public double milesToLatitudeDegrees(double miles)
-    {
-        double earthRadius = 3960.0;
-        double radiansToDegrees = 180.0/Math.PI;
-        return (miles/earthRadius) * radiansToDegrees;
-    }
-
-    /**
-     * Converts miles to longitudinal degrees at a specified latitude
-     */
-    public double milesToLongitudeDegrees(double miles, double atLatitude)
-    {
-        double earthRadius = 3960.0;
-        double degreesToRadians = Math.PI/180.0;
-        double radiansToDegrees = 180.0/Math.PI;
-
-        // derive the earth's radius at that point in latitude
-        double radiusAtLatitude = earthRadius * Math.cos(atLatitude * degreesToRadians);
-        return (miles / radiusAtLatitude) * radiansToDegrees;
     }
 
 }

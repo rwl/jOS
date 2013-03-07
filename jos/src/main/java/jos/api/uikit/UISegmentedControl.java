@@ -29,12 +29,12 @@ public class UISegmentedControl extends UIControl {
     }
 
     @Export("selectedSegmentIndex")
-    public int getSelectedSegmentIndex() {
+    public int getSelectedSegment() {
         return selectedSegmentIndex;
     }
 
     @Export("setSelectedSegmentIndex:")
-    public void setSelectedSegmentIndex(int selectedSegment) {
+    public void setSelectedSegment(int selectedSegment) {
         this.selectedSegmentIndex = selectedSegment;
     }
 

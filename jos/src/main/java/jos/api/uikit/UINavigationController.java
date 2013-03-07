@@ -11,6 +11,11 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UINavigationController extends UIViewController {
 
+    @Export("init")
+    public UINavigationController() {
+        super();
+    }
+
     @Export("initWithNibName:bundle:")
     public UINavigationController(String nibName, NSBundle bundle) {
         super(nibName, bundle);

@@ -19,7 +19,7 @@ public class MKMapViewDelegate extends NSObject {
     }
 
     @Export("mapView:regionDidChangeAnimated:")
-    public void regionDidChange(MKMapView mapView, boolean animated) {
+    public void regionChanged(MKMapView mapView, boolean animated) {
         throw new RuntimeException();
     }
 
@@ -35,6 +35,12 @@ public class MKMapViewDelegate extends NSObject {
 
     @Export("mapViewDidFailLoadingMap:withError:")
     public void didFailLoadingMapwithError(MKMapView mapView, NSError error) {
+        throw new RuntimeException();
+    }
+
+
+    @Export("mapView:viewForAnnotation:")
+    public MKAnnotationView getViewForAnnotation(MKMapView mapView, MKAnnotation annotation) {
         throw new RuntimeException();
     }
 
@@ -89,7 +95,7 @@ public class MKMapViewDelegate extends NSObject {
     }
 
     @Export("mapView:viewForOverlay:")
-    public MKOverlayView viewForOverlay(MKMapView mapView, MKOverlay overlay) {
+    public MKOverlayView getViewForOverlay(MKMapView mapView, MKOverlay overlay) {
         throw new RuntimeException();
     }
 

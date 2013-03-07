@@ -1,5 +1,9 @@
 package jos.api.mapkit;
 
+import com.google.j2objc.annotations.Bind;
+
 public enum MKMapType {
-    MKMapTypeStandard, MKMapTypeSatellite, MKMapTypeHybrid;
+    @Bind("MKMapTypeStandard") STANDARD,
+    @Bind("MKMapTypeSatellite") SATELLITE,
+    @Bind("MKMapTypeHybrid") HYBRID;
 }

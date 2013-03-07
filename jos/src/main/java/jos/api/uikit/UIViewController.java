@@ -436,4 +436,20 @@ public class UIViewController extends UIResponder {
     public UISplitViewController getSplitViewController() {
         throw new RuntimeException();
     }
+
+
+    @Export("tabBarItem")
+    public UITabBarItem getTabBarItem() {
+        throw new RuntimeException();
+    }
+
+    @Export("setTabBarItem:")
+    public void setTabBarItem(UITabBarItem value) {
+        throw new RuntimeException();
+    }
+
+    @Export("tabBarController")
+    public UITabBarController getTabBarController() {
+        throw new RuntimeException();
+    }
 }

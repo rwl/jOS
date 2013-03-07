@@ -2,7 +2,6 @@ package jos.api.uikit;
 
 import jos.api.foundation.NSAttributedString;
 import jos.api.foundation.NSCoding;
-import jos.api.foundation.NSObject;
 import jos.api.foundation.NSString;
 import jos.api.graphicsimaging.CGRect;
 
@@ -15,6 +14,7 @@ import com.google.j2objc.annotations.Register;
 @BaseType({UIControl.class, NSCoding.class})
 @Register(isWrapper = true)
 public class UIButton extends UIControl {
+
     @Export("contentEdgeInsets")
     public UIEdgeInsets getContentEdgeInsets() {
         throw new RuntimeException();
@@ -132,7 +132,7 @@ public class UIButton extends UIControl {
     }
 
     @Export("buttonWithType:")
-    public static NSObject buttonWithType(UIButtonType buttonType) {
+    public static UIButton fromType(UIButtonType buttonType) {
         throw new RuntimeException();
     }
 

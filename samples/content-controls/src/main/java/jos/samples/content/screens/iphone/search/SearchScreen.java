@@ -1,5 +1,9 @@
 package jos.samples.content.screens.iphone.search;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,9 +11,11 @@ import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSIndexPath;
 import jos.api.uikit.UISearchBar;
+import jos.api.uikit.UISearchBarDelegate;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellStyle;
+import jos.api.uikit.UITableViewDataSource;
 import jos.api.uikit.UIViewController;
 
 public class SearchScreen extends UIViewController {
@@ -45,31 +51,58 @@ public class SearchScreen extends UIViewController {
 
         // create our table source and bind it to the table
         tableSource = new WordsTableSource();
-        tblMain.setSource(tableSource);
+        tblMain.setDataSource(tableSource);
 
         // wire up the search button clicked handler to hide the keyboard
-        srchMain.searchButtonClicked ;//+= (s, e) => { srchMain.ResignFirstResponder(); };
+        srchMain.setDelegate(new UISearchBarDelegate() {
 
-        // refine the search results every time the text changes
-        srchMain.textChanged ;//+= (s, e) => { RefineSearchItems(); };
+            @Override
+            public void searchButtonClicked(UISearchBar searchBar) {
+                srchMain.resignFirstResponder();
+            }
+
+            @Override
+            public void textChanged(UISearchBar searchBar, String searchText) {
+                // refine the search results every time the text changes
+                refineSearchItems();
+            }
+
+        });
     }
 
     /**
      * This loads our dictionary of words into our _dictionary object.
      */
-    protected void loadWords()
-    {
-        dictionary = File.readAllLines("Content/WordList.txt").toList();
+    protected void loadWords() {
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader("Content/WordList.txt"));
+            dictionary = new ArrayList<String>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                dictionary.add(line);
+            }
+            br.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
      * is called when the text in the search box text changes. i use some simple
      * LINQ to refine the word list in our table source
      */
-    protected void refineSearchItems()
-    {
+    protected void refineSearchItems() {
         // select our words
-        tableSource.words = dictionary.where(w.contains(srchMain.text)).toList();
+        List<String> words = new ArrayList<String>();
+        for (String w : dictionary) {
+            if (w.contains(srchMain.getText())) {
+                words.add(w);
+            }
+        }
+        tableSource.words = words;
 
         // refresh the table
         tblMain.reloadData();
@@ -78,7 +111,7 @@ public class SearchScreen extends UIViewController {
     /**
      * A simple table source that displays a list of strings
      */
-    protected static class WordsTableSource extends UITableViewSource
+    protected static class WordsTableSource extends UITableViewDataSource
     {
         protected String cellIdentifier = "wordsCell";
 

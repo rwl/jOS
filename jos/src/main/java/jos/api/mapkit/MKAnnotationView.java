@@ -1,6 +1,5 @@
 package jos.api.mapkit;
 
-import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UIView;
@@ -39,7 +38,7 @@ public class MKAnnotationView extends UIView {
     }
 
     @Export("initWithAnnotation:reuseIdentifier:")
-    public NSObject initWithAnnotationreuseIdentifier(MKAnnotation annotation, String reuseIdentifier) {
+    public MKAnnotationView(MKAnnotation annotation, String reuseIdentifier) {
         throw new RuntimeException();
     }
 
@@ -73,6 +72,11 @@ public class MKAnnotationView extends UIView {
         throw new RuntimeException();
     }
 
+    @Export("setSelected:")
+    public void setSelected(boolean selected) {
+        throw new RuntimeException();
+    }
+
     @Export("setSelected:animated:")
     public void setSelectedanimated(boolean selected, boolean animated) {
         throw new RuntimeException();
@@ -83,13 +87,28 @@ public class MKAnnotationView extends UIView {
         throw new RuntimeException();
     }
 
+    @Export("setCanShowCallout:")
+    public void setCanShowCallout(boolean can) {
+        throw new RuntimeException();
+    }
+
     @Export("leftCalloutAccessoryView")
     public UIView leftCalloutAccessoryView() {
         throw new RuntimeException();
     }
 
+    @Export("setLeftCalloutAccessoryView:")
+    public void setLeftCalloutAccessoryView(UIView view) {
+        throw new RuntimeException();
+    }
+
     @Export("rightCalloutAccessoryView")
     public UIView rightCalloutAccessoryView() {
+        throw new RuntimeException();
+    }
+
+    @Export("setRightCalloutAccessoryView:")
+    public void setRightCalloutAccessoryView(UIView view) {
         throw new RuntimeException();
     }
 

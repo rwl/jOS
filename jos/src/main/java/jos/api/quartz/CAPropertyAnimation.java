@@ -1,6 +1,5 @@
 package jos.api.quartz;
 
-import jos.api.foundation.NSObject;
 import jos.api.foundation.NSString;
 
 import com.google.j2objc.annotations.Export;
@@ -10,7 +9,7 @@ import com.google.j2objc.annotations.Register;
 public class CAPropertyAnimation extends CAAnimation {
 
     @Export("animationWithKeyPath:")
-    public NSObject animationWithKeyPath(String path) {
+    public static CAPropertyAnimation fromKeyPath(String path) {
         throw new RuntimeException();
     }
 

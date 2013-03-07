@@ -1,11 +1,11 @@
 package jos.api.uikit;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Register;
-
 import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGImageRef;
 import jos.api.graphicsimaging.CGSize;
+
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Register;
 
 @Register(isWrapper = true)
 public class UIImage extends NSObject {
@@ -17,6 +17,11 @@ public class UIImage extends NSObject {
 
     @Export("imageWithContentsOfFile:")
     public static UIImage fromFile(String string) {
+        return null;
+    }
+
+    @Export("imageWithCGImage:")
+    public static UIImage fromImage(CGImageRef cgImage) {
         return null;
     }
 

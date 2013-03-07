@@ -1,11 +1,27 @@
 package jos.samples.animation.screens;
 
+import static jos.api.graphicsimaging.CGGeometry.makePoint;
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
+import static jos.api.graphicsimaging.CGPath.moveToPoint;
+import static jos.api.graphicsimaging.CGPath.addCurveToPoint;
+import static jos.api.graphicsimaging.CGAffineTransform.scale;
+import static jos.api.graphicsimaging.CGAffineTransform.translate;
+import static jos.api.graphicsimaging.CGContext.concatCTM;
+import static jos.api.graphicsimaging.CGContext.addPath;
+import static jos.api.graphicsimaging.CGContext.setFillColor;
+import static jos.api.graphicsimaging.CGContext.setLineWidth;
+import static jos.api.graphicsimaging.CGContext.strokePath;
+import static jos.api.graphicsimaging.CGContext.drawImage;
+import static jos.api.graphicsimaging.CGBitmapContext.createBitmapContext;
+
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGAffineTransform;
 import jos.api.graphicsimaging.CGColorSpace;
+import jos.api.graphicsimaging.CGContextRef;
 import jos.api.graphicsimaging.CGImageAlphaInfo;
+import jos.api.graphicsimaging.CGImageRef;
 import jos.api.graphicsimaging.CGPath;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.graphicsimaging.CGSize;
@@ -57,9 +73,9 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
                 // create a keyframe animation
                 CAKeyframeAnimation keyFrameAnimation = (CAKeyframeAnimation) CAKeyframeAnimation.fromKeyPath("position");
                 keyFrameAnimation.setPath(animationPath);
-                keyFrameAnimation.setDuration(3);
+                //FIXME: keyFrameAnimation.setDuration(3);
 
-                keyFrameAnimation.setTimingFunction(CAMediaTimingFunction.fromName(CAMediaTimingFunction.EaseInEaseOut));
+                keyFrameAnimation.setTimingFunction(CAMediaTimingFunction.fromName("EaseInEaseOut"));
 
                 imgToAnimate.getLayer().addAnimation(keyFrameAnimation, "MoveImage");
                 imgToAnimate.getLayer().setPosition(makePoint(700, 900));
@@ -81,11 +97,11 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
         CGPoint curve2ControlPoint1 = makePoint(500, 450);
         CGPoint curve2ControlPoint2 = makePoint(700, 650);
         CGPoint curve2EndPoint = makePoint(700, 900);
-        animationPath.MoveToPoint (curve1StartPoint.x, curve1StartPoint.y);
-        animationPath.addCurveToPoint(curve1ControlPoint1.x, curve1ControlPoint1.y,
+        moveToPoint(animationPath, null, curve1StartPoint.x, curve1StartPoint.y);
+        addCurveToPoint(animationPath, null, curve1ControlPoint1.x, curve1ControlPoint1.y,
                 curve1ControlPoint2.x, curve1ControlPoint2.y,
                 curve1EndPoint.x, curve1EndPoint.y);
-        animationPath.addCurveToPoint(curve2ControlPoint1.x, curve2ControlPoint1.y,
+        addCurveToPoint(animationPath, null, curve2ControlPoint1.x, curve2ControlPoint1.y,
                 curve2ControlPoint2.x, curve2ControlPoint2.y,
                 curve2EndPoint.x, curve2EndPoint.y);
 
@@ -95,9 +111,10 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
     // Draws our animation path on the background image, just to show it
     protected void drawPathAsBackground() {
         // create our offscreen bitmap context size
-        CGSize bitmapSize = makeSize(getView().getFrame().size);
+        CGSize bitmapSize = makeSize(getView().getFrame().size.width,
+                getView().getFrame().size.height);
         CGContextRef context = createBitmapContext(
-                   IntPtr.Zero,
+                   null,//IntPtr.Zero,
                    (int) bitmapSize.width, (int) bitmapSize.height, 8,
                    (int)(4 * bitmapSize.width), CGColorSpace.createDeviceRGB (),
                    CGImageAlphaInfo.PREMULTIPLIED_FIRST);
@@ -105,19 +122,21 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
         // convert to View space
         CGAffineTransform affineTransform = CGAffineTransform.makeIdentity();
         // invert the y axis
-        affineTransform.scale(1, -1);
+        scale(affineTransform, 1, -1);
         // move the y axis up
-        affineTransform.translate(0, getView().getFrame().height);
-        context.concatCTM(affineTransform);
+        translate(affineTransform, 0, getView().getFrame().size.height);
+        concatCTM(context, affineTransform);
 
         // actually draw the path
-        context.addPath(animationPath);
-        context.setStrokeColor(UIColor.lightGray.CGColor);
-        context.setLineWidth(3);
-        context.strokePath();
+        addPath(context, animationPath);
+        setFillColor(context, UIColor.LIGHT_GRAY.CGColor());
+        setLineWidth(context, 3);
+        strokePath(context);
 
         // set what we've drawn as the backgound image
-        backgroundImage.setImage(UIImage.fromImage(context.toImage()));
+        CGImageRef image = null;
+        drawImage(context, getView().getFrame(), image);
+        backgroundImage.setImage(UIImage.fromImage(image));
 
     }
 

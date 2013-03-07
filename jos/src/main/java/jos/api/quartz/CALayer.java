@@ -26,7 +26,7 @@ public class CALayer extends NSObject {
     }
 
     @Export("init")
-    public NSObject init() {
+    public CALayer() {
         throw new RuntimeException();
     }
 
@@ -67,6 +67,16 @@ public class CALayer extends NSObject {
 
     @Export("anchorPointZ")
     public CGFloat anchorPointZ() {
+        throw new RuntimeException();
+    }
+
+    @Export("frame")
+    public CGRect getFrame() {
+        throw new RuntimeException();
+    }
+
+    @Export("setFrame:")
+    public void setFrame(CGRect frame) {
         throw new RuntimeException();
     }
 
@@ -182,6 +192,11 @@ public class CALayer extends NSObject {
 
     @Export("contents")
     public NSObject contents() {
+        throw new RuntimeException();
+    }
+
+    @Export("setContents")
+    public void setContents(NSObject contents) {
         throw new RuntimeException();
     }
 
@@ -321,7 +336,7 @@ public class CALayer extends NSObject {
     }
 
     @Export("addAnimation:forKey:")
-    public void addAnimationforKey(CAAnimation anim, String key) {
+    public void addAnimation(CAAnimation anim, String key) {
         throw new RuntimeException();
     }
 
@@ -361,4 +376,28 @@ public class CALayer extends NSObject {
         throw new RuntimeException();
     }
 
+    @Export("opacity")
+    public float getOpacity() {
+        throw new RuntimeException();
+    }
+
+    @Export("setOpacity")
+    public void setOpacity(float opacity) {
+        throw new RuntimeException();
+    }
+
+    @Export("setDelegate")
+    public void setDelegate(NSObject layerDelegate) {
+        throw new RuntimeException();
+    }
+
+    @Export("position")
+    public CGPoint getPosition() {
+        throw new RuntimeException();
+    }
+
+    @Export("setPosition")
+    public void setPosition(CGPoint position) {
+        throw new RuntimeException();
+    }
 }

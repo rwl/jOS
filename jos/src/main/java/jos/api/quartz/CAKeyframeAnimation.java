@@ -2,6 +2,7 @@ package jos.api.quartz;
 
 import jos.api.foundation.NSArray;
 import jos.api.foundation.NSString;
+import jos.api.graphicsimaging.CGPath;
 
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
@@ -31,6 +32,11 @@ public class CAKeyframeAnimation extends CAPropertyAnimation {
 
     @Export("rotationMode")
     public NSString rotationMode() {
+        throw new RuntimeException();
+    }
+
+    @Export("setPath")
+    public void setPath(CGPath path) {
         throw new RuntimeException();
     }
 

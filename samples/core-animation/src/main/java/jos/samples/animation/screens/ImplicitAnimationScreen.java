@@ -1,8 +1,8 @@
 package jos.samples.animation.screens;
 
-import com.google.j2objc.annotations.Outlet;
-
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.foundation.NSObject;
+import jos.api.graphicsimaging.CGContextRef;
 import jos.api.quartz.CALayer;
 import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIButton;
@@ -12,6 +12,8 @@ import jos.api.uikit.UIImage;
 import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
+
+import com.google.j2objc.annotations.Outlet;
 
 public class ImplicitAnimationScreen extends UIViewController implements IDetailView {
 
@@ -59,8 +61,8 @@ public class ImplicitAnimationScreen extends UIViewController implements IDetail
                      imgLayer.setOpacity(0.2f);
                 } else {
                      imgLayer.setFrame(makeRect(200, 70,
-                             imgLayer.getFrame.size.width,
-                             imgLayer.getFrame.size.height);
+                             imgLayer.getFrame().size.width,
+                             imgLayer.getFrame().size.height));
                      imgLayer.setOpacity(1.0f);
                 }
             }
@@ -85,7 +87,7 @@ public class ImplicitAnimationScreen extends UIViewController implements IDetail
 
     public static class LayerDelegate extends NSObject {
         @Override
-        public void drawLayer(CALayer layer, CGContext context) {
+        public void drawLayer(CALayer layer, CGContextRef context) {
             // implement your drawing
         }
     }
@@ -93,17 +95,19 @@ public class ImplicitAnimationScreen extends UIViewController implements IDetail
     //===== Method 3: Create a custom CALayer and override the appropriate methods
     public static class MyCustomLayer extends CALayer {
         @Override
-        public void drawInContext(CGContext ctx) {
+        public void drawInContext(CGContextRef ctx) {
             super.drawInContext(ctx);
             // implement your drawing
         }
     }
 
+    @Override
     public void addContentsButton(UIBarButtonItem button) {
         button.setTitle("Contents");
         this.tlbrMain.setItems(new UIBarButtonItem[] { button }, false);
     }
 
+    @Override
     public void removeContentsButton() {
         this.tlbrMain.setItems(new UIBarButtonItem[0], false);
     }

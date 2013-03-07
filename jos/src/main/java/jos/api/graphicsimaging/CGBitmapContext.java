@@ -9,9 +9,9 @@ public class CGBitmapContext {
 
     @Function
     @Export("CGBitmapContextCreate")
-    public static CGContextRef CGBitmapContextCreate(Object data, int width,
+    public static CGContextRef createBitmapContext(Object data, int width,
             int height, int bitsPerComponent, int bytesPerRow,
-            CGColorSpaceRef space, int bitmapInfo) {
+            CGColorSpaceRef space, CGImageAlphaInfo bitmapInfo) {
         throw new RuntimeException();
     }
 

@@ -1,5 +1,7 @@
 package jos.api.uikit;
 
+import jos.api.graphicsimaging.CGRect;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 
@@ -10,6 +12,10 @@ public class UIImageView extends UIView {
     public int animationRepeatCount;
     public double animationDuration;
     public UIImage image;
+
+    @Export("initWithFrame:")
+    public UIImageView(final CGRect frame) {
+    }
 
     @Export("initWithImage:")
     public UIImageView(UIImage image) {

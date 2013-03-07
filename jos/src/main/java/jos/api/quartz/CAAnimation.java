@@ -38,4 +38,9 @@ public class CAAnimation {
         throw new RuntimeException();
     }
 
+    @Export("setTimingFunction")
+    public void setTimingFunction(CAMediaTimingFunction func) {
+        throw new RuntimeException();
+    }
+
 }

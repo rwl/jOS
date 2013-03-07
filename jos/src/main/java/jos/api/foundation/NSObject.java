@@ -145,7 +145,7 @@ public class NSObject {
     }
 
     @Export("drawLayer:inContext:")
-    public void drawLayerinContext(CALayer layer, CGContextRef ctx) {
+    public void drawLayer(CALayer layer, CGContextRef ctx) {
         throw new RuntimeException();
     }
 

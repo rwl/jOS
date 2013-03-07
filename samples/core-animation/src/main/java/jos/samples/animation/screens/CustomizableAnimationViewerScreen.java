@@ -1,10 +1,6 @@
 package jos.samples.animation.screens;
 
-import com.google.j2objc.annotations.Export;
-import com.google.j2objc.annotations.Outlet;
-import com.google.j2objc.annotations.Selector;
-
-import jos.api.foundation.NSAction;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
 import jos.api.foundation.NSObject;
 import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIButton;
@@ -17,7 +13,12 @@ import jos.api.uikit.UISwitch;
 import jos.api.uikit.UITextField;
 import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIView;
+import jos.api.uikit.UIViewAnimationCurve;
 import jos.api.uikit.UIViewController;
+
+import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Outlet;
+import com.google.j2objc.annotations.Selector;
 
 public class CustomizableAnimationViewerScreen extends UIViewController implements IDetailView {
 
@@ -80,7 +81,7 @@ public class CustomizableAnimationViewerScreen extends UIViewController implemen
                 }, null);*/
 
                 // begin our animation block. the name allows us to refer to it later
-                UIView.beginAnimations("ImageMove");
+                UIView.beginAnimations("ImageMove", null);
 
                 UIView.setAnimationDidStopSelector(new Selector("AnimationStopped"));
                 UIView.setAnimationDelegate(this); // NOTE: you need this for the selector to work
@@ -92,12 +93,12 @@ public class CustomizableAnimationViewerScreen extends UIViewController implemen
                 UIView.setAnimationDuration((double) sldrDuration.getValue());
 
                 // animation curve
-                UIViewAnimationCurve curve = UIViewAnimationCurve.EaseInOut;
+                UIViewAnimationCurve curve = UIViewAnimationCurve.EASE_IN_OUT;
                 switch (sgmtCurves.getSelectedSegment()) {
-                    case 0: curve = UIViewAnimationCurve.EaseInOut; break;
-                    case 1: curve = UIViewAnimationCurve.EaseIn; break;
-                    case 2: curve = UIViewAnimationCurve.EaseOut; break;
-                    case 3: curve = UIViewAnimationCurve.Linear; break;
+                    case 0: curve = UIViewAnimationCurve.EASE_IN_OUT; break;
+                    case 1: curve = UIViewAnimationCurve.EASE_IN; break;
+                    case 2: curve = UIViewAnimationCurve.EASE_OUT; break;
+                    case 3: curve = UIViewAnimationCurve.LINEAR; break;
                 }
                 UIView.setAnimationCurve (curve);
 
@@ -126,15 +127,17 @@ public class CustomizableAnimationViewerScreen extends UIViewController implemen
     }
 
     @Export
-    public void animationStopped(String name, NSNumber numFinished, IntPtr context) {
+    public void animationStopped(String name, int numFinished, Object context) {
         System.out.println("Animation completed");
     }
 
+    @Override
     public void addContentsButton(UIBarButtonItem button) {
         button.setTitle("Contents");
         tlbrMain.setItems(new UIBarButtonItem[] { button }, false );
     }
 
+    @Override
     public void removeContentsButton() {
         tlbrMain.setItems(new UIBarButtonItem[0], false);
     }

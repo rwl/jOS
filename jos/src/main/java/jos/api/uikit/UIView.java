@@ -1,5 +1,6 @@
 package jos.api.uikit;
 
+import jos.api.foundation.NSAction;
 import jos.api.foundation.NSArray;
 import jos.api.foundation.NSCoder;
 import jos.api.foundation.NSCoding;
@@ -9,6 +10,7 @@ import jos.api.graphicsimaging.CGAffineTransform;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
+import jos.api.quartz.CALayer;
 
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Bind;
@@ -49,7 +51,7 @@ public class UIView extends UIResponder {
         throw new RuntimeException();
     }
 
-    /*@Export("layer")
+    @Export("layer")
     public CALayer getLayer() {
         throw new RuntimeException();
     }
@@ -57,7 +59,7 @@ public class UIView extends UIResponder {
     @Export("layerClass")
     public static Class layerClass() {
         throw new RuntimeException();
-    }*/
+    }
 
     @Export("initWithFrame:")
     public NSObject initWithFrame(CGRect frame) {
@@ -138,6 +140,11 @@ public class UIView extends UIResponder {
 
     @Export("frame")
     public CGRect getFrame() {
+        throw new RuntimeException();
+    }
+
+    @Export("setFrame:")
+    public void setFrame(CGRect frame) {
         throw new RuntimeException();
     }
 
@@ -397,7 +404,7 @@ public class UIView extends UIResponder {
     }
 
     @Export("setAnimationDelegate:")
-    public void setAnimationDelegate(NSObject delegate) {
+    public static void setAnimationDelegate(Object delegate) {
         throw new RuntimeException();
     }
 
@@ -619,4 +626,31 @@ public class UIView extends UIResponder {
     public void encodeRestorableStateWithCoder(NSCoder coder) {
         throw new RuntimeException();
     }
+
+    @Export("animateWithDuration:animations:")
+    public static void animate(double duration, NSAction animations) {
+        throw new RuntimeException();
+    }
+
+    @Export("animateWithDuration:delay:options:animations:completion:")
+    public static void animate(double duration, double delay, int options,
+            NSAction animations, NSAction completion) {
+        throw new RuntimeException();
+    }
+
+    @Export("animateWithDuration:animations:completion:")
+    public static void animate(double duration, NSAction animations, NSAction completion) {
+        throw new RuntimeException();
+    }
+
+    @Export("beginAnimations:context:")
+    public static void beginAnimations(String animationID, Object context) {
+        throw new RuntimeException();
+    }
+
+    @Export("commitAnimations")
+    public static void commitAnimations() {
+        throw new RuntimeException();
+    }
+
 }

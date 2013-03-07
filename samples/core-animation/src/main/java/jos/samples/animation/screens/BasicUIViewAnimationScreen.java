@@ -15,7 +15,7 @@ import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
 
-public class BasicUIViewAnimationScreen extends UIViewController {
+public class BasicUIViewAnimationScreen extends UIViewController implements IDetailView {
 
     @Outlet
     UIButton btnClickMe;
@@ -61,11 +61,8 @@ public class BasicUIViewAnimationScreen extends UIViewController {
                 UIView.commitAnimations();*/
 
 
-                //===== NEW WAY
+                //==== NEW WAY
 
-                // basic prototypes:
-                //UIView.Animate(0.2, () => { /* code to animate */ });
-                //UIView.Animate(0.2, delegate() { /* code to animate */ });
                 UIView.animate(0.2, new NSAction() {
 
                     @Override
@@ -86,12 +83,14 @@ public class BasicUIViewAnimationScreen extends UIViewController {
         }, UIControlEvent.TOUCH_UP_INSIDE);
     }
 
+    @Override
     public void addContentsButton(UIBarButtonItem button) {
         button.setTitle("Contents");
         tlbrMain.setItems(new UIBarButtonItem[] { button }, false );
     }
 
-    public void removeContentsButton () {
+    @Override
+    public void removeContentsButton() {
         tlbrMain.setItems(new UIBarButtonItem[0], false);
     }
 

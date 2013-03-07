@@ -24,19 +24,14 @@ public class TransitionViewController extends UIViewController {
         switch(sgmntTransitionType.getSelectedSegment()) {
             case 0:
                 return UIViewAnimationOptions.TRANSITION_CURL_DOWN;
-                break;
             case 1:
                 return UIViewAnimationOptions.TRANSITION_CURL_UP;
-                break;
             case 2:
                 return UIViewAnimationOptions.TRANSITION_FLIP_FROM_LEFT;
-                break;
             case 3:
                 return UIViewAnimationOptions.TRANSITION_FLIP_FROM_RIGHT;
-                break;
             default:
                 return UIViewAnimationOptions.TRANSITION_CURL_DOWN;
-                break;
         }
     }
 

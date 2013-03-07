@@ -1,5 +1,6 @@
 package jos.samples.lists;
 
+import jos.api.uikit.UITableViewCellAccessoryType;
 import jos.api.uikit.UITableViewCellStyle;
 
 /**
@@ -15,7 +16,7 @@ public class TableItem {
 
     private UITableViewCellStyle cellStyle = UITableViewCellStyle.DEFAULT;
 
-    private UITableViewCellAccessory cellAccessory = UITableViewCellAccessory.None;
+    private UITableViewCellAccessoryType cellAccessory = UITableViewCellAccessoryType.NONE;
 
     public TableItem() {}
 
@@ -55,11 +56,11 @@ public class TableItem {
         this.cellStyle = cellStyle;
     }
 
-    public UITableViewCellAccessory getCellAccessory() {
+    public UITableViewCellAccessoryType getCellAccessory() {
         return cellAccessory;
     }
 
-    public void setCellAccessory(UITableViewCellAccessory cellAccessory) {
+    public void setCellAccessory(UITableViewCellAccessoryType cellAccessory) {
         this.cellAccessory = cellAccessory;
     }
 

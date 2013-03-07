@@ -5,6 +5,7 @@ import com.google.j2objc.annotations.Action;
 import jos.api.foundation.NSObject;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIInterfaceOrientation;
+import jos.api.uikit.UIModalTransitionStyle;
 import jos.api.uikit.UIViewController;
 
 public class MainViewController extends UIViewController {

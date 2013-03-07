@@ -1,15 +1,25 @@
 package jos.samples.image;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import jos.api.coreimage.CIFilter;
+import jos.api.coreimage.CIImage;
+import jos.api.coreimage.CIVector;
 import jos.api.foundation.NSObject;
+import jos.api.graphicsimaging.CGImage;
+import jos.api.graphicsimaging.CGRect;
+import jos.api.graphicsimaging.UIGraphics;
 import jos.api.uikit.UIApplicationDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlState;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIImage;
+import jos.api.uikit.UIScreen;
+import jos.api.uikit.UIView;
 
 public class AppDelegate extends UIApplicationDelegate {
 
@@ -196,7 +206,7 @@ public class AppDelegate extends UIApplicationDelegate {
         ).outputImage;
     }
 
-    public UIViewController demo(Func<CIImage> makeDemo)
+    public UIViewController demo(Method<CIImage> makeDemo)
     {
         UIViewController v = new UIViewController ();
         UIImageView imageView = new UIImageView (v.getView().getBounds());
@@ -269,7 +279,7 @@ public class AppDelegate extends UIApplicationDelegate {
 
     List<TestResult> runTests()
     {
-        Map<K, V> filters = CreateFilterDictionary();
+        Map filters = createFilterDictionary();
         List<TestResult> resultList = new ArrayList<TestResult>();
 
         for (MapEntry filter : filters.entrySet())
@@ -513,7 +523,7 @@ public class AppDelegate extends UIApplicationDelegate {
             dictionary.put("DissolveTransition", Demo (DissolveTransition));
             dictionary.put("FlashTransition", Demo (FlashTransition));
             dictionary.put("ModTransition", Demo (ModTransition));
-            dictionary.put("SwipeTransition", Demo (SwipeTransition) }
+            dictionary.put("SwipeTransition", Demo (SwipeTransition));
         }
 
         return dictionary;
@@ -550,7 +560,7 @@ public class AppDelegate extends UIApplicationDelegate {
     @Filter
     public CIImage colorControls ()
     {
-        var colorCtrls = new CIColorControls ();
+        CIColorControls colorCtrls = new CIColorControls ();
         {
             Image = flower;
             Brightness = .5F; // Min: 0 Max: 2
@@ -582,7 +592,7 @@ public class AppDelegate extends UIApplicationDelegate {
     @Filter
     public CIImage temperatureAndTint()
     {
-        var temperatureAdjust = new CITemperatureAndTint();
+        CITemperatureAndTint temperatureAdjust = new CITemperatureAndTint();
         {
             Image = flower;
             Neutral = new CIVector(6500, 0); // Default [6500, 0]

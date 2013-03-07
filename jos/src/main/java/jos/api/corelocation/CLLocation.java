@@ -7,12 +7,20 @@ import jos.api.foundation.NSObject;
 
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Export;
+import com.google.j2objc.annotations.Function;
 import com.google.j2objc.annotations.Register;
 
 
 @BaseType({NSCopying.class, NSCoding.class})
 @Register(isWrapper = true)
 public class CLLocation extends NSObject {
+
+    @Function
+    @Export("CLLocationCoordinate2DMake")
+    public static CLLocationCoordinate2D makeLocationCoordinate2D(double latitude,
+            double longitude) {
+        throw new RuntimeException();
+    }
 
     @Export("initWithLatitude:longitude:")
     public NSObject initWithLatitudelongitude(double latitude, double longitude) {

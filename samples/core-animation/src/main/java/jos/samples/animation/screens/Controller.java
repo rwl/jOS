@@ -17,18 +17,18 @@ public class Controller extends UIViewController implements IDetailView {
     public void viewDidLoad() {
         super.viewDidLoad();
 
-        toolbar = new UIToolbar(makeRect(0, 0, view.getFrame().width, 44));
-        view.add(toolbar);
+        toolbar = new UIToolbar(makeRect(0, 0, getView().getFrame().width, 44));
+        getView().add(toolbar);
 
         CGRect mainFrame = makeRect(0, toolbar.getFrame().height,
-                view.getFrame().width, view.getFrame().height - toolbar.getFrame().height);
+                getView().getFrame().width, getView().getFrame().height - toolbar.getFrame().height);
 
         controller1 = new TransitionViewController();
         controller1.getView().setFrame(mainFrame);
         controller2 = new BackTransitionViewController();
         controller2.getView().setFrame(mainFrame);
 
-        view.addSubview(controller1.getView());
+        getView().addSubview(controller1.getView());
 
         // controller2.getView().setHidden(true);
 
@@ -36,8 +36,8 @@ public class Controller extends UIViewController implements IDetailView {
             UIView.animate(1, 0, controller1.SelectedTransition, new NSAction() {
                 @Override
                 public void action() {
-                    controller1.View.RemoveFromSuperview ();
-                    View.AddSubview (controller2.View);
+                    controller1.getView().removeFromSuperview();
+                    getView().addSubview (controller2.getView());
                     // controller1.View.Hidden = false;
                     // controller2.View.Hidden = true;
                 }
@@ -56,7 +56,7 @@ public class Controller extends UIViewController implements IDetailView {
                 @Override
                 public void action() {
                     controller2.getView().removeFromSuperview();
-                    view.addSubview(controller1.getView());
+                    getView().addSubview(controller1.getView());
                 }
             }, null);
         };

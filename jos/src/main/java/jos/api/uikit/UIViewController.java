@@ -431,4 +431,9 @@ public class UIViewController extends UIResponder {
     public void setToolbarItems(@NativeArray UIBarItem[] value) {
         throw new RuntimeException();
     }
+
+    @Export("splitViewController")
+    public UISplitViewController getSplitViewController() {
+        throw new RuntimeException();
+    }
 }

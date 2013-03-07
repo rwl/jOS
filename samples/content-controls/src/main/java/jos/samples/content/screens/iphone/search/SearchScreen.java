@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSIndexPath;
+import jos.api.uikit.UISearchBar;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellStyle;

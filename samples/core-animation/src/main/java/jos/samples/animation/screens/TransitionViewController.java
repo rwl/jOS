@@ -7,6 +7,7 @@ import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
 import jos.api.uikit.UISegmentedControl;
+import jos.api.uikit.UIViewAnimationOptions;
 import jos.api.uikit.UIViewController;
 
 public class TransitionViewController extends UIViewController {
@@ -19,22 +20,22 @@ public class TransitionViewController extends UIViewController {
 
     EventListener transitionClicked;
 
-    public UIViewAnimationOptions getSelectedTransition() {
+    public int getSelectedTransition() {
         switch(sgmntTransitionType.getSelectedSegment()) {
             case 0:
-                return UIViewAnimationOptions.TransitionCurlDown;
+                return UIViewAnimationOptions.TRANSITION_CURL_DOWN;
                 break;
             case 1:
-                return UIViewAnimationOptions.TransitionCurlUp;
+                return UIViewAnimationOptions.TRANSITION_CURL_UP;
                 break;
             case 2:
-                return UIViewAnimationOptions.TransitionFlipFromLeft;
+                return UIViewAnimationOptions.TRANSITION_FLIP_FROM_LEFT;
                 break;
             case 3:
-                return UIViewAnimationOptions.TransitionFlipFromRight;
+                return UIViewAnimationOptions.TRANSITION_FLIP_FROM_RIGHT;
                 break;
             default:
-                return UIViewAnimationOptions.TransitionCurlDown;
+                return UIViewAnimationOptions.TRANSITION_CURL_DOWN;
                 break;
         }
     }

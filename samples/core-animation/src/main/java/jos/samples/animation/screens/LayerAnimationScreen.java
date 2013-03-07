@@ -3,11 +3,20 @@ package jos.samples.animation.screens;
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSObject;
+import jos.api.graphicsimaging.CGAffineTransform;
+import jos.api.graphicsimaging.CGColorSpace;
+import jos.api.graphicsimaging.CGImageAlphaInfo;
+import jos.api.graphicsimaging.CGPath;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.graphicsimaging.CGSize;
+import jos.api.quartz.CAKeyframeAnimation;
+import jos.api.quartz.CAMediaTimingFunction;
+import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIButton;
+import jos.api.uikit.UIColor;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
 import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIViewController;
@@ -36,8 +45,8 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
         super.viewDidLoad();
 
         // add our background image view that we'll show our path on
-        backgroundImage = new UIImageView(view.getFrame());
-        view.addSubview(backgroundImage);
+        backgroundImage = new UIImageView(getView().getFrame());
+        getView().addSubview(backgroundImage);
 
         // create our path
         createPath();
@@ -46,7 +55,7 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
             @Override
             public void onEvent(NSObject sender, UIEvent event) {
                 // create a keyframe animation
-                CAKeyFrameAnimation keyFrameAnimation = (CAKeyFrameAnimation) CAKeyFrameAnimation.fromKeyPath("position");
+                CAKeyframeAnimation keyFrameAnimation = (CAKeyframeAnimation) CAKeyframeAnimation.fromKeyPath("position");
                 keyFrameAnimation.setPath(animationPath);
                 keyFrameAnimation.setDuration(3);
 
@@ -86,19 +95,19 @@ public class LayerAnimationScreen extends UIViewController implements IDetailVie
     // Draws our animation path on the background image, just to show it
     protected void drawPathAsBackground() {
         // create our offscreen bitmap context size
-        CGSize bitmapSize = makeSize(view.getFrame().size);
-        CGBitmapContext context = new CGBitmapContext(
+        CGSize bitmapSize = makeSize(getView().getFrame().size);
+        CGContextRef context = createBitmapContext(
                    IntPtr.Zero,
-                   (int)bitmapSize.Width, (int)bitmapSize.Height, 8,
-                   (int)(4 * bitmapSize.Width), CGColorSpace.CreateDeviceRGB (),
-                   CGImageAlphaInfo.PremultipliedFirst);
+                   (int) bitmapSize.width, (int) bitmapSize.height, 8,
+                   (int)(4 * bitmapSize.width), CGColorSpace.createDeviceRGB (),
+                   CGImageAlphaInfo.PREMULTIPLIED_FIRST);
 
         // convert to View space
         CGAffineTransform affineTransform = CGAffineTransform.makeIdentity();
         // invert the y axis
         affineTransform.scale(1, -1);
         // move the y axis up
-        affineTransform.translate(0, view.getFrame().height);
+        affineTransform.translate(0, getView().getFrame().height);
         context.concatCTM(affineTransform);
 
         // actually draw the path

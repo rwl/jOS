@@ -5,8 +5,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIInterfaceOrientation;
+import jos.api.uikit.UIPopoverController;
+import jos.api.uikit.UISplitViewController;
 import jos.api.uikit.UIView;
+import jos.api.uikit.UIViewAnimationTransition;
 import jos.api.uikit.UIViewController;
+import jos.samples.animation.navigation.NavItem;
 
 public class MainSplitView extends UISplitViewController {
 
@@ -24,7 +28,7 @@ public class MainSplitView extends UISplitViewController {
 
         // create an array of controllers from them and then assign it to the
         // controllers property
-        viewControllers = new UIViewController[] { masterView,  detailView };
+        setViewControllers(new UIViewController[] { masterView,  detailView });
 
         // in this example, i expose an event on the master view called RowClicked, and i listen
         // for it in here, and then call a method on the detail view to update. this class thereby
@@ -70,8 +74,8 @@ public class MainSplitView extends UISplitViewController {
         if (item.getController() != null) {
             UIView.beginAnimations("DetailViewPush");
             detailView = item.getController();
-            viewControllers = new UIViewController[] { masterView,  detailView };
-            UIView.setAnimationTransition(UIViewAnimationTransition.FlipFromRight,
+            setViewControllers(new UIViewController[] { masterView,  detailView });
+            UIView.setAnimationTransition(UIViewAnimationTransition.FLIP_FROM_RIGHT,
                     viewControllers[1].getView(), false);
             UIView.commitAnimations();
         } else {
@@ -116,7 +120,7 @@ public class MainSplitView extends UISplitViewController {
                         UIView.beginAnimations("DetailViewPush");
                         detailView = item.getController();
                         viewControllers = new UIViewController[] { masterView,  detailView };
-                        UIView.setAnimationTransition(UIViewAnimationTransition.FlipFromRight,
+                        UIView.setAnimationTransition(UIViewAnimationTransition.FLIP_FROM_RIGHT,
                                 viewControllers[1].getView(), false);
                         UIView.commitAnimations();
                     } else {

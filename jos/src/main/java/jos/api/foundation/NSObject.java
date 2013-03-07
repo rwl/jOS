@@ -1,5 +1,10 @@
 package jos.api.foundation;
 
+import jos.api.graphicsimaging.CGContextRef;
+import jos.api.quartz.CAAction;
+import jos.api.quartz.CAAnimation;
+import jos.api.quartz.CALayer;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
 import com.google.j2objc.annotations.Selector;
@@ -130,6 +135,38 @@ public class NSObject {
 
     @Export("attemptRecoveryFromError:optionIndex:")
     public boolean attemptRecoveryFromErroroptionIndex(NSError error, int recoveryOptionIndex) {
+        throw new RuntimeException();
+    }
+
+
+    @Export("displayLayer:")
+    public void displayLayer(CALayer layer) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawLayer:inContext:")
+    public void drawLayerinContext(CALayer layer, CGContextRef ctx) {
+        throw new RuntimeException();
+    }
+
+    @Export("layoutSublayersOfLayer:")
+    public void layoutSublayersOfLayer(CALayer layer) {
+        throw new RuntimeException();
+    }
+
+    @Export("actionForLayer:forKey:")
+    public CAAction actionForLayer(CALayer layer, String event) {
+        throw new RuntimeException();
+    }
+
+
+    @Export("animationDidStart:")
+    public void animationDidStart(CAAnimation anim) {
+        throw new RuntimeException();
+    }
+
+    @Export("animationDidStop:finished:")
+    public void animationDidStop(CAAnimation animation, boolean flag) {
         throw new RuntimeException();
     }
 }

@@ -1,5 +1,9 @@
 package jos.samples.content.screens.iphone.maps;
 
+import static jos.api.corelocation.CLLocation.makeLocationCoordinate2D;
+import static jos.api.mapkit.MKGeometry.makeCoordinateSpan;
+import static jos.api.mapkit.MKGeometry.makeCoordinateRegion;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Outlet;
 
@@ -33,19 +37,20 @@ public class AnnotatedMapScreen extends UIViewController {
         setTitle("Highland Park, Los Angeles");
 
         // create our location and zoom for los angeles
-        CLLocationCoordinate2D coords = new CLLocationCoordinate2D(34.120, -118.188);
-        MKCoordinateSpan span = new MKCoordinateSpan(milesToLatitudeDegrees (20),
-                milesToLongitudeDegrees(20, coords.Latitude));
+        CLLocationCoordinate2D coords = makeLocationCoordinate2D(34.120, -118.188);
+        MKCoordinateSpan span = makeCoordinateSpan(milesToLatitudeDegrees (20),
+                milesToLongitudeDegrees(20, coords.latitude));
 
         // set the coords and zoom on the map
-        mapMain.setRegion(new MKCoordinateRegion(coords, span));
+        mapMain.regionThatFits(makeCoordinateRegion(coords, span));
 
         // set our delegate. we don't actually need a delegate if we want to just drop a pin
         // on there, but if we want to specify anything custom, we do
         mapMain.setDelegate(new MapDelegate());
 
         // add a basic annotation
-        mapMain.addAnnotation(new BasicMapAnnotation (new CLLocationCoordinate2D (34.120, -118.188), "Los Angeles", "City of Demons"));
+        mapMain.addAnnotation(new BasicMapAnnotation(makeLocationCoordinate2D(34.120, -118.188),
+                "Los Angeles", "City of Demons"));
 
         // can use this as well.
 //      mapMain.addAnnotationObject(
@@ -66,7 +71,7 @@ public class AnnotatedMapScreen extends UIViewController {
          * This is very much like the GetCell method on the table delegate
          */
         @Override
-        public MKAnnotationView getViewForAnnotation(MKMapView mapView, NSObject annotation)
+        public MKAnnotationView getViewForAnnotation(MKAnnotation annotation)
         {
             // try and dequeue the annotation view
             MKAnnotationView annotationView = mapView.dequeueReusableAnnotation(annotationIdentifier);

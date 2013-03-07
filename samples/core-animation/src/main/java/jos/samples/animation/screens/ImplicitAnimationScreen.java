@@ -3,10 +3,12 @@ package jos.samples.animation.screens;
 import com.google.j2objc.annotations.Outlet;
 
 import jos.api.foundation.NSObject;
+import jos.api.quartz.CALayer;
 import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIEvent;
+import jos.api.uikit.UIImage;
 import jos.api.uikit.UIToolbar;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewController;
@@ -81,7 +83,7 @@ public class ImplicitAnimationScreen extends UIViewController implements IDetail
         return layer;
     }
 
-    public static class LayerDelegate extends CALayerDelegate {
+    public static class LayerDelegate extends NSObject {
         @Override
         public void drawLayer(CALayer layer, CGContext context) {
             // implement your drawing

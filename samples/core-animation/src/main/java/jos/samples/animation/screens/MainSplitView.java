@@ -7,10 +7,12 @@ import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIPopoverController;
 import jos.api.uikit.UISplitViewController;
+import jos.api.uikit.UISplitViewControllerDelegate;
 import jos.api.uikit.UIView;
 import jos.api.uikit.UIViewAnimationTransition;
 import jos.api.uikit.UIViewController;
 import jos.samples.animation.navigation.NavItem;
+import jos.samples.animation.navigation.NavItemTableDelegate.RowClickListener;
 
 public class MainSplitView extends UISplitViewController {
 
@@ -33,27 +35,31 @@ public class MainSplitView extends UISplitViewController {
         // in this example, i expose an event on the master view called RowClicked, and i listen
         // for it in here, and then call a method on the detail view to update. this class thereby
         // becomes the defacto controller for the screen (both views).
-        masterView.setRowClicked(new RowClickListener() {
+        masterView.setRowClickListener(new RowClickListener() {
+            @Override
             public void onEvent(NavItem item) {
-                this.handleRowClicked(item);
+                handleRowClicked(item);
             }
         });
 
-        // when the master view controller is hid (portrait mode), we add a button to
-        // the detail view that when clicked will show the master view in a popover controller
-        willHideViewController = (NSObject sender, UISplitViewHideEventArgs e) {
-            popoverController = e.Pc;
-            rootPopoverButtonItem = e.BarButtonItem;
-            (detailView as IDetailView).AddContentsButton (rootPopoverButtonItem);
-        };
-
-        // when the master view controller is shown (landscape mode), remove the button
-        // since the controller is shown.
-        willShowViewController = (NSObject sender, UISplitViewShowEventArgs e) {
-            ((IDetailView) detailView).removeContentsButton();
-            popoverController = null;
-            rootPopoverButtonItem = null;
-        };
+        setDelegate(new UISplitViewControllerDelegate() {
+            @Override
+            public void willHideViewController(UISplitViewController controller, UIViewController aViewController, UIBarButtonItem barButtonItem, UIPopoverController pc) {
+                // when the master view controller is hid (portrait mode), we add a button to
+                // the detail view that when clicked will show the master view in a popover controller
+                popoverController = pc;
+                rootPopoverButtonItem = barButtonItem;
+                ((IDetailView) detailView).addContentsButton(rootPopoverButtonItem);
+            }
+            @Override
+            public void willShowViewController(UISplitViewController svc, UIViewController aViewController, UIBarButtonItem barButtonItem) {
+                // when the master view controller is shown (landscape mode), remove the button
+                // since the controller is shown.
+                ((IDetailView) detailView).removeContentsButton();
+                popoverController = null;
+                rootPopoverButtonItem = null;
+            }
+        });
     }
 
     @Override
@@ -72,24 +78,17 @@ public class MainSplitView extends UISplitViewController {
         // NOTE: we could also raise an event here, to loosely couple this, but isn't neccessary,
         // because we'll only ever use this this way
         if (item.getController() != null) {
-            UIView.beginAnimations("DetailViewPush");
+            UIView.beginAnimations("DetailViewPush", null);
             detailView = item.getController();
             setViewControllers(new UIViewController[] { masterView,  detailView });
             UIView.setAnimationTransition(UIViewAnimationTransition.FLIP_FROM_RIGHT,
-                    viewControllers[1].getView(), false);
+                    getViewControllers()[1].getView(), false);
             UIView.commitAnimations();
         } else {
             if (item.getControllerType() != null) {
                 Constructor<? extends UIViewController> ctor = null;
                 try {
-                    // if the nav item has constructor aguments
-                    if (item.getControllerConstructorArgs().length > 0) {
-                        // look for the constructor
-                        ctor = item.getControllerType().getConstructor(item.getControllerConstructorTypes());
-                    } else {
-                        // search for the default constructor
-                        ctor = item.getControllerType().getConstructor();
-                    }
+                    ctor = item.getControllerType().getConstructor();
                 } catch (SecurityException e1) {
                 } catch (NoSuchMethodException e1) {
                 }
@@ -99,13 +98,7 @@ public class MainSplitView extends UISplitViewController {
                     UIViewController instance = null;
 
                     try {
-                        if (item.getControllerConstructorArgs().length > 0) {
-                            // instance the view controller
-                            instance = (UIViewController) ctor.invoke(item.getControllerConstructorArgs()) ;
-                        } else {
-                            // instance the view controller
-                            instance = (UIViewController) ctor.newInstance();
-                        }
+                        instance = (UIViewController) ctor.newInstance();
                     } catch (IllegalArgumentException e) {
                     } catch (InstantiationException e) {
                     } catch (IllegalAccessException e) {
@@ -117,11 +110,11 @@ public class MainSplitView extends UISplitViewController {
                         item.setController(instance);
 
                         // push the view controller onto the stack
-                        UIView.beginAnimations("DetailViewPush");
+                        UIView.beginAnimations("DetailViewPush", null);
                         detailView = item.getController();
-                        viewControllers = new UIViewController[] { masterView,  detailView };
+                        setViewControllers(new UIViewController[] { masterView,  detailView });
                         UIView.setAnimationTransition(UIViewAnimationTransition.FLIP_FROM_RIGHT,
-                                viewControllers[1].getView(), false);
+                                getViewControllers()[1].getView(), false);
                         UIView.commitAnimations();
                     } else {
                         System.out.println("instance of view controller not created");

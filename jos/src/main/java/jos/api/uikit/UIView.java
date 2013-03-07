@@ -134,7 +134,7 @@ public class UIView extends UIResponder {
     }
 
     @Export("setAutoresizingMask:")
-    public void setAutoresizingMask(UIViewAutoresizing value) {
+    public void setAutoresizingMask(int value) {
         throw new RuntimeException();
     }
 
@@ -383,7 +383,7 @@ public class UIView extends UIResponder {
     }
 
     @Export("drawRect:")
-    public void drawRect(CGRect rect) {
+    public void draw(CGRect rect) {
         throw new RuntimeException();
     }
 
@@ -454,7 +454,7 @@ public class UIView extends UIResponder {
     }
 
     @Export("setAnimationTransition:forView:cache:")
-    public static void setAnimationTransitionforViewcache(UIViewAnimationTransition transition, UIView view, boolean cache) {
+    public static void setAnimationTransition(UIViewAnimationTransition transition, UIView view, boolean cache) {
         throw new RuntimeException();
     }
 

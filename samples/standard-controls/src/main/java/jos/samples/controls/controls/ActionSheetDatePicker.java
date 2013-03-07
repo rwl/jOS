@@ -111,7 +111,7 @@ public class ActionSheetDatePicker extends NSObject {
                 datePicker.getFrame().size.height));
 
         // move our label to the top of the action sheet
-        titleLabel.setFrame(makeRect(10, 4, owner.frame.size.width - 100, 35));
+        titleLabel.setFrame(makeRect(10, 4, owner.getFrame().size.width - 100, 35));
 
         // move our button
         doneButton.setFrame(makeRect(actionSheetSize.width

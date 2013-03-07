@@ -137,7 +137,7 @@ public class UIButton extends UIControl {
     }
 
     @Export("setTitle:forState:")
-    public void setTitleforState(String title, UIControlState state) {
+    public void setTitle(String title, UIControlState state) {
         throw new RuntimeException();
     }
 

@@ -1,7 +1,5 @@
 package jos.api.uikit;
 
-import jos.api.foundation.NSArray;
-
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.NativeArray;
 import com.google.j2objc.annotations.Register;
@@ -10,7 +8,7 @@ import com.google.j2objc.annotations.Register;
 public class UISplitViewController extends UIViewController {
 
     @Export("viewControllers")
-    public NSArray getViewControllers() {
+    public UIViewController[] getViewControllers() {
         throw new RuntimeException();
     }
 
@@ -21,6 +19,11 @@ public class UISplitViewController extends UIViewController {
 
     @Export("presentsWithGesture")
     public boolean presentsWithGesture() {
+        throw new RuntimeException();
+    }
+
+    @Export("setDelegate")
+    public void setDelegate(UISplitViewControllerDelegate delegate) {
         throw new RuntimeException();
     }
 

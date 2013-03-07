@@ -11,13 +11,13 @@ public class HelloView extends UIView {
 
     public HelloView(CGRect frame) {
         super(frame);
-        this.backgroundColor = UIColor.LIGHT_GRAY;
+        this.setBackgroundColor(UIColor.LIGHT_GRAY);
 
         UILabel label = new UILabel(makeRect(0.0f, 0.0f, 320.0f, 30.0f));
-        label.text = "Hello World";
-        label.center = this.center;
-        label.backgroundColor = UIColor.CLEAR;
-        label.textAlignment = UITextAlignment.CENTER;
+        label.setText("Hello World");
+        label.setCenter(getCenter());
+        label.setBackgroundColor(UIColor.CLEAR);
+        label.setTextAlignment(UITextAlignment.CENTER);
 
         addSubview(label);
     }

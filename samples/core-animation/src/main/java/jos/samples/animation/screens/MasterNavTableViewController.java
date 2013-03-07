@@ -7,6 +7,8 @@ import jos.api.uikit.UITableViewController;
 import jos.api.uikit.UITableViewStyle;
 import jos.samples.animation.navigation.NavItem;
 import jos.samples.animation.navigation.NavItemGroup;
+import jos.samples.animation.navigation.NavItemTableDataSource;
+import jos.samples.animation.navigation.NavItemTableDelegate;
 import jos.samples.animation.navigation.NavItemTableDelegate.RowClickListener;
 
 public class MasterNavTableViewController extends UITableViewController {
@@ -14,7 +16,8 @@ public class MasterNavTableViewController extends UITableViewController {
     RowClickListener rowClickListener;
 
     List<NavItemGroup> navItems = new ArrayList<NavItemGroup>();
-    NavItemTableSource tableSource;
+    NavItemTableDataSource tableSource;
+    NavItemTableDelegate delegate;
 
     public MasterNavTableViewController() {
         super(UITableViewStyle.GROUPED);
@@ -41,29 +44,42 @@ public class MasterNavTableViewController extends UITableViewController {
         // create the navigation items
         NavItemGroup navGroup = new NavItemGroup("UIView Animations");
         navItems.add(navGroup);
-        navGroup.getItems().add(new NavItem("Basic Animation", "", BasicUIViewAnimationScreen.class));
-        navGroup.getItems().add(new NavItem("Animation Customizer", "", CustomizableAnimationViewerScreen.class));
-        navGroup.getItems().add(new NavItem("Transitions", "", Controller.class));
-        navGroup.getItems().add(new NavItem("Implicit Layer Animation", "", ImplicitAnimationScreen.class));
-        navGroup.getItems().add(new NavItem("Explicit Layer Animation", "", LayerAnimationScreen.class));
+
+        navGroup.getItems().add(new NavItem("Basic Animation",
+                BasicUIViewAnimationScreen.class));
+
+        navGroup.getItems().add(new NavItem("Animation Customizer",
+                CustomizableAnimationViewerScreen.class));
+
+        navGroup.getItems().add(new NavItem("Transitions",
+                Controller.class));
+
+        navGroup.getItems().add(new NavItem("Implicit Layer Animation",
+                ImplicitAnimationScreen.class));
+
+        navGroup.getItems().add(new NavItem("Explicit Layer Animation",
+                LayerAnimationScreen.class));
 
         // create a table source from our nav items
-        tableSource = new NavItemTableSource(navItems);
+        tableSource = new NavItemTableDataSource(navItems);
 
         // set the source on the table to our data source
-        tableView.setSource(tableSource);
+        tableView.setDataSource(tableSource);
 
-        tableSource.setRowClicked(new RowClickListener() {
+        delegate = new NavItemTableDelegate(navItems);
+        tableView.setTableViewDelegate(delegate);
+
+        delegate.setRowClickedListener(new RowClickListener() {
             @Override
             public void onEvent(NavItem item) {
-                if (rowClicked != null) {
-                    rowClicked.onEvent(item);
+                if (rowClickListener != null) {
+                    rowClickListener.onEvent(item);
                 }
             }
         });
     }
 
-    public RowClickListener setRowClickListener(RowClickListener rowClickListener) {
+    public void setRowClickListener(RowClickListener rowClickListener) {
         this.rowClickListener = rowClickListener;
     }
 

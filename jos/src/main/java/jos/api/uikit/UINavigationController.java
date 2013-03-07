@@ -119,7 +119,7 @@ public class UINavigationController extends UIViewController {
     }
 
     @Export("setNavigationBarHidden:animated:")
-    public void setNavigationBarHiddenanimated(boolean hidden, boolean animated) {
+    public void setNavigationBarHidden(boolean hidden, boolean animated) {
         throw new RuntimeException();
     }
 

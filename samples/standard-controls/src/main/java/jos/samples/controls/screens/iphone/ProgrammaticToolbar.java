@@ -32,7 +32,7 @@ public class ProgrammaticToolbar extends UIViewController {
                 - getNavigationController().getNavigationBar().getFrame().size.height,
                 getView().getFrame().size.width, toolbarHeight));
         toolbar.setAutoresizingMask(UIViewAutoresizing.FLEXIBLE_TOP_MARGIN
-                .mask() | UIViewAutoresizing.FLEXIBLE_WIDTH.mask());
+                | UIViewAutoresizing.FLEXIBLE_WIDTH);
 
         // button one
         UIBarButtonItem btnOne = new UIBarButtonItem("One",

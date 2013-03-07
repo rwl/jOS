@@ -19,7 +19,7 @@ public class HelloViewController extends UIViewController {
 
     @Override
     public void loadView() {
-        this.view = new HelloView(UIScreen.mainScreen.applicationFrame);
+        setView(new HelloView(UIScreen.mainScreen.applicationFrame));
     }
 
 }

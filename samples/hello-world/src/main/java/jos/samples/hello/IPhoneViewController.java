@@ -65,7 +65,7 @@ public class IPhoneViewController extends UIViewController {
     @Action("actnButtonClick:")
     protected void actnButtonClick(NSObject sender) {
         this.lblOutput.text = "Action button "
-                + ((UIButton) sender).currentTitle + " clicked.";
+                + ((UIButton) sender).getCurrentTitle() + " clicked.";
     }
 
 }

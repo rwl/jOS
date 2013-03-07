@@ -14,6 +14,17 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UITextField extends UIControl {
 
+    @Export("init")
+    public UITextField() {
+        super();
+    }
+
+    @Export("initWithFrame:")
+    public UITextField(final CGRect frame) {
+        super();
+    }
+
+
     @Export("attributedText")
     public NSAttributedString getAttributedText() {
         throw new RuntimeException();

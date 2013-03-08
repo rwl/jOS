@@ -280,7 +280,7 @@ public class UIView extends UIResponder {
     }
 
     @Export("viewWithTag:")
-    public UIView viewWithTag(int tag) {
+    public UIView getViewWithTag(int tag) {
         throw new RuntimeException();
     }
 

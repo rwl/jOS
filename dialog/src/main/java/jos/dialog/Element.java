@@ -1,7 +1,6 @@
 package jos.dialog;
 
 import jos.api.foundation.NSIndexPath;
-import jos.api.foundation.NSString;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellStyle;
@@ -17,12 +16,12 @@ public abstract class Element {
      * RootElement, for every other object this points to a Section and it is
      * null for the root RootElement.
      */
-    public Element Parent;
+    private Element Parent;
 
     /**
      * The caption to display for this given element
      */
-    public String Caption;
+    private String Caption;
 
     /**
      * Initializes the element with the given caption.
@@ -38,7 +37,7 @@ public abstract class Element {
     protected void Dispose(boolean disposing) {
     }
 
-    static NSString cellkey = new NSString("xx");
+    private static String cellkey = "xx";
 
     /**
      * Subclasses that override the GetCell method should override this method
@@ -55,7 +54,7 @@ public abstract class Element {
      * for those if you are trying to override StringElement or
      * StyledStringElement.
      */
-    protected NSString getCellKey() {
+    protected String getCellKey() {
         return cellkey;
     }
 
@@ -123,9 +122,7 @@ public abstract class Element {
         Section section = (Section) Parent;
         if (section == null)
             section = (Section) this;
-        if (section == null)
-            return null;
-        return (RootElement) section.Parent;
+        return (RootElement) section.getParent();
     }
 
     /**
@@ -147,10 +144,10 @@ public abstract class Element {
         UITableView tv = GetContainerTableView();
         if (tv == null)
             return null;
-        NSIndexPath path = IndexPath;
+        NSIndexPath path = getIndexPath();
         if (path == null)
             return null;
-        return tv.CellAt(path);
+        return tv.cellAt(path);
     }
 
     /**
@@ -162,15 +159,15 @@ public abstract class Element {
         Section section = (Section) Parent;
         if (section == null)
             return null;
-        RootElement root = (RootElement) section.Parent;
+        RootElement root = (RootElement) section.getParent();
         if (root == null)
             return null;
 
         int row = 0;
-        for (Element element : section.Elements) {
+        for (Element element : section.getElements()) {
             if (element.equals(this)) {
                 int nsect = 0;
-                for (Section sect : root.Sections) {
+                for (Section sect : root.getSections()) {
                     if (section == sect) {
                         return NSIndexPath.fromRowSection(row, nsect);
                     }
@@ -190,5 +187,21 @@ public abstract class Element {
         if (Caption == null)
             return false;
         return Caption.equalsIgnoreCase(text);
+    }
+
+    public Element getParent() {
+        return Parent;
+    }
+
+    public void setParent(Element parent) {
+        Parent = parent;
+    }
+
+    public String getCaption() {
+        return Caption;
+    }
+
+    public void setCaption(String caption) {
+        Caption = caption;
     }
 }

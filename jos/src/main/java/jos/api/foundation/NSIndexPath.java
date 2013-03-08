@@ -58,18 +58,19 @@ public class NSIndexPath {
 
     /* UITableView */
 
-    public int section;
-
     @Export("section")
     public int getSection() {
-        return this.section;
+        throw new RuntimeException();
     }
-
-    public int row;
 
     @Export("row")
     public int getRow() {
-        return this.row;
+        throw new RuntimeException();
+    }
+
+    @Export("indexPathForRow:inSection:")
+    public static NSIndexPath fromRowSection(int row, int section) {
+        throw new RuntimeException();
     }
 
 }

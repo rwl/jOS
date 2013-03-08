@@ -30,7 +30,7 @@ public class StringElement extends Element {
 
     public StringElement (String caption, NSAction tapped) {
         super(caption);
-        Tapped = tapped)
+        Tapped = tapped;
     }
 
     public NSAction Tapped;

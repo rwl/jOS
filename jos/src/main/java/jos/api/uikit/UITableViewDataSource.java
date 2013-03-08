@@ -1,5 +1,6 @@
 package jos.api.uikit;
 
+import jos.api.foundation.NSArray;
 import jos.api.foundation.NSIndexPath;
 import jos.api.foundation.NSObject;
 
@@ -34,4 +35,33 @@ public abstract class UITableViewDataSource extends NSObject {
         return null;
     }
 
+    @Export("tableView:canEditRowAtIndexPath:")
+    public boolean tableViewcanEditRowAtIndexPath(UITableView tableView, NSIndexPath indexPath) {
+        throw new RuntimeException();
+    }
+
+    @Export("tableView:canMoveRowAtIndexPath:")
+    public boolean tableViewcanMoveRowAtIndexPath(UITableView tableView, NSIndexPath indexPath) {
+        throw new RuntimeException();
+    }
+
+    @Export("sectionIndexTitlesForTableView:")
+    public NSArray sectionIndexTitlesForTableView(UITableView tableView) {
+        throw new RuntimeException();
+    }
+
+    @Export("tableView:sectionForSectionIndexTitle:atIndex:")
+    public int tableViewsectionForSectionIndexTitleatIndex(UITableView tableView, String title, int index) {
+        throw new RuntimeException();
+    }
+
+    @Export("tableView:commitEditingStyle:forRowAtIndexPath:")
+    public void tableView(UITableView view, UITableViewCellEditingStyle editingStyle, NSIndexPath indexPath) {
+        throw new RuntimeException();
+    }
+
+    @Export("tableView:moveRowAtIndexPath:toIndexPath:")
+    public void tableViewmoveRowAtIndexPathtoIndexPath(UITableView tableView, NSIndexPath sourceIndexPath, NSIndexPath destinationIndexPath) {
+        throw new RuntimeException();
+    }
 }

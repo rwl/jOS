@@ -18,12 +18,12 @@ public class UIWebViewDelegate extends NSObject {
     }
 
     @Export("webViewDidStartLoad:")
-    public void didStartLoad(UIWebView webView) {
+    public void loadStarted(UIWebView webView) {
         throw new RuntimeException();
     }
 
     @Export("webViewDidFinishLoad:")
-    public void didFinishLoad(UIWebView webView) {
+    public void loadFinished(UIWebView webView) {
         throw new RuntimeException();
     }
 

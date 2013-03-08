@@ -25,7 +25,7 @@ import com.google.j2objc.annotations.Register;
 public class CIImage extends NSObject {
 
     @Export("imageWithCGImage:")
-    public CIImage imageWithCGImage(CGImageRef image) {
+    public static CIImage fromCGImage(CGImageRef image) {
         throw new RuntimeException();
     }
 

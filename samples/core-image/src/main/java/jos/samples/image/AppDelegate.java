@@ -9,10 +9,12 @@ import java.util.Map;
 import jos.api.coreimage.CIFilter;
 import jos.api.coreimage.CIImage;
 import jos.api.coreimage.CIVector;
+import jos.api.foundation.NSDictionary;
 import jos.api.foundation.NSObject;
 import jos.api.graphicsimaging.CGImage;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.UIGraphics;
+import jos.api.uikit.UIApplication;
 import jos.api.uikit.UIApplicationDelegate;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIControlState;
@@ -39,12 +41,11 @@ public class AppDelegate extends UIApplicationDelegate {
     CIImage heron = CIImage.fromCGImage(UIImage.fromFile("heron.jpg").CGImage);
 
     @Override
-    public boolean finishedLaunching(UIApplication app, NSDictionary options)
-    {
-        RootElement root = new RootElement("Effects") {
-            new Section () {
-                new RootElement ("Color Adjustment"){
-                    new Section () {
+    public boolean finishedLaunching(UIApplication app, NSDictionary options) {
+        RootElement root = new RootElement("Effects",
+            new Section(
+                new RootElement("Color Adjustment",
+                    new Section(
                         new RootElement ("ColorControls", Demo(ColorControls)),
                         new RootElement ("ColorMatrix", Demo(ColorMatrix)),
                         new RootElement ("ExposureAdjust", Demo(ExposureAdjust)),
@@ -54,10 +55,10 @@ public class AppDelegate extends UIApplicationDelegate {
                         new RootElement ("ToneCurve", Demo(ToneCurve)),
                         new RootElement ("Vibrance", Demo(Vibrance)),
                         new RootElement ("WhitePointAdjust", Demo(WhitePointAdjust))
-                    }
-                },
-                new RootElement ("Color Effect"){
-                    new Section () {
+                    )
+                ),
+                new RootElement("Color Effect",
+                    new Section(
                         new RootElement ("ColorCube", Demo(ColorCube)),
                         new RootElement ("ColorInvert", Demo(ColorInvert)),
                         new RootElement ("ColorMap", null, Demo(ColorMap)),
@@ -69,10 +70,10 @@ public class AppDelegate extends UIApplicationDelegate {
                         new RootElement ("MinimumComponent", null, Demo(MinimumComponent)),
                         new RootElement ("SepiaTone", Demo(SepiaTone)),
                         new RootElement ("Vignete", null, Demo(Vignette))
-                    }
-                },
-                new RootElement ("Composite Operation"){
-                    new Section () {
+                    )
+                ),
+                new RootElement("Composite Operation",
+                    new Section(
                         new RootElement ("AdditionCompositing", Demo (AdditionCompositing)),
                         new RootElement ("ColorBlendMode", Demo (ColorBlendMode)),
                         new RootElement ("ColorBurnBlendMode", Demo (ColorBurnBlendMode)),
@@ -95,69 +96,69 @@ public class AppDelegate extends UIApplicationDelegate {
                         new RootElement ("SourceAtopCompositing", Demo (SourceAtopCompositing)),
                         new RootElement ("SourceInCompositing", Demo(SourceInCompositing)),
                         new RootElement ("SourceOutCompositing", Demo(SourceOutCompositing)),
-                        new RootElement ("SourceOverCompositing", Demo (SourceOverCompositing)),
-                    }
-                },
-                new RootElement ("Distortions"){
-                    new Section () {
+                        new RootElement ("SourceOverCompositing", Demo (SourceOverCompositing))
+                    )
+                ),
+                new RootElement("Distortions",
+                    new Section(
                         new RootElement ("CircleSplashDistortion", null, Demo (CircleSplashDistortion)),
                         new RootElement ("HoleDistortion", null, Demo (HoleDistortion)),
                         new RootElement ("LightTunnel", null, Demo (LightTunel)),
                         new RootElement ("PinchDistortion", null, Demo (PinchDistortion)),
                         new RootElement ("TwirlDistortion", null, Demo (TwirlDistortion)),
                         new RootElement ("VortexDistortion", null, Demo (VortexDistortion))
-                    }
-                },
-                new RootElement ("Generators"){
-                    new Section () {
+                    )
+                ),
+                new RootElement("Generators",
+                    new Section(
                         new RootElement ("CheckerboardGenerator", Demo (CheckerboardGenerator)),
                         new RootElement ("ConstantColorGenerator", Demo (ConstantColorGenerator)),
                         new RootElement ("RandomGenerator", null, Demo (RandomGenerator)),
                         new RootElement ("StarShineGenerator", null, Demo (StarShineGenerator)),
-                        new RootElement ("StripesGenerator", Demo (StripesGenerator)),
-                    }
-                },
-                new RootElement ("Geometry Adjust"){
-                    new Section () {
+                        new RootElement ("StripesGenerator", Demo (StripesGenerator))
+                    )
+                ),
+                new RootElement("Geometry Adjust",
+                    new Section(
                         new RootElement ("AffineTransform", Demo (AffineTransform)),
                         new RootElement ("Crop", Demo (Crop)),
                         new RootElement ("LanczosScaleTransform", null, Demo (LanczosScaleTransform)),
                         new RootElement ("PerspectiveTransform", null, Demo (PerspectiveTransform)),
-                        new RootElement ("StraightenFilter", Demo (StraightenFilter)),
-                    }
-                },
-                new RootElement ("Gradients"){
-                    new Section () {
+                        new RootElement ("StraightenFilter", Demo (StraightenFilter))
+                    )
+                ),
+                new RootElement("Gradients",
+                    new Section(
                         new RootElement ("GaussianGradient", Demo (GaussianGradient)),
                         new RootElement ("LinearGradient", Demo(LinearGradient)),
-                        new RootElement ("RadialGradient", Demo (RadialGradient)),
-                    }
-                },
-                new RootElement ("Halftone Effect") {
-                    new Section () {
+                        new RootElement ("RadialGradient", Demo (RadialGradient))
+                    )
+                ),
+                new RootElement("Halftone Effect",
+                    new Section(
                         new RootElement ("CircularScreen", null, Demo (CircularScreen)),
                         new RootElement ("DotScreen", null, Demo (DotScreen)),
                         new RootElement ("HatchedScreen", null, Demo (HatchedScreen)),
                         new RootElement ("LineScreen", null, Demo (LineScreen))
-                    }
-                },
-                new RootElement ("Sharpen") {
-                    new Section () {
+                    )
+                ),
+                new RootElement("Sharpen",
+                    new Section (
                         new RootElement ("SharpenLuminance", null, Demo (SharpenLuminance)),
-                        new RootElement ("UnsharpMask", null, Demo (UnsharpMask)),
-                    }
-                },
-                new RootElement ("Stylize"){
-                    new Section () {
+                        new RootElement ("UnsharpMask", null, Demo (UnsharpMask))
+                    )
+                ),
+                new RootElement("Stylize",
+                    new Section(
                         new RootElement ("BlendWithMask", null, Demo (BlendWithMask)),
                         new RootElement ("Bloom", null, Demo (Bloom)),
                         new RootElement ("Gloom", null, Demo (Gloom)),
                         new RootElement ("HighlightShadowAdjust", Demo (HighlightShadowAdjust)),
-                        new RootElement ("Pixellate", null, Demo (Pixellate)),
-                    }
-                },
-                new RootElement ("Tile Effect"){
-                    new Section () {
+                        new RootElement ("Pixellate", null, Demo (Pixellate))
+                    )
+                ),
+                new RootElement("Tile Effect",
+                    new Section(
                         new RootElement ("AffineClamp", null, Demo (AffineClamp)),
                         new RootElement ("AffineTile", null, Demo (AffineTile)),
                         new RootElement ("EightfoldReflectedTile", null, Demo (EightfoldReflectedTile)),
@@ -169,22 +170,22 @@ public class AppDelegate extends UIApplicationDelegate {
                         new RootElement ("SixfoldRotatedTile", null, Demo (SixfoldRotatedTile)),
                         new RootElement ("TriangleKaleidoscope", null, Demo (TriangleKaleidoscope)),
                         new RootElement ("TwelvefoldReflectedTile", null, Demo (TwelvefoldReflectedTile))
-                    }
-                },
-                new RootElement ("Transition"){
-                    new Section () {
+                    )
+                ),
+                new RootElement("Transition",
+                    new Section(
                         new RootElement ("BarsSwipeTransition", null, Demo (BarsSwipeTransition)),
                         new RootElement ("CopyMachineTransition", null, Demo (CopyMachineTransition)),
                         new RootElement ("DissolveTransition", null, Demo (DissolveTransition)),
                         new RootElement ("FlashTransition", null, Demo (FlashTransition)),
                         new RootElement ("ModTransition", null, Demo (ModTransition)),
                         new RootElement ("SwipeTransition", null, Demo (SwipeTransition))
-                    }
-                },
+                    )
+                )
                 //new RootElement("Rebase Test Images", RebaseTestImages()),
                 //new RootElement("Test Filters", TestView())
-            }
-        };
+            )
+        );
 
         window = new UIWindow(UIScreen.getMainScreen().getBounds());
         window.setRootViewController(new UINavigationController(

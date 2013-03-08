@@ -1,0 +1,18 @@
+======================================================================
+LEGAL NOTICES
+======================================================================
+
+All code in this project is original work, except as disclosed below.
+
+-----------------------------------------------------------------------
+
+Licensed Software: MonoTouch.Dialog
+Software Web Site: https://github.com/migueldeicaza/MonoTouch.Dialog
+Effective License: MIT X11 license
+License Info Page: http://opensource.org/licenses/MIT
+
+This "dialog" module was translated from the MonoTouch.Dialog project.
+
+-----------------------------------------------------------------------
+
+[end]

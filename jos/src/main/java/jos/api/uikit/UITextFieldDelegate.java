@@ -12,37 +12,37 @@ import com.google.j2objc.annotations.Register;
 public class UITextFieldDelegate extends NSObject {
 
     @Export("textFieldShouldBeginEditing:")
-    public boolean textFieldShouldBeginEditing(UITextField textField) {
+    public boolean shouldStart(UITextField textField) {
         throw new RuntimeException();
     }
 
     @Export("textFieldDidBeginEditing:")
-    public void textFieldDidBeginEditing(UITextField textField) {
+    public void started(UITextField textField) {
         throw new RuntimeException();
     }
 
     @Export("textFieldShouldEndEditing:")
-    public boolean textFieldShouldEndEditing(UITextField textField) {
+    public boolean shouldEnd(UITextField textField) {
         throw new RuntimeException();
     }
 
     @Export("textFieldDidEndEditing:")
-    public void textFieldDidEndEditing(UITextField textField) {
+    public void ended(UITextField textField) {
         throw new RuntimeException();
     }
 
     @Export("textField:shouldChangeCharactersInRange:replacementString:")
-    public boolean textFieldshouldChangeCharactersInRangereplacementString(UITextField textField, NSRange range, String string) {
+    public boolean valueChanged(UITextField textField, NSRange range, String string) {
         throw new RuntimeException();
     }
 
     @Export("textFieldShouldClear:")
-    public boolean textFieldShouldClear(UITextField textField) {
+    public boolean shouldClear(UITextField textField) {
         throw new RuntimeException();
     }
 
     @Export("textFieldShouldReturn:")
-    public boolean textFieldShouldReturn(UITextField textField) {
+    public boolean shouldReturn(UITextField textField) {
         throw new RuntimeException();
     }
 

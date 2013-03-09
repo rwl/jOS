@@ -1,14 +1,24 @@
 package jos.dialog;
 
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
 import jos.api.foundation.NSAction;
+import jos.api.foundation.NSObject;
 import jos.api.foundation.NSString;
+import jos.api.graphicsimaging.CGRect;
 import jos.api.uikit.UIButton;
 import jos.api.uikit.UIButtonType;
+import jos.api.uikit.UIColor;
+import jos.api.uikit.UIControlEvent;
 import jos.api.uikit.UIControlState;
+import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UIImage;
+import jos.api.uikit.UILabel;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
+import jos.api.uikit.UITableViewCellStyle;
+import jos.api.uikit.UITextAlignment;
 
 /**
  * This class is used to render a string + a state in the form of an image.
@@ -23,62 +33,66 @@ import jos.api.uikit.UITableViewCell;
  */
 public abstract class BaseBooleanImageElement extends BoolElement {
 
-    static NSString key = new NSString("BooleanImageElement");
+    private static final NSString key = new NSString("BooleanImageElement");
 
     public class TextWithImageCellView extends UITableViewCell {
 
-        static final int fontSize = 17;
-        static UIFont font = UIFont.boldSystemFontOfSize(fontSize);
-        BaseBooleanImageElement parent;
-        UILabel label;
-        UIButton button;
-        final int ImageSpace = 32;
-        final int Padding = 8;
+        private static final int fontSize = 17;
+        private final UIFont font = UIFont.boldSystemFontOfSize(fontSize);
+        private BaseBooleanImageElement parent;
+        private UILabel label;
+        private UIButton button;
+        private final int ImageSpace = 32;
+        private final int Padding = 8;
 
         public TextWithImageCellView(BaseBooleanImageElement parent_) {
-            super(UITableViewCellStyle.Value1, parent_.CellKey);
+            super(UITableViewCellStyle.VALUE1, parent_.getCellKey());
             parent = parent_;
             label = new UILabel();
-            label.setTextAlignment(UITextAlignment.Left);
-            label.setText(parent.Caption);
+            label.setTextAlignment(UITextAlignment.LEFT);
+            label.setText(parent.getCaption());
             label.setFont(font);
-            label.setBackgroundColor(UIColor.Clear);
+            label.setBackgroundColor(UIColor.CLEAR);
             button = UIButton.fromType(UIButtonType.CUSTOM);
-            //            button.TouchDown += delegate {
-            //                parent.Value = !parent.Value;
-            //                UpdateImage ();
-            //                if (parent.Tapped != null)
-            //                    parent.Tapped ();
-            //            };
-            getContentView().add(label);
-            getContentView().add(button);
+            button.addTarget(new EventListener() {
+
+                @Override
+                public void onEvent(NSObject sender, UIEvent event) {
+                    parent.setValue(!parent.getValue());
+                    UpdateImage();
+                    if (parent.getTapped() != null)
+                        parent.getTapped().action();
+                }
+            }, UIControlEvent.TOUCH_DOWN);
+            getContentView().addSubview(label);
+            getContentView().addSubview(button);
             UpdateImage();
         }
 
         void UpdateImage() {
-            button.SetImage(parent.GetImage(), UIControlState.NORMAL);
+            button.setImage(parent.GetImage(), UIControlState.NORMAL);
         }
 
         @Override
-        public void LayoutSubviews() {
-            super.LayoutSubviews();
-            CGRect full = ContentView.Bounds;
+        public void layoutSubviews() {
+            super.layoutSubviews();
+            CGRect full = getContentView().getBounds();
             CGRect frame = full;
-            frame.height = 22;
-            frame.x = Padding;
-            frame.y = (full.height - frame.height) / 2;
-            frame.width -= ImageSpace + Padding;
+            frame.size.height = 22;
+            frame.origin.x = Padding;
+            frame.origin.y = (full.size.height - frame.size.height) / 2;
+            frame.size.width -= ImageSpace + Padding;
             label.setFrame(frame);
 
-            button.setFrame(makeRect(full.Width - ImageSpace, -3, ImageSpace,
-                    48));
+            button.setFrame(makeRect(full.size.width - ImageSpace, -3,
+                    ImageSpace, 48));
         }
 
         public void UpdateFrom(BaseBooleanImageElement newParent) {
             parent = newParent;
             UpdateImage();
             label.setText(parent.Caption);
-            SetNeedsDisplay();
+            setNeedsDisplay();
         }
     }
 
@@ -86,7 +100,7 @@ public abstract class BaseBooleanImageElement extends BoolElement {
         super(caption, value);
     }
 
-    public NSAction Tapped;
+    private NSAction Tapped;
 
     protected abstract UIImage GetImage();
 
@@ -98,12 +112,20 @@ public abstract class BaseBooleanImageElement extends BoolElement {
     @Override
     public UITableViewCell GetCell(UITableView tv) {
         TextWithImageCellView cell = (TextWithImageCellView) tv
-                .DequeueReusableCell(getCellKey());
+                .dequeueReusableCell(getCellKey());
         if (cell == null)
             cell = new TextWithImageCellView(this);
         else
             cell.UpdateFrom(this);
         return cell;
+    }
+
+    public NSAction getTapped() {
+        return Tapped;
+    }
+
+    public void setTapped(NSAction tapped) {
+        Tapped = tapped;
     }
 
 }

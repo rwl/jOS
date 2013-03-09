@@ -55,4 +55,8 @@ public class RadioElement extends StringElement {
 
         super.Selected(dvc, tableView, indexPath);
     }
+
+    public void setRadioIdx(int value) {
+        RadioIdx = value;
+    }
 }

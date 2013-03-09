@@ -5,28 +5,25 @@ public abstract class BoolElement extends Element {
     boolean val;
 
     public boolean getValue() {
-            return val;
+        return val;
     }
 
     public void setValue(boolean value) {
         boolean emit = val != value;
         val = value;
         if (emit && ValueChanged != null)
-            ValueChanged (this, EventArgs.Empty);
-        }
+            ValueChanged.onEvent(this, null);
     }
 
-    public EventHandler ValueChanged;
+    public EventListener ValueChanged;
 
-    public BoolElement (String caption, boolean value)
-    {
+    public BoolElement(String caption, boolean value) {
         super(caption);
         val = value;
     }
 
     @Override
-    public String Summary ()
-    {
+    public String Summary() {
         return val ? "On" : "Off";
     }
 

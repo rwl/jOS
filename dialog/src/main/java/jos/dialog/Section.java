@@ -2,13 +2,16 @@ package jos.dialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
+import jos.api.foundation.NSIndexPath;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITableViewRowAnimation;
+import jos.api.uikit.UIView;
 
 /**
  * Sections contain individual Element instances that are rendered by
@@ -25,9 +28,10 @@ import jos.api.uikit.UITableViewRowAnimation;
  * properties, or as UIViews to be shown (HeaderView and FooterView). Internally
  * this uses the same storage, so you can only show one or the other.
  */
-public class Section extends Element implements IEnumerable {
+public class Section extends Element implements Iterable<Element> {
 
-    Object header, footer;
+    Object Header, Footer;
+
     private List<Element> Elements = new ArrayList<Element>();
 
     // X corresponds to the alignment, Y to the height of the password
@@ -70,57 +74,57 @@ public class Section extends Element implements IEnumerable {
 
     public Section(UIView header) {
         super(null);
-        HeaderView = header;
+        setHeaderView(header);
     }
 
     public Section(UIView header, UIView footer) {
         super(null);
-        HeaderView = header;
-        FooterView = footer;
+        setHeaderView(header);
+        setFooterView(footer);
     }
 
     /**
      * The section header, as a string
      */
     public String getHeader() {
-            return header as string;
-        }
+        return (String) Header;
+    }
 
     public void setHeader(String value) {
-        header = value;
+        Header = value;
     }
 
     /**
      * The section footer, as a string.
      */
     public String getFooter() {
-        return (String) footer;
+        return (String) Footer;
     }
 
     public void setFooter(String value) {
-        footer = value;
+        Footer = value;
     }
 
     /**
      * The section's header view.
      */
     public UIView getHeaderView() {
-            return header as UIView;
-        }
+        return (UIView) Header;
+    }
 
     public void setHeaderView(UIView value) {
-        header = value;
+        Header = value;
     }
 
     /**
      * The section's footer view.
      */
     public UIView getFooterView() {
-            return footer as UIView;
-        }
+        return (UIView) Footer;
+    }
 
     public void setFooterView(UIView value) {
-        footer = value;
+        Footer = value;
     }
 
     /**
@@ -133,11 +137,11 @@ public class Section extends Element implements IEnumerable {
         if (element == null)
             return;
 
-        Elements.Add(element);
-        element.Parent = this;
+        Elements.add(element);
+        element.setParent(this);
 
         if (Parent != null)
-            InsertVisual(Elements.Count - 1, UITableViewRowAnimation.NONE, 1);
+            InsertVisual(Elements.size() - 1, UITableViewRowAnimation.NONE, 1);
     }
 
     public int AddAll(List<Element> elements) {
@@ -162,7 +166,7 @@ public class Section extends Element implements IEnumerable {
     /**
      * Adds the UIViews to the section.
      */
-    public void Add(IEnumerable<UIView> views) {
+    public void Add(Iterable<UIView> views) {
         for (UIView v : views)
             Add(v);
     }
@@ -185,15 +189,15 @@ public class Section extends Element implements IEnumerable {
 
         int pos = idx;
         for (Element e : newElements) {
-            Elements.Insert(pos++, e);
-            e.Parent = this;
+            Elements.add(pos++, e);
+            e.setParent(this);
         }
         RootElement root = (RootElement) Parent;
-        if (Parent != null && root.TableView != null) {
+        if (Parent != null && root.getTableView() != null) {
             if (anim == UITableViewRowAnimation.NONE)
-                root.getTableView().ReloadData();
+                root.getTableView().reloadData();
             else
-                InsertVisual(idx, anim, newElements.Length);
+                InsertVisual(idx, anim, newElements.length);
         }
     }
 
@@ -205,14 +209,14 @@ public class Section extends Element implements IEnumerable {
         int pos = idx;
         int count = 0;
         for (Element e : newElements) {
-            Elements.Insert(pos++, e);
-            e.Parent = this;
+            Elements.add(pos++, e);
+            e.setParent(this);
             count++;
         }
         RootElement root = (RootElement) Parent;
-        if (root != null && root.TableView != null) {
+        if (root != null && root.getTableView() != null) {
             if (anim == UITableViewRowAnimation.NONE)
-                root.getTableView().ReloadData();
+                root.getTableView().reloadData();
             else
                 InsertVisual(idx, anim, pos - idx);
         }
@@ -220,29 +224,29 @@ public class Section extends Element implements IEnumerable {
     }
 
     void InsertVisual(int idx, UITableViewRowAnimation anim, int count) {
-        var root = (RootElement) Parent;
+        RootElement root = (RootElement) Parent;
 
-        if (root == null || root.TableView == null)
+        if (root == null || root.getTableView() == null)
             return;
 
         int sidx = root.IndexOf(this);
         NSIndexPath[] paths = new NSIndexPath[count];
         for (int i = 0; i < count; i++)
-            paths[i] = NSIndexPath.FromRowSection(idx + i, sidx);
+            paths[i] = NSIndexPath.fromRowSection(idx + i, sidx);
 
-        root.getTableView().InsertRows(paths, anim);
+        root.getTableView().insertRows(paths, anim);
     }
 
     public void Insert(int index, Element... newElements) {
-        Insert(index, UITableViewRowAnimation.None, newElements);
+        Insert(index, UITableViewRowAnimation.NONE, newElements);
     }
 
     public void Remove(Element e) {
         if (e == null)
             return;
-        for (int i = Elements.Count; i > 0;) {
+        for (int i = Elements.size(); i > 0;) {
             i--;
-            if (Elements[i] == e) {
+            if (Elements.get(i).equals(e)) {
                 RemoveRange(i, 1);
                 return;
             }
@@ -262,7 +266,7 @@ public class Section extends Element implements IEnumerable {
      *            Number of elements to remove from the section
      */
     public void RemoveRange(int start, int count) {
-        RemoveRange(start, count, UITableViewRowAnimation.Fade);
+        RemoveRange(start, count, UITableViewRowAnimation.FADE);
     }
 
     /**
@@ -286,28 +290,38 @@ public class Section extends Element implements IEnumerable {
         if (start + count > Elements.size())
             count = Elements.size() - start;
 
-        Elements.RemoveRange(start, count);
+        Elements.subList(start, count).clear();
 
-        if (root == null || root.TableView == null)
+        if (root == null || root.getTableView() == null)
             return;
 
         int sidx = root.IndexOf(this);
         NSIndexPath[] paths = new NSIndexPath[count];
         for (int i = 0; i < count; i++)
-            paths[i] = NSIndexPath.FromRowSection(start + i, sidx);
-        root.TableView.DeleteRows(paths, anim);
+            paths[i] = NSIndexPath.fromRowSection(start + i, sidx);
+        root.getTableView().deleteRows(paths, anim);
     }
 
-    /**
-     * Enumerator to get all the elements in the Section.
-     */
-    public List GetEnumerator() {
-        //        for (Element e : Elements)
-        //            yield return e;
+    @Override
+    public UITableViewCell GetCell(UITableView tv) {
+        UITableViewCell cell = new UITableViewCell(
+                UITableViewCellStyle.DEFAULT, "");
+        cell.getTextLabel().setText("Section was used for Element");
+
+        return cell;
+    }
+
+    public List<Element> getElements() {
+        return Elements;
+    }
+
+    @Override
+    public Iterator<Element> iterator() {
+        return Elements.iterator();
     }
 
     public int Count() {
-        return Elements.Count;
+        return Elements.size();
     }
 
     public Element get(int idx) {
@@ -336,16 +350,4 @@ public class Section extends Element implements IEnumerable {
         super.Dispose(disposing);
     }
 
-    @Override
-    public UITableViewCell GetCell(UITableView tv) {
-        UITableViewCell cell = new UITableViewCell(
-                UITableViewCellStyle.DEFAULT, "");
-        cell.getTextLabel().setText("Section was used for Element");
-
-        return cell;
-    }
-
-    public List<Element> getElements() {
-        return Elements;
-    }
 }

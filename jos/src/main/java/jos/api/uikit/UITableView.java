@@ -5,6 +5,7 @@ import jos.api.foundation.NSCoding;
 import jos.api.foundation.NSIndexPath;
 import jos.api.foundation.NSIndexSet;
 import jos.api.foundation.NSObject;
+import jos.api.foundation.NSString;
 import jos.api.graphicsimaging.CGPoint;
 import jos.api.graphicsimaging.CGRect;
 
@@ -43,6 +44,11 @@ public class UITableView extends UIScrollView {
 
     @Export("dequeueReusableCellWithIdentifier:")
     public UITableViewCell dequeueReusableCell(String cellIdentifier) {
+        return null;
+    }
+
+    @Export("dequeueReusableCellWithIdentifier:")
+    public UITableViewCell dequeueReusableCell(NSString cellIdentifier) {
         return null;
     }
 
@@ -300,17 +306,17 @@ public class UITableView extends UIScrollView {
     }
 
     @Export("insertSections:withRowAnimation:")
-    public void insertSectionswithRowAnimation(NSIndexSet sections, UITableViewRowAnimation animation) {
+    public void insertSections(NSIndexSet sections, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
     @Export("deleteSections:withRowAnimation:")
-    public void deleteSectionswithRowAnimation(NSIndexSet sections, UITableViewRowAnimation animation) {
+    public void deleteSections(NSIndexSet sections, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
     @Export("reloadSections:withRowAnimation:")
-    public void reloadSectionswithRowAnimation(NSIndexSet sections, UITableViewRowAnimation animation) {
+    public void reloadSections(NSIndexSet sections, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
@@ -320,17 +326,17 @@ public class UITableView extends UIScrollView {
     }
 
     @Export("insertRowsAtIndexPaths:withRowAnimation:")
-    public void insertRowsAtIndexPathswithRowAnimation(NSArray indexPaths, UITableViewRowAnimation animation) {
+    public void insertRows(NSIndexPath[] indexPaths, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
     @Export("deleteRowsAtIndexPaths:withRowAnimation:")
-    public void deleteRowsAtIndexPathswithRowAnimation(NSArray indexPaths, UITableViewRowAnimation animation) {
+    public void deleteRows(NSIndexPath[] indexPaths, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
     @Export("reloadRowsAtIndexPaths:withRowAnimation:")
-    public void reloadRowsAtIndexPathswithRowAnimation(NSArray indexPaths, UITableViewRowAnimation animation) {
+    public void reloadRowsAtIndexPathswithRowAnimation(NSIndexPath[] indexPaths, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 
@@ -365,7 +371,7 @@ public class UITableView extends UIScrollView {
     }
 
     @Export("deselectRowAtIndexPath:animated:")
-    public void deselectRowAtIndexPathanimated(NSIndexPath indexPath, boolean animated) {
+    public void deselectRow(NSIndexPath indexPath, boolean animated) {
         throw new RuntimeException();
     }
 

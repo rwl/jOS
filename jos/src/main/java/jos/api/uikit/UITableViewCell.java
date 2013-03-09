@@ -2,6 +2,7 @@ package jos.api.uikit;
 
 import jos.api.foundation.NSCoding;
 import jos.api.foundation.NSObject;
+import jos.api.foundation.NSString;
 import jos.api.graphicsimaging.CGRect;
 
 import com.google.j2objc.annotations.BaseType;
@@ -24,6 +25,10 @@ public class UITableViewCell extends UIView {
 
     @Export("initWithStyle:reuseIdentifier:")
     public UITableViewCell(UITableViewCellStyle style, String reuseIdentifier) {
+    }
+
+    @Export("initWithStyle:reuseIdentifier:")
+    public UITableViewCell(UITableViewCellStyle style, NSString reuseIdentifier) {
     }
 
     @Export("accessoryType")

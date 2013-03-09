@@ -7,42 +7,53 @@ import jos.api.uikit.UITableViewCellAccessoryType;
 
 public class CheckboxElement extends StringElement {
 
-    public boolean Value;
-    public String Group;
+    private boolean Value;
+    private String Group;
 
-    public CheckboxElement (String caption) {
+    public CheckboxElement(String caption) {
         super(caption);
     }
 
-    public CheckboxElement (String caption, boolean value) {
+    public CheckboxElement(String caption, boolean value) {
         super(caption);
         Value = value;
     }
 
-    public CheckboxElement (String caption, boolean value, String group) {
-        this (caption, value);
+    public CheckboxElement(String caption, boolean value, String group) {
+        this(caption, value);
         Group = group;
     }
 
-    UITableViewCell ConfigCell (UITableViewCell cell)
-    {
-        cell.Accessory = Value ? UITableViewCellAccessoryType.CHECKMARK : UITableViewCellAccessoryType.NONE;
+    UITableViewCell ConfigCell(UITableViewCell cell) {
+        cell.setAccessoryType(Value ? UITableViewCellAccessoryType.CHECKMARK
+                : UITableViewCellAccessoryType.NONE);
         return cell;
     }
 
     @Override
-    public UITableViewCell GetCell (UITableView tv)
-    {
-        return  ConfigCell (super.GetCell (tv));
+    public UITableViewCell GetCell(UITableView tv) {
+        return ConfigCell(super.GetCell(tv));
     }
 
     @Override
-    public void Selected (DialogViewController dvc, UITableView tableView, NSIndexPath path)
-    {
+    public void Selected(DialogViewController dvc, UITableView tableView,
+            NSIndexPath path) {
         Value = !Value;
-        UITableViewCell cell = tableView.CellAt (path);
-        ConfigCell (cell);
-        super.Selected (dvc, tableView, path);
+        UITableViewCell cell = tableView.cellAt(path);
+        ConfigCell(cell);
+        super.Selected(dvc, tableView, path);
+    }
+
+    public String getGroup() {
+        return Group;
+    }
+
+    public boolean isValue() {
+        return Value;
+    }
+
+    public void setValue(boolean value) {
+        Value = value;
     }
 
 }

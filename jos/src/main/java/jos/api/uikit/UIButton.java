@@ -152,7 +152,7 @@ public class UIButton extends UIControl {
     }
 
     @Export("setImage:forState:")
-    public void setImageforState(UIImage image, UIControlState state) {
+    public void setImage(UIImage image, UIControlState state) {
         throw new RuntimeException();
     }
 

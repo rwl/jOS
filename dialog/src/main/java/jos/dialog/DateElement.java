@@ -1,11 +1,13 @@
 package jos.dialog;
 
+import java.util.Date;
+
 import jos.api.uikit.UIDatePicker;
 import jos.api.uikit.UIDatePickerMode;
 
 public class DateElement extends DateTimeElement {
 
-    public DateElement(String caption, DateTime date) {
+    public DateElement(String caption, Date date) {
         super(caption, date);
         fmt.setDateStyle(NSDateFormatterStyle.MEDIUM);
     }

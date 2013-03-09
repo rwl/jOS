@@ -1,5 +1,9 @@
 package jos.dialog;
 
+import java.util.Date;
+
+import jos.api.foundation.NSDateFormatter;
+import jos.api.foundation.NSDateFormatterStyle;
 import jos.api.foundation.NSIndexPath;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.uikit.UIApplication;
@@ -16,17 +20,17 @@ import jos.api.uikit.UIViewController;
 
 public class DateTimeElement extends StringElement {
 
-    public DateTime DateValue;
-    public UIDatePicker datePicker;
-    public Action<DateTimeElement> DateSelected;
-    public UIColor BackgroundColor = UIColor.BLACK;
+    private Date DateValue;
+    private UIDatePicker datePicker;
+    private EventListener DateSelected;
+    private UIColor BackgroundColor = UIColor.BLACK;
 
     protected NSDateFormatter fmt = new NSDateFormatter();
     {
-        fmt.setDateStyle(NSDateFormatterStyle.Short);
+        fmt.setDateStyle(NSDateFormatterStyle.SHORT);
     };
 
-    public DateTimeElement(String caption, DateTime date) {
+    public DateTimeElement(String caption, Date date) {
         super(caption);
         DateValue = date;
         Value = FormatDate(date);
@@ -56,14 +60,14 @@ public class DateTimeElement extends StringElement {
         }
     }
 
-    protected DateTime GetDateWithKind(DateTime dt) {
+    protected Date GetDateWithKind(Date dt) {
         if (dt.Kind == DateTimeKind.UNSPECIFIED)
             return DateTime.specifyKind(dt, DateTimeKind.LOCAL);
 
         return dt;
     }
 
-    public String FormatDate(DateTime dt) {
+    public String FormatDate(Date dt) {
         dt = GetDateWithKind(dt);
         return fmt.toString(dt) + " " + dt.toLocalTime().toShortTimeString();
     }

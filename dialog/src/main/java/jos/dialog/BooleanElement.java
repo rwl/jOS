@@ -1,11 +1,14 @@
 package jos.dialog;
 
+import jos.api.foundation.NSObject;
 import jos.api.foundation.NSString;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIControlEvent;
+import jos.api.uikit.UIEvent;
 import jos.api.uikit.UISwitch;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 
 /**
@@ -31,26 +34,29 @@ public class BooleanElement extends BoolElement {
     }
 
     @Override
-    public UITableViewCell GetCell (UITableView tv)
-    {
-        if (sw == null){
-            sw = new UISwitch ();
+    public UITableViewCell GetCell(UITableView tv) {
+        if (sw == null) {
+            sw = new UISwitch();
             sw.setBackgroundColor(UIColor.CLEAR);
             sw.setTag(1);
             sw.setOn(getValue());
-            sw.addTarget(new Target() {
-//                Value = sw.On;
+            sw.addTarget(new EventListener() {
+                @Override
+                public void onEvent(NSObject sender, UIEvent event) {
+                    setValue(sw.isOn());
+                }
             }, UIControlEvent.VALUE_CHANGED);
         } else {
             sw.setOn(getValue());
         }
 
         UITableViewCell cell = tv.dequeueReusableCell(getCellKey());
-        if (cell == null){
-            cell = new UITableViewCell(UITableViewCellStyle.DEFAULT, getCellKey());
+        if (cell == null) {
+            cell = new UITableViewCell(UITableViewCellStyle.DEFAULT,
+                    getCellKey());
             cell.setSelectionStyle(UITableViewCellSelectionStyle.NONE);
         } else {
-            RemoveTag (cell, 1);
+            RemoveTag(cell, 1);
         }
 
         cell.getTextLabel().setText(Caption);
@@ -63,7 +69,7 @@ public class BooleanElement extends BoolElement {
     protected void Dispose(boolean disposing) {
         if (disposing) {
             if (sw != null) {
-                sw.Dispose();
+                sw.dealloc();
                 sw = null;
             }
         }
@@ -80,4 +86,5 @@ public class BooleanElement extends BoolElement {
         if (sw != null)
             sw.setOn(value);
     }
+
 }

@@ -13,7 +13,7 @@ public class NSIndexPath {
     }
 
     @Export("indexPathWithIndexes:length:")
-    public static NSObject indexPathWithIndexeslength(@Bind("NSUInteger") int[] indexes, int length) {
+    public static NSIndexPath create(@Bind("NSUInteger") int[] indexes, int length) {
         return null;
     }
 

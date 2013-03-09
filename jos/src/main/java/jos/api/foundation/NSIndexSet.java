@@ -14,12 +14,12 @@ public class NSIndexSet extends NSObject {
     }
 
     @Export("indexSetWithIndex:")
-    public static NSObject indexSetWithIndex(int value) {
+    public static NSIndexSet fromIndex(int value) {
         throw new RuntimeException();
     }
 
     @Export("indexSetWithIndexesInRange:")
-    public static NSObject indexSetWithIndexesInRange(NSRange range) {
+    public static NSIndexSet fromRange(NSRange range) {
         throw new RuntimeException();
     }
 

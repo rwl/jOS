@@ -1,6 +1,8 @@
 package jos.dialog;
 
 import jos.api.foundation.NSIndexPath;
+import jos.api.foundation.NSObject;
+import jos.api.foundation.NSString;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellStyle;
@@ -9,19 +11,19 @@ import jos.api.uikit.UIView;
 /**
  * Base class for all elements
  */
-public abstract class Element {
+public abstract class Element extends NSObject {
 
     /**
      * Handle to the container object. For sections this points to a
      * RootElement, for every other object this points to a Section and it is
      * null for the root RootElement.
      */
-    private Element Parent;
+    protected Element Parent;
 
     /**
      * The caption to display for this given element
      */
-    private String Caption;
+    protected String Caption;
 
     /**
      * Initializes the element with the given caption.
@@ -37,7 +39,7 @@ public abstract class Element {
     protected void Dispose(boolean disposing) {
     }
 
-    private static String cellkey = "xx";
+    private static NSString cellkey = new NSString("xx");
 
     /**
      * Subclasses that override the GetCell method should override this method
@@ -54,7 +56,7 @@ public abstract class Element {
      * for those if you are trying to override StringElement or
      * StyledStringElement.
      */
-    protected String getCellKey() {
+    protected NSString getCellKey() {
         return cellkey;
     }
 
@@ -133,7 +135,7 @@ public abstract class Element {
         RootElement root = GetImmediateRootElement();
         if (root == null)
             return null;
-        return root.TableView;
+        return root.getTableView();
     }
 
     /**

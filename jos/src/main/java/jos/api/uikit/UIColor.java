@@ -34,6 +34,9 @@ public class UIColor extends NSObject {
     @Bind("lightTextColor")
     public static UIColor LIGHT_TEXT_COLOR;
 
+    @Bind("blackColor")
+    public static UIColor BLACK;
+
     @Export("darkTextColor")
     public static UIColor darkTextColor() {
         throw new RuntimeException();

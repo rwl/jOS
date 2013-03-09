@@ -1,7 +1,9 @@
 package jos.dialog;
 
 import jos.api.uikit.UISearchBar;
+import jos.api.uikit.UITableViewController;
 import jos.api.uikit.UITableViewStyle;
+import jos.api.uikit.UIViewController;
 
 /**
  *  The DialogViewController is the main entry point to use Dialog,
@@ -129,7 +131,7 @@ public class DialogViewController extends UITableViewController
     /**
      * Controls whether the DialogViewController should auto rotate
      */
-    public boolean Autorotate ;
+    private boolean Autorotate ;
 
     @Override
     public boolean ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
@@ -676,5 +678,13 @@ public class DialogViewController extends UITableViewController
     public DialogViewController (IntPtr handle) {
         super(handle);
         this.root = new RootElement ("");
+    }
+
+    public boolean isAutorotate() {
+        return Autorotate;
+    }
+
+    public void setAutorotate(boolean autorotate) {
+        Autorotate = autorotate;
     }
 }

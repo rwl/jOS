@@ -541,11 +541,21 @@ public class Parser {
         }
         q = line.indexOf(')');
         log("->%s\np=%d q-p=%d", line, p, q-p);
-        final String retval = remapType(line
+        String retval = null;
+        try {
+            retval = remapType(line
                 .substring(p + 1, p + 1 + q - p - 1));
+        } catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
         p = line.indexOf(';');
-        final String signature = StringUtils.strip(
-                line.substring(q + 1, q + 1 + p - q), " ;");
+        String signature = null;
+        try {
+            signature = StringUtils.strip(
+                    line.substring(q + 1, q + 1 + p - q), " ;");
+        } catch (StringIndexOutOfBoundsException e) {
+            e.printStackTrace();
+        }
         log("SIG: %s %d", line, p);
         final String selector = makeSelector(signature);
         final String parameters = makeParameters(signature);

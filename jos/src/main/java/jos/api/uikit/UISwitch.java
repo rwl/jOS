@@ -6,16 +6,14 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UISwitch extends UIControl {
 
-    public boolean on;
-
     @Export("isOn")
     public boolean isOn() {
-        return on;
+        throw new RuntimeException();
     }
 
     @Export("setOn")
     public void setOn(boolean on) {
-        this.on = on;
+        throw new RuntimeException();
     }
 
 }

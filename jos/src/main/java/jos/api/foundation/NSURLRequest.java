@@ -9,6 +9,7 @@ import com.google.j2objc.annotations.Register;
 @BaseType({NSCoding.class, NSCopying.class, NSMutableCopying.class})
 @Register(isWrapper = true)
 public class NSURLRequest extends NSObject {
+
     @Export("requestWithURL:")
     public NSObject requestWithURL(NSUrl url) {
         throw new RuntimeException();

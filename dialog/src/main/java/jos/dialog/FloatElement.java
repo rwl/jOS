@@ -3,9 +3,12 @@ package jos.dialog;
 import static jos.api.graphicsimaging.CGGeometry.makeSize;
 import static jos.api.graphicsimaging.CGGeometry.makeRect;
 
+import jos.api.foundation.NSObject;
 import jos.api.foundation.NSString;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIColor;
+import jos.api.uikit.UIControlEvent;
+import jos.api.uikit.UIEvent;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UISlider;
@@ -69,9 +72,12 @@ public class FloatElement extends Element {
             slider.setContinuous(true);
             slider.setValue(this.Value);
             slider.setTag(1);
-            //            slider.ValueChanged += delegate {
-            //                Value = slider.Value;
-            //            };
+            slider.addTarget(new EventListener() {
+                @Override
+                public void onEvent(NSObject sender, UIEvent event) {
+                    setValue(slider.getValue());
+                }
+            }, UIControlEvent.VALUE_CHANGED);
         } else {
             slider.setValue(Value);
         }
@@ -93,6 +99,38 @@ public class FloatElement extends Element {
                 slider = null;
             }
         }
+    }
+
+    public float getValue() {
+        return Value;
+    }
+
+    public void setValue(float value) {
+        Value = value;
+    }
+
+    public boolean isShowCaption() {
+        return ShowCaption;
+    }
+
+    public void setShowCaption(boolean showCaption) {
+        ShowCaption = showCaption;
+    }
+
+    public float getMinValue() {
+        return MinValue;
+    }
+
+    public void setMinValue(float minValue) {
+        MinValue = minValue;
+    }
+
+    public float getMaxValue() {
+        return MaxValue;
+    }
+
+    public void setMaxValue(float maxValue) {
+        MaxValue = maxValue;
     }
 
 }

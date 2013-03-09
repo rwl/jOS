@@ -33,7 +33,7 @@ public class NSError extends NSObject {
     }
 
     @Export("localizedDescription")
-    public String localizedDescription() {
+    public String getLocalizedDescription() {
         throw new RuntimeException();
     }
 

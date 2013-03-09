@@ -4,6 +4,7 @@ import jos.api.foundation.NSCoding;
 import jos.api.foundation.NSData;
 import jos.api.foundation.NSURLRequest;
 import jos.api.foundation.NSUrl;
+import jos.api.graphicsimaging.CGRect;
 
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Bind;
@@ -14,6 +15,15 @@ import com.google.j2objc.annotations.Register;
 @BaseType({NSCoding.class, UIScrollViewDelegate.class})
 @Register(isWrapper = true)
 public class UIWebView extends UIView {
+
+    @Export("init")
+    public UIWebView() {
+    }
+
+    @Export("initWithFrame:")
+    public UIWebView(final CGRect frame) {
+    }
+
 
     @Export("delegate")
     public UIWebViewDelegate getDelegate() {

@@ -1,15 +1,21 @@
 package jos.dialog;
 
 import jos.api.foundation.NSIndexPath;
+import jos.api.foundation.NSString;
 import jos.api.foundation.NSURLRequest;
+import jos.api.foundation.NSError;
 import jos.api.foundation.NSUrl;
+import jos.api.uikit.UIActivityIndicatorView;
+import jos.api.uikit.UIActivityIndicatorViewStyle;
 import jos.api.uikit.UIApplication;
+import jos.api.uikit.UIBarButtonItem;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIInterfaceOrientation;
 import jos.api.uikit.UIScreen;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellAccessoryType;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UIViewAutoresizing;
 import jos.api.uikit.UIViewController;
@@ -21,9 +27,9 @@ import jos.api.uikit.UIWebViewDelegate;
  */
 public class HtmlElement extends Element {
 
-    NSUrl nsUrl;
-    static NSString hkey = new NSString("HtmlElement");
-    UIWebView web;
+    private NSUrl nsUrl;
+    private static final NSString hkey = new NSString("HtmlElement");
+    private UIWebView web;
 
     public HtmlElement(String caption, String url) {
         super(caption);
@@ -50,13 +56,13 @@ public class HtmlElement extends Element {
 
     @Override
     public UITableViewCell GetCell(UITableView tv) {
-        UITableViewCell cell = tv.DequeueReusableCell(getCellKey());
+        UITableViewCell cell = tv.dequeueReusableCell(getCellKey());
         if (cell == null) {
             cell = new UITableViewCell(UITableViewCellStyle.DEFAULT,
                     getCellKey());
             cell.setSelectionStyle(UITableViewCellSelectionStyle.BLUE);
         }
-        cell.setAccessory(UITableViewCellAccessoryType.DISCLOSURE_INDICATOR);
+        cell.setAccessoryType(UITableViewCellAccessoryType.DISCLOSURE_INDICATOR);
 
         cell.getTextLabel().setText(Caption);
         return cell;
@@ -79,68 +85,85 @@ public class HtmlElement extends Element {
             this.container = container;
         }
 
-        public boolean Autorotate;
+        private boolean Autorotate;
 
         @Override
         public boolean shouldAutorotateToInterfaceOrientation(
                 UIInterfaceOrientation toInterfaceOrientation) {
             return Autorotate;
         }
+
+        public boolean isAutorotate() {
+            return Autorotate;
+        }
+
+        public void setAutorotate(boolean autorotate) {
+            Autorotate = autorotate;
+        }
     }
 
-    @Override
-    public void Selected (DialogViewController dvc, UITableView tableView, NSIndexPath path)
-    {
-        int i = 0;
-        WebViewController vc = new WebViewController (this) {
-            Autorotate = dvc.isAutorotate();
-        };
+    private int i = 0;
 
-        web = new UIWebView (UIScreen.getMainScreen().getBounds());
+    @Override
+    public void Selected(DialogViewController dvc, UITableView tableView,
+            NSIndexPath path) {
+        i = 0;
+        final WebViewController vc = new WebViewController(this);
+        vc.setAutorotate(dvc.isAutorotate());
+
+        web = new UIWebView(UIScreen.getMainScreen().getBounds());
         web.setBackgroundColor(UIColor.WHITE);
         web.setScalesPageToFit(true);
-        web.setAutoresizingMask(UIViewAutoresizing.ALL);
+        web.setAutoresizingMask(UIViewAutoresizing.FLEXIBLE_BOTTOM_MARGIN
+                | UIViewAutoresizing.FLEXIBLE_HEIGHT
+                | UIViewAutoresizing.FLEXIBLE_LEFT_MARGIN
+                | UIViewAutoresizing.FLEXIBLE_RIGHT_MARGIN
+                | UIViewAutoresizing.FLEXIBLE_TOP_MARGIN
+                | UIViewAutoresizing.FLEXIBLE_WIDTH);
         web.setDelegate(new UIWebViewDelegate() {
 
             @Override
             public void loadStarted(UIWebView webView) {
-             // this is called several times and only one UIActivityIndicatorView is needed
+                // this is called several times and only one UIActivityIndicatorView is needed
                 if (i++ == 0) {
-                    var indicator = new UIActivityIndicatorView (UIActivityIndicatorViewStyle.White);
-                    vc.NavigationItem.RightBarButtonItem = new UIBarButtonItem (indicator);
-                    indicator.StartAnimating ();
+                    UIActivityIndicatorView indicator = new UIActivityIndicatorView(
+                            UIActivityIndicatorViewStyle.WHITE);
+                    vc.getNavigationItem().setRightBarButtonItem(
+                            new UIBarButtonItem(indicator));
+                    indicator.startAnimating();
                 }
-                NetworkActivity = true;
+                setNetworkActivity(true);
             }
 
             @Override
             public void loadFinished(UIWebView webView) {
                 if (--i == 0) {
                     // we stopped loading, remove indicator and dispose of UIWebView
-                    vc.NavigationItem.RightBarButtonItem = null;
-                    web.stopLoading ();
-                    web.dispose ();
+                    vc.getNavigationItem().setRightBarButtonItem(null);
+                    web.stopLoading();
+                    web.dealloc();
                 }
-                NetworkActivity = false;
+                setNetworkActivity(false);
             }
 
             @Override
             public void didFailLoad(UIWebView webView, NSError error) {
-                NetworkActivity = false;
-                vc.NavigationItem.RightBarButtonItem = null;
+                setNetworkActivity(false);
+                vc.getNavigationItem().setRightBarButtonItem(null);
                 if (web != null)
-                    web.LoadHtmlString (
-                        String.Format ("<html><center><font size=+5 color='red'>{0}:<br>{1}</font></center></html>",
-                        "An error occurred:".GetText (), args.Error.LocalizedDescription), null);
-
+                    web.loadHTML(
+                            String.format(
+                                    "<html><center><font size=+5 color='red'>%s:<br>%s</font></center></html>",
+                                    "An error occurred:",
+                                    error.getLocalizedDescription()), null);
             }
         });
         vc.getNavigationItem().setTitle(Caption);
 
-        vc.getView().setAutosizesSubviews(true);
-        vc.getView().addSubview (web);
+        vc.getView().setAutoresizesSubviews(true);
+        vc.getView().addSubview(web);
 
-        dvc.ActivateController (vc);
-        web.loadRequest (NSURLRequest.fromUrl (nsUrl));
+        dvc.ActivateController(vc);
+        web.loadRequest(new NSURLRequest(nsUrl));
     }
 }

@@ -3,8 +3,8 @@ package jos.api.uikit;
 import com.google.j2objc.annotations.Bind;
 
 public enum UITextAutocapitalizationType {
-    @Bind("UITextAutocapitalizationTypeNone") None,
-    @Bind("UITextAutocapitalizationTypeWords") Words,
-    @Bind("UITextAutocapitalizationTypeSentences") Sentences,
-    @Bind("UITextAutocapitalizationTypeAllCharacters") AllCharacters;
+    @Bind("UITextAutocapitalizationTypeNone") NONE,
+    @Bind("UITextAutocapitalizationTypeWords") WORDS,
+    @Bind("UITextAutocapitalizationTypeSentences") SENTENCES,
+    @Bind("UITextAutocapitalizationTypeAllCharacters") ALL_CHARACTERS;
 }

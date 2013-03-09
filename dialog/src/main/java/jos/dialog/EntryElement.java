@@ -1,5 +1,11 @@
 package jos.dialog;
 
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
+import jos.api.foundation.NSIndexPath;
+import jos.api.foundation.NSString;
+import jos.api.foundation.NSRange;
 import jos.api.graphicsimaging.CGRect;
 import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.UIDevice;
@@ -8,6 +14,7 @@ import jos.api.uikit.UIKeyboardType;
 import jos.api.uikit.UIReturnKeyType;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITableViewScrollPosition;
 import jos.api.uikit.UITextAlignment;
@@ -41,7 +48,7 @@ public class EntryElement extends Element {
         val = newValue;
 
         if (Changed != null)
-            Changed(this/*, EventArgs.Empty*/);
+            Changed.onEvent(this, null);
         return val;
     }
 
@@ -56,7 +63,7 @@ public class EntryElement extends Element {
     /**
      * The key used for reusable UITableViewCells.
      */
-    static NSString entryKey = new NSString("EntryElement");
+    private static NSString entryKey = new NSString("EntryElement");
 
     protected NSString getEntryKey() {
         return entryKey;
@@ -86,8 +93,8 @@ public class EntryElement extends Element {
 
     public void setReturnKeyType(UIReturnKeyType value) {
         returnKeyType = value;
-        if (entry != null && returnKeyType.hasValue())
-            entry.setReturnKeyType(returnKeyType.getValue());
+        if (entry != null && returnKeyType != null)
+            entry.setReturnKeyType(returnKeyType);
     }
 
     public UITextAutocapitalizationType getAutocapitalizationType() {
@@ -97,7 +104,7 @@ public class EntryElement extends Element {
     public void setAutocapitalizationType(UITextAutocapitalizationType value) {
         autocapitalizationType = value;
         if (entry != null)
-            entry.AutocapitalizationType = value;
+            entry.setAutocapitalizationType(value);
     }
 
     public UITextAutocorrectionType getAutocorrectionType() {
@@ -131,21 +138,25 @@ public class EntryElement extends Element {
         }
     }
 
-    UITextAlignment textalignment = UITextAlignment.LEFT;
-    UIKeyboardType keyboardType = UIKeyboardType.Default;
-    UIReturnKeyType returnKeyType = null;
-    UITextAutocapitalizationType autocapitalizationType = UITextAutocapitalizationType.Sentences;
-    UITextAutocorrectionType autocorrectionType = UITextAutocorrectionType.Default;
-    UITextFieldViewMode clearButtonMode = UITextFieldViewMode.Never;
-    boolean isPassword, becomeResponder;
-    UITextField entry;
-    String placeholder;
-    static UIFont font = UIFont.boldSystemFontOfSize(17);
+    private UITextAlignment textalignment = UITextAlignment.LEFT;
+    private UIKeyboardType keyboardType = UIKeyboardType.DEFAULT;
+    private UIReturnKeyType returnKeyType = null;
+    private UITextAutocapitalizationType autocapitalizationType = UITextAutocapitalizationType.SENTENCES;
+    private UITextAutocorrectionType autocorrectionType = UITextAutocorrectionType.DEFAULT;
+    private UITextFieldViewMode clearButtonMode = UITextFieldViewMode.NEVER;
+    private boolean isPassword, becomeResponder;
+    private UITextField entry;
+    private String placeholder;
+    private static final UIFont font = UIFont.boldSystemFontOfSize(17);
 
-    public EventHandler Changed;
-    public Method<Boolean>/*Func<bool>*/ShouldReturn;
-    public EventHandler EntryStarted;
-    public EventHandler EntryEnded;
+    public interface ShouldReturnHandler {
+        public boolean shouldReturn();
+    }
+
+    public EventListener Changed;
+    public ShouldReturnHandler ShouldReturn;
+    public EventListener EntryStarted;
+    public EventListener EntryEnded;
 
     /**
      * Constructs an EntryElement with the given caption, placeholder and
@@ -160,7 +171,7 @@ public class EntryElement extends Element {
      */
     public EntryElement(String caption, String placeholder, String value) {
         super(caption);
-        Value = value;
+        setValue(value);
         this.placeholder = placeholder;
     }
 
@@ -180,49 +191,49 @@ public class EntryElement extends Element {
     public EntryElement(String caption, String placeholder, String value,
             boolean isPassword) {
         super(caption);
-        Value = value;
+        setValue(value);
         this.isPassword = isPassword;
         this.placeholder = placeholder;
     }
 
     @Override
     public String Summary() {
-        return Value;
+        return getValue();
     }
 
     //
     // Computes the X position for the entry by aligning all the entries in the Section
     //
-    CGSize ComputeEntryPosition(UITableView tv, UITableViewCell cell) {
+    private CGSize ComputeEntryPosition(UITableView tv, UITableViewCell cell) {
         Section s = (Section) Parent;
-        if (s.getEntryAlignment().Width != 0)
+        if (s.getEntryAlignment().width != 0)
             return s.getEntryAlignment();
 
         // If all EntryElements have a null Caption, align UITextField with the Caption
         // offset of normal cells (at 10px).
-        CGSize max = makeSize(-15, tv.StringSize("M", font).Height);
-        for (Element e : s.Elements) {
+        CGSize max = makeSize(-15, new NSString("M").sizeWithFont(font).height);
+        for (Element e : s) {
             EntryElement ee = (EntryElement) e;
             if (ee == null)
                 continue;
 
             if (ee.Caption != null) {
-                var size = tv.StringSize(ee.Caption, font);
-                if (size.Width > max.Width)
+                CGSize size = new NSString(ee.getCaption()).sizeWithFont(font);
+                if (size.width > max.width)
                     max = size;
             }
         }
-        s.setEntryAlignment(makeSize(25 + Math.Min(max.Width, 160), max.Height));
+        s.setEntryAlignment(makeSize(25 + Math.min(max.width, 160), max.height));
         return s.getEntryAlignment();
     }
 
-    protected UITextField CreateTextField (CGRect frame)
-    {
-        UITextField tf = new UITextField (frame);
-        tf.setAutoresizingMask = UIViewAutoresizing.FLEXIBLE_WIDTH | UIViewAutoresizing.FLEXIBLE_LEFT_MARGIN);
+    protected UITextField CreateTextField(CGRect frame) {
+        UITextField tf = new UITextField(frame);
+        tf.setAutoresizingMask(UIViewAutoresizing.FLEXIBLE_WIDTH
+                | UIViewAutoresizing.FLEXIBLE_LEFT_MARGIN);
         tf.setPlaceholder(placeholder == null ? "" : placeholder);
         tf.setSecureTextEntry(isPassword);
-        tf.setText(Value == null ? "" : Value);
+        tf.setText(getValue() == null ? "" : getValue());
         tf.setTag(1);
         tf.setTextAlignment(textalignment);
         tf.setClearButtonMode(clearButtonMode);
@@ -250,46 +261,49 @@ public class EntryElement extends Element {
 
         int offset = (UIDevice.getCurrentDevice().getUserInterfaceIdiom() == UIUserInterfaceIdiom.PHONE) ? 20
                 : 90;
-        cell.setFrame(makeRect(cell.getFrame().x, cell.getFrame().y,
-                tv.getFrame().width - offset, cell.getFrame().height));
+        cell.setFrame(makeRect(cell.getFrame().origin.x,
+                cell.getFrame().origin.y, tv.getFrame().size.width - offset,
+                cell.getFrame().size.height));
         CGSize size = ComputeEntryPosition(tv, cell);
-        float yOffset = (cell.getContentView().getBounds().Height - size.Height) / 2 - 1;
-        float width = cell.getContentView().getBounds().width - size.width;
+        float yOffset = (cell.getContentView().getBounds().size.height - size.height) / 2 - 1;
+        float width = cell.getContentView().getBounds().size.width - size.width;
         if (textalignment == UITextAlignment.RIGHT) {
             // Add padding if right aligned
             width -= 10;
         }
-        CGRect entryFrame = makeRect(size.Width, yOffset, width, size.Height);
+        CGRect entryFrame = makeRect(size.width, yOffset, width, size.height);
 
         if (entry == null) {
-            entry = createTextField(entryFrame);
+            entry = CreateTextField(entryFrame);
             entry.setDelegate(new UITextFieldDelegate() {
-                public boolean valueChanged(UITextField textField, NSRange range, String string) {
-                    FetchValue ();
+                public boolean valueChanged(UITextField textField,
+                        NSRange range, String string) {
+                    FetchValue();
                 }
 
                 public void ended(UITextField textField) {
-                    FetchValue ();
+                    FetchValue();
                     if (EntryEnded != null) {
-                        EntryEnded (this, null);
+                        EntryEnded.onEvent(this, null);
                     }
                 }
 
                 public boolean shouldReturn(UITextField textField) {
                     if (ShouldReturn != null)
-                        return ShouldReturn ();
+                        return ShouldReturn.shouldReturn();
 
-                    RootElement root = GetImmediateRootElement ();
+                    RootElement root = GetImmediateRootElement();
                     EntryElement focus = null;
 
                     if (root == null)
                         return true;
 
-                    for (Section s : root.Sections) {
-                        for (Element e : s.Elements) {
-                            if (e.equals(this)) {
-                                focus = this;
-                            } else if (focus != null && e instanceof EntryElement) {
+                    for (Section s : root) {
+                        for (Element e : s) {
+                            if (e.equals(EntryElement.this)) {
+                                focus = EntryElement.this;
+                            } else if (focus != null
+                                    && e instanceof EntryElement) {
                                 focus = (EntryElement) e;
                                 break;
                             }
@@ -300,34 +314,36 @@ public class EntryElement extends Element {
                     }
 
                     if (!focus.equals(this))
-                        focus.BecomeFirstResponder (true);
+                        focus.BecomeFirstResponder(true);
                     else
-                        focus.ResignFirstResponder (true);
+                        focus.ResignFirstResponder(true);
 
                     return true;
 
                 }
+
                 public void started(UITextField textField) {
                     EntryElement self = null;
 
                     if (EntryStarted != null) {
-                        EntryStarted (this, null);
+                        EntryStarted.onEvent(this, null);
                     }
 
-                    if (!returnKeyType.HasValue) {
-                        UIReturnKeyType returnType = UIReturnKeyType.Default;
+                    if (returnKeyType == null) {
+                        UIReturnKeyType returnType = UIReturnKeyType.DEFAULT;
 
-                        for (Element e : ((Section) Parent).Elements) {
+                        for (Element e : (Section) Parent) {
                             if (e.equals(this))
                                 self = this;
                             else if (self != null && e instanceof EntryElement)
-                                returnType = UIReturnKeyType.Next;
+                                returnType = UIReturnKeyType.NEXT;
                         }
                         entry.setReturnKeyType(returnType);
                     } else
-                        entry.setReturnKeyType(returnKeyType.Value);
+                        entry.setReturnKeyType(returnKeyType);
 
-                    tv.ScrollToRow (IndexPath, UITableViewScrollPosition.MIDDLE, true);
+                    tv.scrollToRow(getIndexPath(),
+                            UITableViewScrollPosition.MIDDLE, true);
 
                 }
             });
@@ -339,10 +355,10 @@ public class EntryElement extends Element {
             entry.becomeFirstResponder();
             becomeResponder = false;
         }
-        entry.setKeyboardType(KeyboardType);
+        entry.setKeyboardType(getKeyboardType());
 
-        entry.setAutocapitalizationType(AutocapitalizationType);
-        entry.setAutocorrectionType(AutocorrectionType);
+        entry.setAutocapitalizationType(getAutocapitalizationType());
+        entry.setAutocorrectionType(getAutocorrectionType());
 
         return cell;
     }
@@ -355,21 +371,21 @@ public class EntryElement extends Element {
         if (entry == null)
             return;
 
-        newValue = entry.getText();
-        if (newValue == Value)
+        String newValue = entry.getText();
+        if (newValue == getValue())
             return;
 
-        Value = newValue;
+        setValue(newValue);
 
         if (Changed != null)
-            Changed(this/*, EventArgs.Empty*/);
+            Changed.onEvent(this, null);
     }
 
     @Override
     protected void Dispose(boolean disposing) {
         if (disposing) {
             if (entry != null) {
-                entry.Dispose();
+                entry.dealloc();
                 entry = null;
             }
         }
@@ -379,12 +395,12 @@ public class EntryElement extends Element {
     public void Selected(DialogViewController dvc, UITableView tableView,
             NSIndexPath indexPath) {
         BecomeFirstResponder(true);
-        tableView.DeselectRow(indexPath, true);
+        tableView.deselectRow(indexPath, true);
     }
 
     @Override
     public boolean Matches(String text) {
-        return (Value != null ? Value.equalsIgnoreCase(text) : false)
+        return (getValue() != null ? getValue().equalsIgnoreCase(text) : false)
                 || super.Matches(text);
     }
 
@@ -400,9 +416,10 @@ public class EntryElement extends Element {
         UITableView tv = GetContainerTableView();
         if (tv == null)
             return;
-        tv.ScrollToRow(IndexPath, UITableViewScrollPosition.Middle, animated);
+        tv.scrollToRow(getIndexPath(), UITableViewScrollPosition.MIDDLE,
+                animated);
         if (entry != null) {
-            entry.BecomeFirstResponder();
+            entry.becomeFirstResponder();
             becomeResponder = false;
         }
     }
@@ -412,9 +429,10 @@ public class EntryElement extends Element {
         UITableView tv = GetContainerTableView();
         if (tv == null)
             return;
-        tv.ScrollToRow(IndexPath, UITableViewScrollPosition.Middle, animated);
+        tv.scrollToRow(getIndexPath(), UITableViewScrollPosition.MIDDLE,
+                animated);
         if (entry != null)
-            entry.ResignFirstResponder();
+            entry.resignFirstResponder();
     }
 
 }

@@ -286,7 +286,7 @@ public class UITableView extends UIScrollView {
     }
 
     @Export("scrollToRowAtIndexPath:atScrollPosition:animated:")
-    public void scrollToRowAtIndexPathatScrollPositionanimated(NSIndexPath indexPath, UITableViewScrollPosition scrollPosition, boolean animated) {
+    public void scrollToRow(NSIndexPath indexPath, UITableViewScrollPosition scrollPosition, boolean animated) {
         throw new RuntimeException();
     }
 

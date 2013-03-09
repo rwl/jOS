@@ -48,7 +48,7 @@ public class CheckboxElement extends StringElement {
         return Group;
     }
 
-    public boolean isValue() {
+    public boolean getValue() {
         return Value;
     }
 

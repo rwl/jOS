@@ -1,5 +1,12 @@
 package jos.api.foundation;
 
+import jos.api.graphicsimaging.CGPoint;
+import jos.api.graphicsimaging.CGRect;
+import jos.api.graphicsimaging.CGSize;
+import jos.api.uikit.NSLineBreakMode;
+import jos.api.uikit.UIBaselineAdjustment;
+import jos.api.uikit.UIFont;
+
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Register;
@@ -423,4 +430,66 @@ public class NSString extends NSObject {
     public NSDictionary propertyListFromStringsFileFormat() {
         throw new RuntimeException();
     }
+
+
+    @Export("sizeWithFont:")
+    public CGSize sizeWithFont(UIFont font) {
+        throw new RuntimeException();
+    }
+
+    @Export("sizeWithFont:forWidth:lineBreakMode:")
+    public CGSize sizeWithFontforWidthlineBreakMode(UIFont font, float width, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawAtPoint:withFont:")
+    public CGSize drawAtPointwithFont(CGPoint point, UIFont font) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawAtPoint:forWidth:withFont:lineBreakMode:")
+    public CGSize drawAtPointforWidthwithFontlineBreakMode(CGPoint point, float width, UIFont font, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("sizeWithFont:constrainedToSize:")
+    public CGSize sizeWithFontconstrainedToSize(UIFont font, CGSize size) {
+        throw new RuntimeException();
+    }
+
+    @Export("sizeWithFont:constrainedToSize:lineBreakMode:")
+    public CGSize sizeWithFontconstrainedToSizelineBreakMode(UIFont font, CGSize size, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawInRect:withFont:")
+    public CGSize drawInRectwithFont(CGRect rect, UIFont font) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawInRect:withFont:lineBreakMode:")
+    public CGSize drawInRectwithFontlineBreakMode(CGRect rect, UIFont font, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawInRect:withFont:lineBreakMode:alignment:")
+    public CGSize drawInRectwithFontlineBreakModealignment(CGRect rect, UIFont font, NSLineBreakMode lineBreakMode, int alignment) {
+        throw new RuntimeException();
+    }
+
+    @Export("sizeWithFont:minFontSize:actualFontSize:forWidth:lineBreakMode:")
+    public CGSize sizeWithFontminFontSizeactualFontSizeforWidthlineBreakMode(UIFont font, float minFontSize, float actualFontSize, float width, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawAtPoint:forWidth:withFont:fontSize:lineBreakMode:baselineAdjustment:")
+    public CGSize drawAtPointforWidthwithFontfontSizelineBreakModebaselineAdjustment(CGPoint point, float width, UIFont font, float fontSize, NSLineBreakMode lineBreakMode, UIBaselineAdjustment baselineAdjustment) {
+        throw new RuntimeException();
+    }
+
+    @Export("drawAtPoint:forWidth:withFont:minFontSize:actualFontSize:lineBreakMode:baselineAdjustment:")
+    public CGSize drawAtPointforWidthwithFontminFontSizeactualFontSizelineBreakModebaselineAdjustment(CGPoint point, float width, UIFont font, float minFontSize, float actualFontSize, NSLineBreakMode lineBreakMode, UIBaselineAdjustment baselineAdjustment) {
+        throw new RuntimeException();
+    }
+
 }

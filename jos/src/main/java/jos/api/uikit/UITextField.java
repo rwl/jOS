@@ -56,12 +56,12 @@ public class UITextField extends UIControl {
     }
 
     @Export("textAlignment")
-    public int getTextAlignment() {
+    public NSTextAlignment getTextAlignment() {
         throw new RuntimeException();
     }
 
     @Export("setTextAlignment:")
-    public void setTextAlignment(int value) {
+    public void setTextAlignment(NSTextAlignment value) {
         throw new RuntimeException();
     }
 
@@ -253,6 +253,11 @@ public class UITextField extends UIControl {
 
     @Export("clearButtonMode")
     public UITextFieldViewMode clearButtonMode() {
+        throw new RuntimeException();
+    }
+
+    @Export("setClearButtonMode:")
+    public void setClearButtonMode(UITextFieldViewMode value) {
         throw new RuntimeException();
     }
 

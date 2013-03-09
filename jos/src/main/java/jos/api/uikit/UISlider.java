@@ -13,6 +13,14 @@ import com.google.j2objc.annotations.Register;
 @Register(isWrapper = true)
 public class UISlider extends UIControl {
 
+    @Export("init")
+    public UISlider() {
+    }
+
+    @Export("initWithFrame:")
+    public UISlider(final CGRect frame) {
+    }
+
     @Export("value")
     public float getValue() {
         throw new RuntimeException();

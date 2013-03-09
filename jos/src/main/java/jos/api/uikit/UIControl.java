@@ -3,6 +3,7 @@ package jos.api.uikit;
 import jos.api.foundation.NSArray;
 import jos.api.foundation.NSObject;
 import jos.api.foundation.NSSet;
+import jos.api.graphicsimaging.CGRect;
 
 import com.google.j2objc.annotations.Bind;
 import com.google.j2objc.annotations.Export;
@@ -11,6 +12,14 @@ import com.google.j2objc.annotations.Selector;
 
 @Register(isWrapper = true)
 public class UIControl extends UIView {
+
+    @Export("init")
+    public UIControl() {
+    }
+
+    @Export("initWithFrame:")
+    public UIControl(final CGRect frame) {
+    }
 
     @Export("addTarget:forControlEvents:")
     public void addTarget(Object listener, UIControlEvent controlEvents) {

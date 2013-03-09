@@ -1,10 +1,17 @@
 package jos.dialog;
 
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
+import static jos.api.graphicsimaging.CGGeometry.makeRect;
+
+import jos.api.foundation.NSString;
+import jos.api.graphicsimaging.CGSize;
+import jos.api.uikit.UIColor;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UISlider;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 
 /**
@@ -12,12 +19,12 @@ import jos.api.uikit.UITableViewCellStyle;
  */
 public class FloatElement extends Element {
 
-    public boolean ShowCaption;
-    public float Value;
-    public float MinValue, MaxValue;
-    static NSString skey = new NSString("FloatElement");
+    private boolean ShowCaption;
+    private float Value;
+    private float MinValue, MaxValue;
+    private static NSString skey = new NSString("FloatElement");
     //UIImage Left, Right;
-    UISlider slider;
+    private UISlider slider;
 
     public FloatElement(UIImage left, UIImage right, float value) {
         super(null);
@@ -29,13 +36,13 @@ public class FloatElement extends Element {
     }
 
     @Override
-    protected NSString CellKey() {
+    protected NSString getCellKey() {
         return skey;
     }
 
     @Override
     public UITableViewCell GetCell(UITableView tv) {
-        UITableViewCell cell = tv.DequeueReusableCell(getCellKey());
+        UITableViewCell cell = tv.dequeueReusableCell(getCellKey());
         if (cell == null) {
             cell = new UITableViewCell(UITableViewCellStyle.DEFAULT,
                     getCellKey());
@@ -47,19 +54,18 @@ public class FloatElement extends Element {
         CGSize captionSize = makeSize(0, 0);
         if (Caption != null && ShowCaption) {
             cell.getTextLabel().setText(Caption);
-            captionSize = cell.getTextLabel().setStringSize(
-                    Caption,
-                    UIFont.FromName(cell.getTextLabel().getFont().getName(),
-                            UIFont.getLabelFontSize()));
-            captionSize.setWidth(captionSize.getWidth() + 10); // Spacing
+            captionSize = new NSString(Caption).sizeWithFont(UIFont
+                    .fromName(cell.getTextLabel().getFont().getFontName(),
+                            Math.round(UIFont.labelFontSize())));
+            captionSize.width = captionSize.width + 10; // Spacing
         }
 
         if (slider == null) {
-            slider = new UISlider(makeRect(10f + captionSize.Width, 12f,
-                    280f - captionSize.Width, 7f));
-            slider.setBackgroundColor(UIColor.Clear);
-            slider.setMinValue(this.MinValue);
-            slider.setMaxValue(this.MaxValue);
+            slider = new UISlider(makeRect(10f + captionSize.width, 12f,
+                    280f - captionSize.width, 7f));
+            slider.setBackgroundColor(UIColor.CLEAR);
+            slider.setMinimumValue(MinValue);
+            slider.setMaximumValue(MaxValue);
             slider.setContinuous(true);
             slider.setValue(this.Value);
             slider.setTag(1);
@@ -76,14 +82,14 @@ public class FloatElement extends Element {
 
     @Override
     public String Summary() {
-        return Value.toString();
+        return String.valueOf(Value);
     }
 
     @Override
     protected void Dispose(boolean disposing) {
         if (disposing) {
             if (slider != null) {
-                slider.Dispose();
+                slider.dealloc();
                 slider = null;
             }
         }

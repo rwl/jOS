@@ -350,4 +350,8 @@ public class Section extends Element implements Iterable<Element> {
         super.Dispose(disposing);
     }
 
+    public CGSize getEntryAlignment() {
+        return EntryAlignment;
+    }
+
 }

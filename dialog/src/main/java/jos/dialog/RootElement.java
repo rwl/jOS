@@ -385,7 +385,7 @@ public class RootElement extends Element implements Iterable<Section> {
                 for (Element e : s) {
                     CheckboxElement ce = (CheckboxElement) e;
                     if (ce != null) {
-                        if (ce.Value)
+                        if (ce.getValue())
                             count++;
                         continue;
                     }

@@ -6,6 +6,7 @@ import jos.api.graphicsimaging.CGSize;
 import jos.api.uikit.NSLineBreakMode;
 import jos.api.uikit.UIBaselineAdjustment;
 import jos.api.uikit.UIFont;
+import jos.api.uikit.UILineBreakMode;
 
 import com.google.j2objc.annotations.BaseType;
 import com.google.j2objc.annotations.Export;
@@ -459,6 +460,11 @@ public class NSString extends NSObject {
 
     @Export("sizeWithFont:constrainedToSize:lineBreakMode:")
     public CGSize sizeWithFontconstrainedToSizelineBreakMode(UIFont font, CGSize size, NSLineBreakMode lineBreakMode) {
+        throw new RuntimeException();
+    }
+
+    @Export("sizeWithFont:constrainedToSize:lineBreakMode:")
+    public CGSize sizeWithFontconstrainedToSizelineBreakMode(UIFont font, CGSize size, UILineBreakMode lineBreakMode) {
         throw new RuntimeException();
     }
 

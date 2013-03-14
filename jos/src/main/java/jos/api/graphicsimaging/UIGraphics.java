@@ -1,5 +1,7 @@
 package jos.api.graphicsimaging;
 
+import jos.api.uikit.UIImage;
+
 import com.google.j2objc.annotations.Export;
 import com.google.j2objc.annotations.Function;
 import com.google.j2objc.annotations.Register;
@@ -18,4 +20,17 @@ public abstract class UIGraphics {
     public static void beginImageContext(CGSize size) {
         throw new RuntimeException();
     }
+
+    @Function
+    @Export("UIGraphicsGetImageFromCurrentImageContext")
+    public static UIImage getImageFromCurrentImageContext() {
+        throw new RuntimeException();
+    }
+
+    @Function
+    @Export("UIGraphicsEndImageContext")
+    public static void endImageContext() {
+        throw new RuntimeException();
+    }
+
 }

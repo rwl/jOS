@@ -336,7 +336,7 @@ public class UITableView extends UIScrollView {
     }
 
     @Export("reloadRowsAtIndexPaths:withRowAnimation:")
-    public void reloadRowsAtIndexPathswithRowAnimation(NSIndexPath[] indexPaths, UITableViewRowAnimation animation) {
+    public void reloadRows(NSIndexPath[] indexPaths, UITableViewRowAnimation animation) {
         throw new RuntimeException();
     }
 

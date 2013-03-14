@@ -123,7 +123,7 @@ public class RootElement extends Element implements Iterable<Section> {
 
     private List<Section> Sections = new ArrayList<Section>();
 
-    private NSIndexPath PathForRadio(int idx) {
+    protected NSIndexPath PathForRadio(int idx) {
         RadioGroup radio = (RadioGroup) group;
         if (radio == null)
             return null;
@@ -469,7 +469,7 @@ public class RootElement extends Element implements Iterable<Section> {
         NSIndexPath path = element.getIndexPath();
         if (path == null)
             return;
-        TableView.reloadRowsAtIndexPathswithRowAnimation(
+        TableView.reloadRows(
                 new NSIndexPath[] { path }, animation);
     }
 
@@ -484,6 +484,10 @@ public class RootElement extends Element implements Iterable<Section> {
     @Override
     public Iterator<Section> iterator() {
         return Sections.iterator();
+    }
+
+    public Group getGroup() {
+        return group;
     }
 
 }

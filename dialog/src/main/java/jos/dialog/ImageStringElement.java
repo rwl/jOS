@@ -1,17 +1,19 @@
 package jos.dialog;
 
 import jos.api.foundation.NSAction;
+import jos.api.foundation.NSString;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellAccessoryType;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 
 public class ImageStringElement extends StringElement {
 
-    static NSString skey = new NSString("ImageStringElement");
-    UIImage image;
-    public UITableViewCellAccessoryType Accessory;
+    private static NSString skey = new NSString("ImageStringElement");
+    private UIImage image;
+    private UITableViewCellAccessoryType Accessory;
 
     public ImageStringElement(String caption, UIImage image) {
         super(caption);
@@ -41,20 +43,21 @@ public class ImageStringElement extends StringElement {
         UITableViewCell cell = tv.dequeueReusableCell(getCellKey());
         if (cell == null) {
             cell = new UITableViewCell(
-                    Value == null ? UITableViewCellStyle.DEFAULT
+                    getValue() == null ? UITableViewCellStyle.DEFAULT
                             : UITableViewCellStyle.SUBTITLE, getCellKey());
             cell.setSelectionStyle(UITableViewCellSelectionStyle.BLUE);
         }
 
-        cell.setAccessory(Accessory);
+        cell.setAccessoryType(Accessory);
         cell.getTextLabel().setText(Caption);
-        cell.getTextLabel().setTextAlignment(Alignment);
+        cell.getTextLabel().setTextAlignment(getAlignment());
 
         cell.getImageView().setImage(image);
 
         // The check is needed because the cell might have been recycled.
         if (cell.getDetailTextLabel() != null)
-            cell.getDetailTextLabel().setText(Value == null ? "" : Value);
+            cell.getDetailTextLabel().setText(
+                    getValue() == null ? "" : getValue());
 
         return cell;
     }

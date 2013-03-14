@@ -4,16 +4,20 @@ import java.net.URI;
 
 import jos.api.foundation.NSAction;
 import jos.api.foundation.NSIndexPath;
+import jos.api.foundation.NSString;
 import jos.api.uikit.UIColor;
 import jos.api.uikit.UIFont;
 import jos.api.uikit.UIImage;
 import jos.api.uikit.UIImageView;
 import jos.api.uikit.UILabel;
+import jos.api.uikit.UILineBreakMode;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellAccessoryType;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITableViewRowAnimation;
+import jos.dialog.utilities.IImageUpdated;
 
 /**
  * A version of the StringElement that can be styled with a number of formatting
@@ -23,7 +27,7 @@ import jos.api.uikit.UITableViewRowAnimation;
 public class StyledStringElement extends StringElement implements
         IImageUpdated, IColorizeBackground {
 
-    static NSString[] skey = { new NSString(".1"), new NSString(".2"),
+    private static NSString[] skey = { new NSString(".1"), new NSString(".2"),
             new NSString(".3"), new NSString(".4") };
 
     public StyledStringElement(String caption) {
@@ -36,7 +40,7 @@ public class StyledStringElement extends StringElement implements
 
     public StyledStringElement(String caption, String value) {
         super(caption, value);
-        style = UITableViewCellStyle.Value1;
+        style = UITableViewCellStyle.VALUE1;
     }
 
     public StyledStringElement(String caption, String value,
@@ -45,14 +49,14 @@ public class StyledStringElement extends StringElement implements
         this.style = style;
     }
 
-    protected UITableViewCellStyle style;
-    public NSAction AccessoryTapped;
-    public UIFont Font;
-    public UIFont SubtitleFont;
-    public UIColor TextColor;
-    public UILineBreakMode LineBreakMode = UILineBreakMode.WORD_WRAP;
-    public int Lines = 0;
-    public UITableViewCellAccessoryType Accessory = UITableViewCellAccessoryType.NONE;
+    private UITableViewCellStyle style;
+    private NSAction AccessoryTapped;
+    private UIFont Font;
+    private UIFont SubtitleFont;
+    private UIColor TextColor;
+    private UILineBreakMode LineBreakMode = UILineBreakMode.WORD_WRAP;
+    private int Lines = 0;
+    private UITableViewCellAccessoryType Accessory = UITableViewCellAccessoryType.NONE;
 
     // To keep the size down for a StyleStringElement, we put all the image information
     // on a separate structure, and create this on demand.
@@ -118,13 +122,13 @@ public class StyledStringElement extends StringElement implements
         extraInfo.BackgroundColor = null;
     }
 
-    protected String GetKey(int style) {
+    protected NSString GetKey(int style) {
         return skey[style];
     }
 
     @Override
     public UITableViewCell GetCell(UITableView tv) {
-        String key = GetKey((int) style);
+        NSString key = GetKey(style.ordinal());
         UITableViewCell cell = tv.dequeueReusableCell(key);
         if (cell == null) {
             cell = new UITableViewCell(style, key);
@@ -136,18 +140,18 @@ public class StyledStringElement extends StringElement implements
 
     protected void PrepareCell (UITableViewCell cell)
     {
-        cell.setAccessory(Accessory);
+        cell.setAccessoryType(Accessory);
         UILabel tl = cell.getTextLabel();
         tl.setText(Caption);
-        tl.setTextAlignment(Alignment);
-        tl.setTextColor(TextColor == null ? UIColor.Black : TextColor);
-        tl.setFont(Font == null ? UIFont.BoldSystemFontOfSize (17) : Font);
+        tl.setTextAlignment(getAlignment());
+        tl.setTextColor(TextColor == null ? UIColor.BLACK : TextColor);
+        tl.setFont(Font == null ? UIFont.boldSystemFontOfSize(17) : Font);
         tl.setLineBreakMode(LineBreakMode);
         tl.setLines(Lines);
 
         // The check is needed because the cell might have been recycled.
         if (cell.getDetailTextLabel() != null)
-            cell.getDetailTextLabel().setText(Value == null ? "" : Value);
+            cell.getDetailTextLabel().setText(getValue() == null ? "" : getValue());
 
         if (extraInfo == null){
             ClearBackground (cell);

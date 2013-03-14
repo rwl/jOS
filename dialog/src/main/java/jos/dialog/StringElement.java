@@ -2,9 +2,11 @@ package jos.dialog;
 
 import jos.api.foundation.NSAction;
 import jos.api.foundation.NSIndexPath;
+import jos.api.foundation.NSString;
 import jos.api.uikit.UITableView;
 import jos.api.uikit.UITableViewCell;
 import jos.api.uikit.UITableViewCellAccessoryType;
+import jos.api.uikit.UITableViewCellSelectionStyle;
 import jos.api.uikit.UITableViewCellStyle;
 import jos.api.uikit.UITextAlignment;
 
@@ -14,10 +16,10 @@ import jos.api.uikit.UITextAlignment;
  */
 public class StringElement extends Element {
 
-    static NSString skey = new NSString("StringElement");
-    static NSString skeyvalue = new NSString("StringElementValue");
-    public UITextAlignment Alignment = UITextAlignment.LEFT;
-    public String Value;
+    private static NSString skey = new NSString("StringElement");
+    private static NSString skeyvalue = new NSString("StringElementValue");
+    private UITextAlignment Alignment = UITextAlignment.LEFT;
+    private String Value;
 
     public StringElement(String caption) {
         super(caption);
@@ -28,7 +30,7 @@ public class StringElement extends Element {
         this.Value = value;
     }
 
-    public StringElement (String caption, NSAction tapped) {
+    public StringElement(String caption, NSAction tapped) {
         super(caption);
         Tapped = tapped;
     }
@@ -37,7 +39,7 @@ public class StringElement extends Element {
 
     @Override
     public UITableViewCell GetCell(UITableView tv) {
-        UITableViewCell cell = tv.DequeueReusableCell(Value == null ? skey
+        UITableViewCell cell = tv.dequeueReusableCell(Value == null ? skey
                 : skeyvalue);
         if (cell == null) {
             cell = new UITableViewCell(
@@ -46,7 +48,7 @@ public class StringElement extends Element {
             cell.setSelectionStyle((Tapped != null) ? UITableViewCellSelectionStyle.BLUE
                     : UITableViewCellSelectionStyle.NONE);
         }
-        cell.setAccessory(UITableViewCellAccessoryType.NONE);
+        cell.setAccessoryType(UITableViewCellAccessoryType.NONE);
         cell.getTextLabel().setText(Caption);
         cell.getTextLabel().setTextAlignment(Alignment);
 
@@ -75,4 +77,13 @@ public class StringElement extends Element {
         return (Value != null ? Value.equalsIgnoreCase(text) : false)
                 || super.Matches(text);
     }
+
+    public String getValue() {
+        return Value;
+    }
+
+    public UITextAlignment getAlignment() {
+        return Alignment;
+    }
+
 }

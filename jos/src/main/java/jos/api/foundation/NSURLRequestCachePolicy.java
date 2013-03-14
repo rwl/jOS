@@ -5,25 +5,25 @@ import com.google.j2objc.annotations.Bind;
 public enum NSURLRequestCachePolicy {
 
     @Bind("NSURLRequestUseProtocolCachePolicy")
-    UseProtocolCachePolicy,
+    USE_PROTOCOL_CACHE_POLICY,
 
 
     @Bind("NSURLRequestReloadIgnoringLocalCacheData")
-    ReloadIgnoringLocalCacheData,
+    RELOAD_IGNORING_LOCAL_CACHE_DATA,
 
     @Bind("NSURLRequestReloadIgnoringLocalAndRemoteCacheData")
-    ReloadIgnoringLocalAndRemoteCacheData,
+    RELOAD_IGNORING_LOCAL_AND_REMOTE_CACHE_DATA,
 
     @Bind("NSURLRequestReloadIgnoringCacheData")
-    ReloadIgnoringCacheData,
+    RELOAD_IGNORING_CACHE_DATA,
 
     @Bind("NSURLRequestReturnCacheDataElseLoad")
-    ReturnCacheDataElseLoad,
+    RETURN_CACHE_DATA_ELSE_LOAD,
 
     @Bind("NSURLRequestReturnCacheDataDontLoad")
-    ReturnCacheDataDontLoad,
+    RETURN_CACHE_DATA_DONT_LOAD,
 
     @Bind("NSURLRequestReloadRevalidatingCacheData")
-    ReloadRevalidatingCacheData
+    RELOAD_REVALIDATING_CACHE_DATA;
 
 }

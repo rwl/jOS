@@ -92,8 +92,8 @@ public class UILabel extends UIView {
     }
 
     @Export("setLineBreakMode:")
-    public void setLineBreakMode(NSLineBreakMode lineBreakMode) {
-        this.lineBreakMode = lineBreakMode;
+    public void setLineBreakMode(UILineBreakMode lineBreakMode) {
+        throw new RuntimeException();
     }
 
     @Export("numberOfLines")
@@ -102,7 +102,7 @@ public class UILabel extends UIView {
     }
 
     @Export("setNumberOfLines:")
-    public void setNumberOfLines(int lines) {
+    public void setLines(int lines) {
         this.numberOfLines = lines;
     }
 

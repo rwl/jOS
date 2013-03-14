@@ -7,7 +7,8 @@ import jos.api.uikit.UITableViewCellAccessoryType;
 
 public class RadioElement extends StringElement {
 
-    public String Group;
+    private String Group;
+
     private int RadioIdx;
 
     public RadioElement(String caption, String group) {
@@ -24,12 +25,13 @@ public class RadioElement extends StringElement {
         UITableViewCell cell = super.GetCell(tv);
         RootElement root = (RootElement) Parent.Parent;
 
-        if (!(root.group instanceof RadioGroup))
-            throw new Exception(
+        if (!(root.getGroup() instanceof RadioGroup))
+            throw new RuntimeException(
                     "The RootElement's Group is null or is not a RadioGroup");
 
-        boolean selected = RadioIdx == ((RadioGroup) root.group).getSelected();
-        cell.setAccessory(selected ? UITableViewCellAccessoryType.CHECKMARK
+        boolean selected = RadioIdx == ((RadioGroup) root.getGroup())
+                .getSelected();
+        cell.setAccessoryType(selected ? UITableViewCellAccessoryType.CHECKMARK
                 : UITableViewCellAccessoryType.NONE);
 
         return cell;
@@ -39,17 +41,18 @@ public class RadioElement extends StringElement {
     public void Selected(DialogViewController dvc, UITableView tableView,
             NSIndexPath indexPath) {
         RootElement root = (RootElement) Parent.Parent;
-        if (RadioIdx != root.RadioSelected) {
+        if (RadioIdx != root.getRadioSelected()) {
             UITableViewCell cell;
-            selectedIndex = root.PathForRadio(root.RadioSelected);
+            NSIndexPath selectedIndex = root.PathForRadio(root
+                    .getRadioSelected());
             if (selectedIndex != null) {
-                cell = tableView.CellAt(selectedIndex);
+                cell = tableView.cellAt(selectedIndex);
                 if (cell != null)
-                    cell.setAccessory(UITableViewCellAccessoryType.NONE);
+                    cell.setAccessoryType(UITableViewCellAccessoryType.NONE);
             }
-            cell = tableView.CellAt(indexPath);
+            cell = tableView.cellAt(indexPath);
             if (cell != null)
-                cell.setAccessory(UITableViewCellAccessoryType.CHECKMARK);
+                cell.setAccessoryType(UITableViewCellAccessoryType.CHECKMARK);
             root.setRadioSelected(RadioIdx);
         }
 
@@ -59,4 +62,9 @@ public class RadioElement extends StringElement {
     public void setRadioIdx(int value) {
         RadioIdx = value;
     }
+
+    public String getGroup() {
+        return Group;
+    }
+
 }

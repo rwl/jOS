@@ -1,5 +1,7 @@
 package jos.dialog;
 
+import static jos.api.graphicsimaging.CGGeometry.makeSize;
+
 import jos.api.foundation.NSAction;
 import jos.api.foundation.NSIndexPath;
 import jos.api.graphicsimaging.CGSize;
@@ -34,7 +36,7 @@ public class StyledMultilineElement extends StyledStringElement implements
     public float GetHeight(UITableView tableView, NSIndexPath indexPath) {
         float margin = UIDevice.getCurrentDevice().getUserInterfaceIdiom() == UIUserInterfaceIdiom.PHONE ? 40f
                 : 110f;
-        CGSize maxSize = makeSize(tableView.getBounds().width - margin,
+        CGSize maxSize = makeSize(tableView.getBounds().size.width - margin,
                 Float.MAX_VALUE);
 
         if (this.Accessory != UITableViewCellAccessoryType.NONE)
